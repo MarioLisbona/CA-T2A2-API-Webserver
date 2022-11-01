@@ -1,4 +1,4 @@
-from flask import Blueprint, request
+from flask import Blueprint, request, abort
 from datetime import date, timedelta
 import flask_jwt_extended
 from sqlalchemy.exc import IntegrityError
@@ -31,9 +31,9 @@ def register_user():
             'Message': f'Successfully registered user \'{user.f_name} {user.l_name}\' to the forum',
             'User details': UserSchema(exclude=['password']).dump(user)
             }, 201
-        # return UserSchema(exclude=['password']).dump(user)
+    #email address already exists - abort with json error message
     except IntegrityError:
-        return {'error': 'Email address already in use'}, 409
+        abort(409, description=f'Email address \'{user.email}\' already exists')
 
 
 # ======================================LOGIN a single user==================================
@@ -53,44 +53,48 @@ def login_user():
         #return token, email address and admin status
         return {'email': user.email, 'token': token, 'is_admin': user.is_admin}
     else:
-        return {'error': 'Invalid email or password'}, 401
+        #email address or password invalid - abort with json error message
+        abort(401, description='Invalid email or password')
 
 
 
+# ======================================UPDATE a user's own details==================================
+@auth_bp.route('/edit_my_profile', methods=['PUT', 'PATCH'])
+@jwt_required()
+def edit_users_own_details():
+    #retrieve the user's own id from their token
+    user_id = get_jwt_identity()
 
+    #create query statement to return user from the database 
+    stmt = db.select(User).filter_by(id=user_id)
+    #scalar will return a single user where the id matches user_id and assign the result to the user variable
+    user = db.session.scalar(stmt)
 
+    #need an if statement here because
+    # ID can be retrieved from a valid token even if the user has been deleted from the database by the admin
+    # if the user exists in database, they can update any profile attributes except is_admin
+    if user:
+        user.f_name = request.json.get('f_name') or user.f_name
+        user.l_name = request.json.get('l_name') or user.l_name
+        user.email = request.json.get('email') or user.email
 
-
-
-# ======================================UPDATE a single user==================================
-# @users_bp.route('<int:user_id>', methods=['PUT', 'PATCH'])
-# def edit_single_user(user_id):
+        #need to use if statement here - suspect its because generate_password_hash needs a return value
+        if request.json.get('password'):
+            user.password = bcrypt.generate_password_hash(request.json.get('password')).decode('utf-8')
     
-#     #create query statement to return a single user with the id of the route variable
-#     stmt = db.select(User).filter_by(id=user_id)
-#     #scalar will return a single user where the id matches user_id and assign the result to the user variable
-#     user = db.session.scalar(stmt)
+        # Add new post details to the database and commit changes
+        db.session.commit()
 
-#     #if the post exists update the json data in the request or keep the existing data
-#     if user:
-#         user.f_name = request.json.get('f_name') or user.f_name
-#         user.l_name = request.json.get('l_name') or user.l_name
-#         user.email = request.json.get('email') or user.email
-#         user.password = bcrypt.generate_password_hash(request.json.get('password')) or user.password
-#         user.is_admin - request.json.get('is_admin') or user.is_admin
-    
-#         # Add new post details to the database and commit changes
-#         db.session.commit()
+        #return success message and return the updated data
+        return {
+        'Message': f'You successfully updated the user id: {user_id} \'{user.f_name} {user.l_name}\'.',
+        'New user details': UserSchema(exclude=['password']).dump(user)
+        }
 
-#         #return success message and return the updated data
-#         return {
-#         'Message': f'You successfully updated the user id: {user_id} \'{user.f_name} {user.l_name}\'.',
-#         'New user details': UserSchema(exclude=['password']).dump(user)
-#         }
-
-#     #else provide an error message and 404 resource not found code
-#     else:
-#         return {'Error': f'User {user_id} does not exist'}, 404
+    #else provide an error message and 404 resource not found code
+    else:
+        # return {'Error': f'User {user_id} does not exist'}, 404
+        abort(404, description=f'User {user_id} does not exist')
 
 
 # ======================================DELETE a single user==================================

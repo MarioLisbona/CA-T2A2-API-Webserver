@@ -37,27 +37,32 @@ def create_forum():
     app.register_blueprint(auth_bp)
 
 # ======================================ERROR HANDLING====================================================
+    #bad request, 400, error handler
+    @app.errorhandler(400)
+    def bad_request(err):
+        return {'error': str(err)}, 400
+
+    #unauthorized, 401, error handler
+    @app.errorhandler(401)
+    def unauthorized(err):
+        return {'error': str(err)}, 401
+        
     #not found, 404, error handler
     @app.errorhandler(404)
     def not_found(err):
         return {'error': str(err)}
 
-    # #unauthorized, 401, error handler
-    # @app.errorhandler(401)
-    # def unauthorized(err):
-    #     return {'error': str(err)}, 401
+    #conflict, 409, error handler
+    @app.errorhandler(409)
+    def conflict(err):
+        return {'error': str(err)}, 409
 
-    # #bad request, 400, error handler
-    # @app.errorhandler(400)
-    # def bad_request(err):
-    #     return {'error': str(err)}, 400
-
-    # #KeyError error handler
+    # # #KeyError error handler
     # @app.errorhandler(KeyError)
     # def key_error(err):
     #     return {'error': f'the field {err} is required'}, 400
 
-    # #ValidationError error handler
+    # # #ValidationError error handler
     # @app.errorhandler(ValidationError)
     # def validation_error(err):
     #     return {'error': err.messages}, 400

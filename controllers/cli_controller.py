@@ -47,14 +47,14 @@ def seed_db_tables():
         ),
         Post(
             title = 'Learning to Code',
-            date = date.today(),
+            date = datetime(2020, 5, 17),
             is_active = True,
             content = "Some information about my experience learning how to code.Some information about my experience learning how to codeSome information about my experience learning how to codeSome information about my experience learning how to codeSome information about my experience learning how to codeSome information about my experience learning how to codeSome information about my experience learning how to codeSome information about my experience learning how to codeSome information about my experience learning how to codeSome information about my experience learning how to code",
             tag = 'Education '
         ),
         Post(
             title = 'Using Flask for Web Development',
-            date = date.today(),
+            date = datetime(2018, 5, 17),
             is_active = True,
             content = "Learning how to build a web application with Flask and Python, Learning how to build a web application with Flask and PythonLearning how to build a web application with Flask and PythonLearning how to build a web application with Flask and PythonLearning how to build a web application with Flask and PythonLearning how to build a web application with Flask and Python",
             tag = 'Tech'

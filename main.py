@@ -2,6 +2,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from init import db, ma, bcrypt, jwt
 from controllers.cli_controller import db_commands
+from controllers.posts_controller import posts_bp
 import os
 
 
@@ -29,6 +30,7 @@ def create_forum():
 
     # registering Blueprints
     app.register_blueprint(db_commands)
+    app.register_blueprint(posts_bp)
 
 # ======================================ERROR HANDLING====================================================
     # #not found, 404, error handler

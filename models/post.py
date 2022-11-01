@@ -11,7 +11,7 @@ class Post(db.Model):
     date = db.Column(db.Date)
     is_active = db.Column(db.Boolean)
     content = db.Column(db.Text, nullable=False)
-    tag = db.Column(db.String(20))
+    tag = db.Column(db.String(100))
 
 
 #marshmallow schema to handle converting the database objects from the posts table into serialised objects

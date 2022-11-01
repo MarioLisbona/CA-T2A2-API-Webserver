@@ -3,6 +3,8 @@ from datetime import date
 import flask_jwt_extended
 from init import db
 from models.post import Post, PostSchema
+from controllers.auth_controller import admin_access
+from flask_jwt_extended import jwt_required
 
 #creating Blueprint for posts
 posts_bp = Blueprint('posts', __name__, url_prefix='/posts')
@@ -91,7 +93,9 @@ def edit_single_post(post_id):
 
 # ======================================DELETE a single post==================================
 @posts_bp.route('<int:post_id>', methods=['DELETE'])
+@jwt_required()
 def delete_single_post(post_id):
+    admin_access()
     
     #create query statement to return a single Post with the id of the route variable
     stmt = db.select(Post).filter_by(id=post_id)

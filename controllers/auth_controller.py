@@ -97,4 +97,40 @@ def edit_users_own_details():
         abort(404, description=f'User {user_id} does not exist')
 
 
-# ======================================DELETE a single user==================================
+# # ======================================DELETE a user - ADMIN ONLY==================================
+# @auth_bp.route('/admin/users/<int:post_id>', methods=['DELETE'])
+# def delete_single_post(post_id):
+#     @jwt_required()
+    
+#     #create query statement to return a single Post with the id of the route variable
+#     stmt = db.select(Post).filter_by(id=post_id)
+#     #scalar will return a single post where the id matches post_id and assign the result to the post variable
+#     post = db.session.scalar(stmt)
+
+#     #if the post exists then use Schema to return json serialized version of the query statement
+#     #else provide an error message and 404 resource not found code
+#     if post:
+#         db.session.delete(post)
+#         db.session.commit()
+#         return {'Message': f'You successfully deleted the post id {post_id}: \'{post.title}\'.'}
+#     else:
+#         abort(404, description=f'Post {post_id} does not exist')
+
+
+
+
+# ==========================function to check if token links to a valid user===================================
+def admin_access():
+    #get identity from JWT token 
+    user_id = get_jwt_identity()
+
+    #create a statement to query the database for the id retrieved from JWT token
+    stmt = db.select(User).filter_by(id=user_id)
+    user = db.session.scalar(stmt)
+
+    #id from token is not a user in the database
+    if not user:
+        abort(401, description='Invalid Authorization token')
+    if not user.is_admin:
+        abort(401, description='You do not have administrative privileges')
+    

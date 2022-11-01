@@ -14,7 +14,7 @@ db_commands = Blueprint('db', __name__)
 def drop_db_tables():
     db.drop_all()
     print('\n====================================================================')
-    print('================== Tables Dropped Successfully ! ==================')
+    print('================== Tables Dropped Successfully ! ===================')
     print('====================================================================\n')
 
 #Creating database tables
@@ -22,7 +22,7 @@ def drop_db_tables():
 def create_db_tables():
     db.create_all()
     print('\n====================================================================')
-    print('================== Tables Created Successfully ! ==================')
+    print('================== Tables Created Successfully ! ===================')
     print('====================================================================\n')
 
 #seeding the database with posts, users and replies
@@ -138,7 +138,7 @@ def seed_db_tables():
     db.session.commit()
 
     print('\n====================================================================')
-    print('================== Tables Seeded Successfully ! ==================')
+    print('================== Tables Seeded Successfully ! ====================')
     print('====================================================================\n')
 
 

@@ -1,5 +1,5 @@
 from flask import Blueprint, request, abort
-from datetime import date
+from datetime import date, datetime
 import flask_jwt_extended
 from init import db
 from models.post import Post, PostSchema
@@ -74,6 +74,8 @@ def edit_single_post(post_id):
     #if the post exists update the json data in the request or keep the existing data
     if post:
         post.title = request.json.get('title') or post.title
+        post.date = date.today()
+        post.time = datetime.now().strftime("%H:%M:%S")
         post.is_active = request.json.get('is_active') or post.is_active
         post.content = request.json.get('content') or post.content
         post.tag = request.json.get('tag') or post.tag
@@ -83,7 +85,7 @@ def edit_single_post(post_id):
 
         #return success message and return the updated data
         return {
-        'Message': f'You successfully updated the post titled \'{post.title}\'.',
+        'Message': f'You successfully updated post id:{post.id} titled \'{post.title}\'.',
         'Post details': PostSchema().dump(post)
         }
     #else provide an error message and 404 resource not found code

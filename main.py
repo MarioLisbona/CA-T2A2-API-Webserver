@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from init import db, ma, bcrypt, jwt
+from controllers.cli_controller import db_commands
 import os
 
 
@@ -26,8 +27,8 @@ def create_forum():
     bcrypt.init_app(app)
     jwt.init_app(app)
 
-    #registering Blueprints
-    # app.register_blueprint(db_commands)
+    # registering Blueprints
+    app.register_blueprint(db_commands)
 
 # ======================================ERROR HANDLING====================================================
     # #not found, 404, error handler

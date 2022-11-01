@@ -1,0 +1,3 @@
+FLASK_APP=main:create_forum
+FLASK_DEBUG=1
+FLASK_RUN_PORT=8000

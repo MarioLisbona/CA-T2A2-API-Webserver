@@ -27,7 +27,7 @@ def get_single_post(post_id):
     
     #create query statement to return a single Post with the id of the route variable
     stmt = db.select(Post).filter_by(id = post_id)
-    #scalala will return a single post where the id matches post_id and assign the result to the post variable
+    #scalar will return a single post where the id matches post_id and assign the result to the post variable
     post = db.session.scalar(stmt)
 
     #if the post exists then use Schema to return json serialized version of the query statement
@@ -66,7 +66,7 @@ def edit_single_post(post_id):
     
     #create query statement to return a single Post with the id of the route variable
     stmt = db.select(Post).filter_by(id = post_id)
-    #scalala will return a single post where the id matches post_id and assign the result to the post variable
+    #scalar will return a single post where the id matches post_id and assign the result to the post variable
     post = db.session.scalar(stmt)
 
     #if the post exists then create a new instance of Post class to store request.json data
@@ -86,5 +86,24 @@ def edit_single_post(post_id):
         'Message': f'You successfully updated the post titled \'{post.title}\'.',
         'Post details': PostSchema().dump(post)
         }
+    else:
+        return {'Error': f'Post {post_id} does not exist'}, 404
+
+
+# ======================================DELETE a single post==================================
+@posts_bp.route('<int:post_id>', methods=['DELETE'])
+def delete_single_post(post_id):
+    
+    #create query statement to return a single Post with the id of the route variable
+    stmt = db.select(Post).filter_by(id = post_id)
+    #scalar will return a single post where the id matches post_id and assign the result to the post variable
+    post = db.session.scalar(stmt)
+
+    #if the post exists then use Schema to return json serialized version of the query statement
+    #else provide an error message and 404 resource not found code
+    if post:
+        db.session.delete(post)
+        db.session.commit()
+        return {'Message': f'You successfully deleted the post id {post_id}: \'{post.title}\'.'}
     else:
         return {'Error': f'Post {post_id} does not exist'}, 404

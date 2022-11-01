@@ -1,6 +1,5 @@
 from flask import Blueprint, request, abort
 from datetime import date, timedelta
-import flask_jwt_extended
 from sqlalchemy.exc import IntegrityError
 from init import db, bcrypt
 from models.user import User, UserSchema
@@ -108,9 +107,11 @@ def admin_access():
     stmt = db.select(User).filter_by(id=user_id)
     user = db.session.scalar(stmt)
 
-    #id from token is not a user in the database
+    #abort if id from token is not a user in the database
     if not user:
         abort(401, description='Invalid Authorization token')
+    
+    #abort if is_admin is False
     if not user.is_admin:
         abort(401, description='You do not have administrative privileges')
     

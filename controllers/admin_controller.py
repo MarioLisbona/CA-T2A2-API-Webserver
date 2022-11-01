@@ -11,10 +11,13 @@ from flask_jwt_extended import jwt_required, create_access_token, get_jwt_identi
 #creating Blueprint for users
 admin_bp = Blueprint('admin', __name__, url_prefix='/admin')
 
-# =============================DELETE a single post - ADMIN ONLY==================================
+# =============================DELETE any post - ADMIN ONLY==================================
 @admin_bp.route('/posts/<int:post_id>', methods=['DELETE'])
+#Route protected by JWT
 @jwt_required()
 def delete_single_post(post_id):
+    # delete post protected by admin rights
+    #admin_access will abort if is_admin is False
     admin_access()
     
     #create query statement to return a single Post with the id of the route variable
@@ -33,23 +36,26 @@ def delete_single_post(post_id):
 
 
 
-# # # ======================================DELETE a user - ADMIN ONLY==================================
-# @admin_bp.route('/users/<int:user_id>', methods=['DELETE'])
-# @jwt_required()
-# def delete_single_user(user_id):
-#     admin_access()
+# ======================================DELETE any user - ADMIN ONLY==================================
+@admin_bp.route('/users/<int:user_id>', methods=['DELETE'])
+#Route protected by JWT
+@jwt_required()
+def delete_single_user(user_id):
+    # delete user protected by admin rights
+    #admin_access will abort if is_admin is False
+    admin_access()
     
-#     #create query statement to return a single Post with the id of the route variable
-#     stmt = db.select(Post).filter_by(id=user_id)
-#     #scalar will return a single post where the id matches post_id and assign the result to the post variable
-#     user = db.session.scalar(stmt)
+    #create query statement to return a single Post with the id of the route variable
+    stmt = db.select(User).filter_by(id=user_id)
+    #scalar will return a single post where the id matches post_id and assign the result to the post variable
+    user = db.session.scalar(stmt)
 
-#     #if the post exists then use Schema to return json serialized version of the query statement
-#     #else provide an error message and 404 resource not found code
-#     if user:
-#         db.session.delete(user)
-#         db.session.commit()
-#         return {'Message': f'You successfully deleted the user id: {user_id} \'{user.f_name} {user.l_name}\'.'}
-#     else:
-#         abort(404, description=f'User id:{user_id} does not exist')
+    #if the post exists then use Schema to return json serialized version of the query statement
+    #else provide an error message and 404 resource not found code
+    if user:
+        db.session.delete(user)
+        db.session.commit()
+        return {'Message': f'You successfully deleted the user id: {user_id} \'{user.f_name} {user.l_name}\'.'}
+    else:
+        abort(404, description=f'User id:{user_id} does not exist')
 

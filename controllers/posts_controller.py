@@ -5,40 +5,10 @@ from init import db
 from models.post import Post, PostSchema
 
 #creating Blueprint for posts
-posts_bp = Blueprint('cards', __name__, url_prefix='/posts')
+posts_bp = Blueprint('posts', __name__, url_prefix='/posts')
 
 
-# ======================================GET all posts==================================
-@posts_bp.route('/')
-def get_all_posts():
-
-    #create query statement to return all records in Post table sort by newest first
-    stmt = db.select(Post).order_by(Post.date.desc())
-    #scalalars will return many results and assign to posts variable
-    posts = db.session.scalars(stmt)
-
-    #use Schema to return json serialized version of the query statement
-    return PostSchema(many=True).dump(posts)
-
-
-# ======================================GET a single post==================================
-@posts_bp.route('<int:post_id>')
-def get_single_post(post_id):
-    
-    #create query statement to return a single Post with the id of the route variable
-    stmt = db.select(Post).filter_by(id = post_id)
-    #scalar will return a single post where the id matches post_id and assign the result to the post variable
-    post = db.session.scalar(stmt)
-
-    #if the post exists then use Schema to return json serialized version of the query statement
-    #else provide an error message and 404 resource not found code
-    if post:
-        return PostSchema().dump(post)
-    else:
-        return {'Error': f'Post {post_id} does not exist'}, 404
-
-
-# ======================================POST a single post==================================
+# ======================================CREATE a single post==================================
 @posts_bp.route('/', methods=['POST'])
 def create_single_post():
     #create a new instance of Post class to store request.json data
@@ -60,18 +30,46 @@ def create_single_post():
         }
 
 
-# ======================================EDIT a single post==================================
+# ======================================READ all posts==================================
+@posts_bp.route('/')
+def get_all_posts():
+
+    #create query statement to return all records in Post table sort by newest first
+    stmt = db.select(Post).order_by(Post.date.desc(), Post.time.desc())
+    #scalalars will return many results and assign to posts variable
+    posts = db.session.scalars(stmt)
+
+    #use Schema to return json serialized version of the query statement
+    return PostSchema(many=True).dump(posts)
+
+
+# ======================================READ a single post==================================
+@posts_bp.route('<int:post_id>')
+def get_single_post(post_id):
+    
+    #create query statement to return a single Post with the id of the route variable
+    stmt = db.select(Post).filter_by(id=post_id)
+    #scalar will return a single post where the id matches post_id and assign the result to the post variable
+    post = db.session.scalar(stmt)
+
+    #if the post exists then use Schema to return json serialized version of the query statement
+    #else provide an error message and 404 resource not found code
+    if post:
+        return PostSchema().dump(post)
+    else:
+        return {'Error': f'Post {post_id} does not exist'}, 404
+
+
+# ======================================UPDATE a single post==================================
 @posts_bp.route('<int:post_id>', methods=['PUT', 'PATCH'])
 def edit_single_post(post_id):
     
     #create query statement to return a single Post with the id of the route variable
-    stmt = db.select(Post).filter_by(id = post_id)
+    stmt = db.select(Post).filter_by(id=post_id)
     #scalar will return a single post where the id matches post_id and assign the result to the post variable
     post = db.session.scalar(stmt)
 
-    #if the post exists then create a new instance of Post class to store request.json data
-    # use Schema to return json serialized version of the query statement
-    #else provide an error message and 404 resource not found code
+    #if the post exists update the json data in the request or keep the existing data
     if post:
         post.title = request.json.get('title') or post.title
         post.is_active = request.json.get('is_active') or post.is_active
@@ -86,6 +84,7 @@ def edit_single_post(post_id):
         'Message': f'You successfully updated the post titled \'{post.title}\'.',
         'Post details': PostSchema().dump(post)
         }
+    #else provide an error message and 404 resource not found code
     else:
         return {'Error': f'Post {post_id} does not exist'}, 404
 
@@ -95,7 +94,7 @@ def edit_single_post(post_id):
 def delete_single_post(post_id):
     
     #create query statement to return a single Post with the id of the route variable
-    stmt = db.select(Post).filter_by(id = post_id)
+    stmt = db.select(Post).filter_by(id=post_id)
     #scalar will return a single post where the id matches post_id and assign the result to the post variable
     post = db.session.scalar(stmt)
 

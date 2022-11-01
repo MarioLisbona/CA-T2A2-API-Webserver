@@ -9,7 +9,8 @@ class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False)
     date = db.Column(db.Date)
-    is_active = db.Column(db.Boolean)
+    time = db.Column(db.Time)
+    is_active = db.Column(db.Boolean, default=True)
     content = db.Column(db.Text, nullable=False)
     tag = db.Column(db.String(100))
 
@@ -18,7 +19,7 @@ class Post(db.Model):
 class PostSchema(ma.Schema):
     
     class Meta:
-        fields = ('id', 'title', 'date', 'is_active', 'content', 'tag')
+        fields = ('id', 'title', 'date', 'time', 'is_active', 'content', 'tag')
         ordered = True
 
     

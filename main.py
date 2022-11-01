@@ -3,6 +3,8 @@ from flask_sqlalchemy import SQLAlchemy
 from init import db, ma, bcrypt, jwt
 from controllers.cli_controller import db_commands
 from controllers.posts_controller import posts_bp
+from controllers.users_controller import users_bp
+from controllers.auth_controller import auth_bp
 import os
 
 
@@ -31,12 +33,14 @@ def create_forum():
     # registering Blueprints
     app.register_blueprint(db_commands)
     app.register_blueprint(posts_bp)
+    app.register_blueprint(users_bp)
+    app.register_blueprint(auth_bp)
 
 # ======================================ERROR HANDLING====================================================
-    # #not found, 404, error handler
-    # @app.errorhandler(404)
-    # def not_found(err):
-    #     return {'error': str(err)}, 404
+    #not found, 404, error handler
+    @app.errorhandler(404)
+    def not_found(err):
+        return {'error': str(err)}, 404
 
     # #unauthorized, 401, error handler
     # @app.errorhandler(401)

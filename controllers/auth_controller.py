@@ -1,9 +1,10 @@
 from flask import Blueprint, request
-from datetime import date
+from datetime import date, timedelta
 import flask_jwt_extended
 from sqlalchemy.exc import IntegrityError
 from init import db, bcrypt
 from models.user import User, UserSchema
+from flask_jwt_extended import create_access_token, get_jwt_identity
 
 #creating Blueprint for users
 auth_bp = Blueprint('auth', __name__, url_prefix='/auth')
@@ -36,7 +37,23 @@ def register_user():
 
 
 # ======================================LOGIN a single user==================================
+@auth_bp.route('/login/', methods=['POST'])
+def login_user():
 
+    #create query statement to query database for email in request.json
+    stmt = db.select(User).filter_by(email=request.json['email'])
+    #scalar will return a single post where the database email matches email in request.json
+    user = db.session.scalar(stmt)
+
+    # if user exists and password in request.json matches decrypted password in database
+    if user and bcrypt.check_password_hash(user.password, request.json['password']):
+
+        #create token based on user id and lasts for 24 hours
+        token = create_access_token(identity=str(user.id), expires_delta=timedelta(days=1))
+        #return token, email address and admin status
+        return {'email': user.email, 'token': token, 'is_admin': user.is_admin}
+    else:
+        return {'error': 'Invalid email or password'}, 401
 
 
 

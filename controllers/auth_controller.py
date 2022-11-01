@@ -4,7 +4,7 @@ import flask_jwt_extended
 from sqlalchemy.exc import IntegrityError
 from init import db, bcrypt
 from models.user import User, UserSchema
-from flask_jwt_extended import create_access_token, get_jwt_identity
+from flask_jwt_extended import jwt_required, create_access_token, get_jwt_identity
 
 #creating Blueprint for users
 auth_bp = Blueprint('auth', __name__, url_prefix='/auth')

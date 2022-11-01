@@ -1,4 +1,4 @@
-from flask import Blueprint, request
+from flask import Blueprint, request, abort
 from datetime import date
 import flask_jwt_extended
 from init import db
@@ -57,7 +57,7 @@ def get_single_post(post_id):
     if post:
         return PostSchema().dump(post)
     else:
-        return {'Error': f'Post {post_id} does not exist'}, 404
+        abort(404, description=f'Post {post_id} does not exist')
 
 
 # ======================================UPDATE a single post==================================
@@ -86,7 +86,7 @@ def edit_single_post(post_id):
         }
     #else provide an error message and 404 resource not found code
     else:
-        return {'Error': f'Post {post_id} does not exist'}, 404
+        abort(404, description=f'Post {post_id} does not exist')
 
 
 # ======================================DELETE a single post==================================
@@ -105,4 +105,4 @@ def delete_single_post(post_id):
         db.session.commit()
         return {'Message': f'You successfully deleted the post id {post_id}: \'{post.title}\'.'}
     else:
-        return {'Error': f'Post {post_id} does not exist'}, 404
+        abort(404, description=f'Post {post_id} does not exist')

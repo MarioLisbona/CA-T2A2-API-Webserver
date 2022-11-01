@@ -40,7 +40,7 @@ def create_forum():
     #not found, 404, error handler
     @app.errorhandler(404)
     def not_found(err):
-        return {'error': str(err)}, 404
+        return {'error': str(err)}
 
     # #unauthorized, 401, error handler
     # @app.errorhandler(401)

@@ -14,13 +14,15 @@ auth_bp = Blueprint('auth', __name__, url_prefix='/auth')
 @auth_bp.route('/register/', methods=['POST'])
 def register_user():
     try:
+        # loading request data into the marshmallow PostSchema for validation
+        data = UserSchema().load(request.json)
+
         #create a new instance of User class to store request.json data
         user = User(
-            #f_name and l_name use request.json.get() to allow them to be optional fields
-            f_name = request.json.get('f_name'),
-            l_name = request.json.get('l_name'),
-            email = request.json['email'],
-            password = bcrypt.generate_password_hash(request.json['password']).decode('utf-8')
+            f_name = data['f_name'],
+            l_name = data['l_name'],
+            email = data['email'],
+            password = bcrypt.generate_password_hash(data['password']).decode('utf-8')
         )
 
         # Add new user details to the database and commit changes

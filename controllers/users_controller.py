@@ -1,4 +1,4 @@
-from flask import Blueprint, request
+from flask import Blueprint, request, abort
 from datetime import date
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from init import db, bcrypt
@@ -35,7 +35,7 @@ def get_single_post(user_id):
     if user:
         return UserSchema(exclude=['password']).dump(user)
     else:
-        return {'Error': f'user {user_id} does not exist'}, 404
+        abort(404, description=f'User id:{user_id} does not exist')
 
 
 # ======================================UPDATE a user's own profile==================================

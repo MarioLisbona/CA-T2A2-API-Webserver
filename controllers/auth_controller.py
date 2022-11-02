@@ -10,18 +10,19 @@ from flask_jwt_extended import jwt_required, create_access_token, get_jwt_identi
 auth_bp = Blueprint('auth', __name__, url_prefix='/auth')
 
 
-# ======================================REGISTER/CREATE a single user==================================
+# ======================================REGISTER/CREATE a new user==================================
 @auth_bp.route('/register/', methods=['POST'])
 def register_user():
     try:
         #create a new instance of User class to store request.json data
         user = User(
-            f_name = request.json['f_name'],
-            l_name = request.json['l_name'],
+            #f_name and l_name use request.json.get() to allow them to be optional fields
+            f_name = request.json.get('f_name'),
+            l_name = request.json.get('l_name'),
             email = request.json['email'],
             password = bcrypt.generate_password_hash(request.json['password']).decode('utf-8')
         )
-        
+
         # Add new user details to the database and commit changes
         db.session.add(user)
         db.session.commit()
@@ -36,7 +37,7 @@ def register_user():
         abort(409, description=f'Email address \'{user.email}\' already exists')
 
 
-# ======================================LOGIN a single user==================================
+# ======================================LOGIN a user==================================
 @auth_bp.route('/login/', methods=['POST'])
 def login_user():
 

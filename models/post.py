@@ -10,7 +10,7 @@ class Post(db.Model):
 
     #creating the structure for the posts table using the sqlalchemy instance that is connected to the database
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(100), nullable=False)
+    title = db.Column(db.String(100))
     date = db.Column(db.Date)
     time = db.Column(db.Time)
     is_active = db.Column(db.Boolean, default=True)
@@ -24,13 +24,13 @@ class PostSchema(ma.Schema):
 
     #validating title input - need sto be at least 3 characters long, contain
     #only letters numbers and spaces
-    title = fields.String(required=True, validate=And(
+    title = fields.String(validate=And(
         Length(min=3, max=100, error='Title must be minimum of 3 characters in length and maximum of 100'),
         Regexp('^[a-zA-Z0-9 ]+$', error='Only letters and numbers and spaces are allowed')
         ))
 
     #validating content - minimum of 3 characters in length and max of 2,000 characters (roughly 300-500 words)
-    content = fields.String(required=True, validate=(Length(min=100, max=2000)))
+    content = fields.String(validate=(Length(min=100, max=2000)))
 
     #validating tags input
     #tags can only be ones that are listed in the VALID_TAGS tuple

@@ -94,16 +94,23 @@ def edit_single_post(post_id):
     data = PostSchema().load(request.json)
 
     #if the post exists update the json data in the request or keep the existing data
-    #validate the data throught the data instance of marshmallow PostSchema
+    #validate the data through the data instance of marshmallow PostSchema
     if post:
-        post.title = data['title'] or post.title
         post.date = date.today()
         post.time = datetime.now().strftime("%H:%M:%S")
-        post.content = data['content'] or post.content
-        # post.tag = data['tag'] or post.tag
-    
-        #tags are optional
+
+        #optional update fields
         #if there is a tag key in the JSON request then assign it to tag variable
+
+        #title is optional for update
+        if request.json.get('title'):
+            post.title = data['title']
+
+        #content is optional for update
+        if request.json.get('content'):
+            post.content = data['content']
+
+        #tags are optional for update
         if request.json.get('tag'):
             post.tag = data['tag']
 

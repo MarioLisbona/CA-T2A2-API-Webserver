@@ -21,6 +21,7 @@ def create_single_post():
     post = Post(
         title = data['title'],
         date = date.today(),
+        time = datetime.now().strftime("%H:%M:%S"),
         is_active = data['is_active'],
         content = data['content'],
         tag = data['tag']

@@ -1,5 +1,6 @@
 from init import db, ma
 from marshmallow import fields
+from marshmallow.validate import Length
 
 class Post(db.Model):
     #assigning a table name to the model
@@ -18,6 +19,9 @@ class Post(db.Model):
 #marshmallow schema to handle converting the database objects from the posts table into serialised objects
 class PostSchema(ma.Schema):
     
+
+    #validation of data inputs
+    title = fields.String(required=True, validate=(Length(min=3, error='Title must be minimum of 3 characters in length')))
     class Meta:
         fields = ('id', 'title', 'date', 'time', 'is_active', 'content', 'tag')
         ordered = True

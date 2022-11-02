@@ -11,7 +11,7 @@ from flask_jwt_extended import jwt_required, create_access_token, get_jwt_identi
 #creating Blueprint for users
 admin_bp = Blueprint('admin', __name__, url_prefix='/admin')
 
-# =============================DELETE any post - ADMIN ONLY==================================
+# =============================DELETE any post - ADMIN ONLY========================================================
 @admin_bp.route('/posts/<int:post_id>', methods=['DELETE'])
 #Route protected by JWT
 @jwt_required()
@@ -36,7 +36,7 @@ def delete_single_post(post_id):
 
 
 
-# ======================================DELETE any user - ADMIN ONLY==================================
+# ======================================DELETE any user - ADMIN ONLY==================================================
 @admin_bp.route('/users/<int:user_id>', methods=['DELETE'])
 #Route protected by JWT
 @jwt_required()
@@ -60,7 +60,7 @@ def delete_single_user(user_id):
         abort(404, description=f'User id:{user_id} does not exist')
 
 
-# ======================================Grant admin rights to any user - ADMIN ONLY==================================
+# ======================================Grant admin rights to any user - ADMIN ONLY=====================================
 @admin_bp.route('/grant_admin/<int:user_id>', methods=['PATCH'])
 #Route protected by JWT
 @jwt_required()
@@ -86,9 +86,7 @@ def revoke_admin_rights(user_id):
     return grant_revoke_admin(user_id, False, 'does not have', 'revoked', 'from')
 
 
-# ======================================Function def - Revoke/grant access==================================
-
-
+# ======================================Function def - Revoke/grant access==============================================
 def grant_revoke_admin(user_id, admin_bool, string_1, string_2, string_3):
     #create query statement to return a single Post with the id of the route variable
     stmt = db.select(User).filter_by(id=user_id)

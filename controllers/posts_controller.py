@@ -10,7 +10,7 @@ from flask_jwt_extended import jwt_required
 posts_bp = Blueprint('posts', __name__, url_prefix='/posts')
 
 
-# ======================================CREATE a single post==================================
+# ======================================CREATE a new post==================================
 @posts_bp.route('/', methods=['POST'])
 def create_single_post():
     #create a new instance of Post class to store request.json data
@@ -91,24 +91,3 @@ def edit_single_post(post_id):
     #else provide an error message and 404 resource not found code
     else:
         abort(404, description=f'Post {post_id} does not exist')
-
-
-# # ======================================DELETE a single post==================================
-# @posts_bp.route('<int:post_id>', methods=['DELETE'])
-# @jwt_required()
-# def delete_single_post(post_id):
-#     admin_access()
-    
-#     #create query statement to return a single Post with the id of the route variable
-#     stmt = db.select(Post).filter_by(id=post_id)
-#     #scalar will return a single post where the id matches post_id and assign the result to the post variable
-#     post = db.session.scalar(stmt)
-
-#     #if the post exists then use Schema to return json serialized version of the query statement
-#     #else provide an error message and 404 resource not found code
-#     if post:
-#         db.session.delete(post)
-#         db.session.commit()
-#         return {'Message': f'You successfully deleted the post id {post_id}: \'{post.title}\'.'}
-#     else:
-#         abort(404, description=f'Post {post_id} does not exist')

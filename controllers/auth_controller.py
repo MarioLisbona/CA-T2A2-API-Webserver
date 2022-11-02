@@ -61,7 +61,7 @@ def login_user():
 
 
 
-# ==========================function to check if token links to a valid user===================================
+# ==========================function to check if token is valid and user is admin===================================
 def admin_access():
     #get identity from JWT token 
     user_id = get_jwt_identity()

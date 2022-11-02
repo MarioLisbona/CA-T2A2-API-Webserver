@@ -2,7 +2,7 @@ from init import db, ma
 from marshmallow import fields
 from marshmallow.validate import Length, And, Regexp, OneOf
 
-VALID_TAGS = ('Travel', 'Tech', 'Snowboarding', 'Surfing', 'Foiling', 'Food', 'Pets')
+VALID_TAGS = ('Travel', 'Tech', 'Snowboarding', 'Surfing', 'Foiling', 'Food', 'Pets', 'Music')
 
 class Post(db.Model):
     #assigning a table name to the model
@@ -21,6 +21,7 @@ class Post(db.Model):
 #marshmallow schema to handle converting the database objects from the posts table into serialised objects
 class PostSchema(ma.Schema):
     #validation of data inputs
+
     #validating title input - need sto be at least 3 characters long, contain
     #only letters numbers and spaces
     title = fields.String(required=True, validate=And(

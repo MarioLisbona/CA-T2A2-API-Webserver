@@ -10,7 +10,7 @@ from flask_jwt_extended import jwt_required
 posts_bp = Blueprint('posts', __name__, url_prefix='/posts')
 
 
-# ======================================CREATE a new post==================================
+# ======================================CREATE a new post - any registered user==================================
 @posts_bp.route('/', methods=['POST'])
 #Route protected by JWT
 @jwt_required()
@@ -44,7 +44,7 @@ def create_single_post():
         }
 
 
-# ======================================READ all posts==================================
+# ======================================READ all posts - any registered user==================================
 @posts_bp.route('/')
 #Route protected by JWT
 @jwt_required()
@@ -60,7 +60,7 @@ def get_all_posts():
 
 
 
-# ======================================READ a single post==================================
+# ======================================READ a single post - any registered user==================================
 @posts_bp.route('<int:post_id>')
 #Route protected by JWT
 @jwt_required()
@@ -79,7 +79,7 @@ def get_single_post(post_id):
         abort(404, description=f'Post {post_id} does not exist')
 
 
-# ======================================UPDATE a single post==================================
+# ======================================UPDATE a single post - any POST OWNER==================================
 @posts_bp.route('<int:post_id>', methods=['PUT', 'PATCH'])
 #Route protected by JWT
 @jwt_required()

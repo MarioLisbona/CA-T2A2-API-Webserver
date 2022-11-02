@@ -3,14 +3,22 @@ from datetime import date
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from init import db, bcrypt
 from models.user import User, UserSchema
+from controllers.auth_controller import admin_access
+from flask_jwt_extended import jwt_required
 
 #creating Blueprint for users
 users_bp = Blueprint('users', __name__, url_prefix='/users')
 
 
-# ======================================READ all users==================================
+# ======================================READ all users - ADMIN ONLY==================================
 @users_bp.route('/')
+#Route protected by JWT
+@jwt_required()
 def get_all_users():
+
+    #Read any user protected by admin rights
+    #admin_access will abort if is_admin is False
+    admin_access()
 
     #create query statement to return all records in Post table sort by alphabetically
     stmt = db.select(User).order_by(User.l_name, User.f_name)
@@ -21,9 +29,19 @@ def get_all_users():
     return UserSchema(many=True, exclude=['password']).dump(users)
 
 
-# ======================================READ a single user==================================
+# ======================================READ a single user - ADMIN or Profile Owner==================================
 @users_bp.route('<int:user_id>')
+#Route protected by JWT
+@jwt_required()
 def get_single_post(user_id):
+
+    # if token is not the owner of this user profile then check to see if they are an admin
+    #need to cast strings to int for comparison to work
+    if int(user_id) != int(get_jwt_identity()):
+
+        #Read any user protected by admin rights
+        #admin_access will abort if is_admin is False
+        admin_access()
     
     #create query statement to return a single user with the id of the route variable
     stmt = db.select(User).filter_by(id=user_id)
@@ -38,8 +56,8 @@ def get_single_post(user_id):
         abort(404, description=f'User id:{user_id} does not exist')
 
 
-# # ======================================UPDATE a user's own profile==================================
-@users_bp.route('/edit_my_profile', methods=['PUT', 'PATCH'])
+# # ======================================UPDATE a user's profile - Profile Owner==================================
+@users_bp.route('/update_profile', methods=['PUT', 'PATCH'])
 @jwt_required()
 def edit_users_own_details():
     #retrieve the user's own id from their token

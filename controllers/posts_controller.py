@@ -22,7 +22,6 @@ def create_single_post():
         title = data['title'],
         date = date.today(),
         time = datetime.now().strftime("%H:%M:%S"),
-        # is_active = data['is_active'],
         content = data['content'],
         # tag = data['tag']
     )
@@ -82,15 +81,23 @@ def edit_single_post(post_id):
     #scalar will return a single post where the id matches post_id and assign the result to the post variable
     post = db.session.scalar(stmt)
 
+    # loading request data into the marshmallow PostSchema for validation
+    data = PostSchema().load(request.json)
+
     #if the post exists update the json data in the request or keep the existing data
+    #validate the data throught the data instance of marshmallow PostSchema
     if post:
-        post.title = request.json.get('title') or post.title
+        post.title = data['title'] or post.title
         post.date = date.today()
         post.time = datetime.now().strftime("%H:%M:%S")
-        post.is_active = request.json.get('is_active') or post.is_active
-        post.content = request.json.get('content') or post.content
-        post.tag = request.json.get('tag') or post.tag
+        post.content = data['content'] or post.content
+        # post.tag = data['tag'] or post.tag
     
+        #tags are optional
+        #if there is a tag key in the JSON request then assign it to tag variable
+        if request.json.get('tag'):
+            post.tag = data['tag']
+
         # Add new post details to the database and commit changes
         db.session.commit()
 

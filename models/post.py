@@ -25,7 +25,7 @@ class PostSchema(ma.Schema):
     #validating title input - need sto be at least 3 characters long, contain
     #only letters numbers and spaces
     title = fields.String(required=True, validate=And(
-        Length(min=3, error='Title must be minimum of 3 characters in length'),
+        Length(min=3, max=100, error='Title must be minimum of 3 characters in length and maximum of 100'),
         Regexp('^[a-zA-Z0-9 ]+$', error='Only letters and numbers and spaces are allowed')
         ))
 

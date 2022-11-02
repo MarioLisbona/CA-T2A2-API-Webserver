@@ -20,11 +20,13 @@ class User(db.Model):
 class UserSchema(ma.Schema):
     #validation of data inputs
     #first name and last name, mix 3, max 50 chars, only letters and spaces
-    f_name = fields.String(required=True, validate=And(
+    #required=True is not used here to allow for optional updates to uer profile
+    #when creating a new profile request.json key error will be raised if data is missing
+    f_name = fields.String(validate=And(
         Length(min=3, max=50, error='First name must be minimum of 3 characters in length and maximum of 50'),
         Regexp('^[a-zA-Z ]+$', error='First name can only contain letters and spaces')
     ))
-    l_name = fields.String(required=True, validate=And(
+    l_name = fields.String(validate=And(
         Length(min=3, max=50, error='Last name must be minimum of 3 characters in length and maximum of 50'),
         Regexp('^[a-zA-Z ]+$', error='Last name can only contain letters and spaces')
     ))
@@ -33,7 +35,7 @@ class UserSchema(ma.Schema):
     email = fields.Email()
 
     #validate password - between 8 and 64 chars, uppercase, lowercase, at least 1 numeric and one special character
-    password = fields.String(required=True, validate=(Regexp('((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W]).{8,64})',
+    password = fields.String(validate=(Regexp('((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W]).{8,64})',
     error='Invalid password. Password must be between 8 and 64 characters and contain a mix of upper and lower case letters, one numeric and one special character')
     ))
 

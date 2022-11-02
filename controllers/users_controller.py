@@ -39,51 +39,64 @@ def get_single_post(user_id):
 
 
 # # ======================================UPDATE a user's own profile==================================
-# @users_bp.route('/edit_my_profile', methods=['PUT', 'PATCH'])
-# @jwt_required()
-# def edit_users_own_details():
-#     #retrieve the user's own id from their token
-#     user_id = get_jwt_identity()
+@users_bp.route('/edit_my_profile', methods=['PUT', 'PATCH'])
+@jwt_required()
+def edit_users_own_details():
+    #retrieve the user's own id from their token
+    user_id = get_jwt_identity()
 
-#     #create query statement to return user from the database 
-#     stmt = db.select(User).filter_by(id=user_id)
-#     #scalar will return a single user where the id matches user_id and assign the result to the user variable
-#     user = db.session.scalar(stmt)
+    #create query statement to return user from the database 
+    stmt = db.select(User).filter_by(id=user_id)
+    #scalar will return a single user where the id matches user_id and assign the result to the user variable
+    user = db.session.scalar(stmt)
 
-#     # loading request data into the marshmallow PostSchema for validation
-#     data = UserSchema().load(request.json)
+    # loading request data into the marshmallow PostSchema for validation
+    data = UserSchema().load(request.json)
 
-#     #need an if statement here because
-#     # ID can be retrieved from a valid token even if the user has been deleted from the database by the admin
-#     # if the user exists in database, they can update any profile attributes except is_admin
-#     if user:
-#         user.f_name = data['f_name'] or user.f_name
-#         user.l_name = data['l_name'] or user.l_name
-#         # user.email = data['email'] or user.email
+    #need an if statement here because
+    # ID can be retrieved from a valid token even if the user has been deleted from the database by the admin
+    # if the user exists in database, they can update any profile attributes except is_admin
+    if user:
+        #all fields are optional when updating profile
+        #if there is a tag key in the JSON request then assign it to tag variable
 
-#         #Email should be optional when updating profile
-#         if request.json.get('email'):
-#             user.email = data['email']
+        if request.json.get('f_name'):
+            user.f_name = data['f_name']
+
+        if request.json.get('l_name'):
+            user.l_name = data['l_name']
+
+        if request.json.get('email'):
+            user.email = data['email']
         
-#         #password should also be optional - cant get this to work
-#         # #need to use if statement here - suspect its because generate_password_hash needs a return value
-#         if request.json.get('password'):
-#             user.password = bcrypt.generate_password_hash(data['password']).decode('utf-8')
+        if request.json.get('password'):
+            user.password = bcrypt.generate_password_hash(data['password']).decode('utf-8')
 
     
-#         # Add new post details to the database and commit changes
-#         db.session.commit()
+        # Add new post details to the database and commit changes
+        db.session.commit()
 
-#         #return success message and return the updated data
-#         return {
-#         'Message': f'You successfully updated the user id: {user_id} \'{user.f_name} {user.l_name}\'.',
-#         'New user details': UserSchema(exclude=['password']).dump(user)
-#         }
+        if not (request.json.get('f_name') or
+            request.json.get('l_name') or
+            request.json.get('email') or
+            request.json.get('password')
+        ):
+            return {
+        'Message': f'You made no changes to the user id: {user_id} \'{user.f_name} {user.l_name}\'.',
+        'User details': UserSchema(exclude=['password']).dump(user)
+        }
+        
 
-#     #else provide an error message and 404 resource not found code
-#     else:
-#         # return {'Error': f'User {user_id} does not exist'}, 404
-#         abort(404, description=f'User {user_id} does not exist')
+        #return success message and return the updated data
+        return {
+        'Message': f'You successfully updated the user id: {user_id} \'{user.f_name} {user.l_name}\'.',
+        'New user details': UserSchema(exclude=['password']).dump(user)
+        }
+
+    #else provide an error message and 404 resource not found code
+    else:
+        # return {'Error': f'User {user_id} does not exist'}, 404
+        abort(404, description=f'User {user_id} does not exist')
 
 
 

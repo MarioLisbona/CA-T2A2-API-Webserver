@@ -10,7 +10,7 @@ from flask_jwt_extended import jwt_required
 users_bp = Blueprint('users', __name__, url_prefix='/users')
 
 
-# ======================================READ all users - ADMIN ONLY==================================
+# ======================================READ all user profiles - ADMIN ONLY==================================
 @users_bp.route('/')
 #Route protected by JWT
 @jwt_required()
@@ -29,7 +29,7 @@ def get_all_users():
     return UserSchema(many=True, exclude=['password']).dump(users)
 
 
-# ======================================READ a single user - ADMIN or Profile Owner==================================
+# ======================================READ a single user profile - ADMIN or Profile Owner==================================
 @users_bp.route('<int:user_id>')
 #Route protected by JWT
 @jwt_required()

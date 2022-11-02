@@ -79,7 +79,7 @@ def get_single_post(post_id):
         abort(404, description=f'Post {post_id} does not exist')
 
 
-# ======================================UPDATE a single post - any POST OWNER==================================
+# ======================================UPDATE a single post - POST OWNER==================================
 @posts_bp.route('<int:post_id>', methods=['PUT', 'PATCH'])
 #Route protected by JWT
 @jwt_required()

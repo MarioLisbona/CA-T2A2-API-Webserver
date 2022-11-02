@@ -36,6 +36,14 @@ def delete_single_post(post_id):
 
 
 
+# # =============================deactivate any post - ADMIN ONLY========================================================
+# @admin_bp.route('/posts/<int:post_id>', methods=['DELETE'])
+# #Route protected by JWT
+# @jwt_required()
+# def deactivate_single_post(post_id):
+
+
+
 # ======================================DELETE any user - ADMIN ONLY==================================================
 @admin_bp.route('/users/<int:user_id>', methods=['DELETE'])
 #Route protected by JWT
@@ -61,7 +69,7 @@ def delete_single_user(user_id):
 
 
 # ======================================Grant admin rights to any user - ADMIN ONLY=====================================
-@admin_bp.route('/grant_admin/<int:user_id>', methods=['PATCH'])
+@admin_bp.route('/grant_admin/users/<int:user_id>', methods=['PATCH'])
 #Route protected by JWT
 @jwt_required()
 def grant_admin_rights(user_id):
@@ -74,7 +82,7 @@ def grant_admin_rights(user_id):
 
 
 # ======================================Revoke admin rights from any user - ADMIN ONLY==================================
-@admin_bp.route('/revoke_admin/<int:user_id>', methods=['PATCH'])
+@admin_bp.route('/revoke_admin/users/<int:user_id>', methods=['PATCH'])
 #Route protected by JWT
 @jwt_required()
 def revoke_admin_rights(user_id):

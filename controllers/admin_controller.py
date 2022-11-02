@@ -59,3 +59,33 @@ def delete_single_user(user_id):
     else:
         abort(404, description=f'User id:{user_id} does not exist')
 
+
+# ======================================Grant admin rights to any user - ADMIN ONLY==================================
+@admin_bp.route('/grant_access/<int:user_id>', methods=['PATCH'])
+#Route protected by JWT
+@jwt_required()
+def make_user_admin(user_id):
+    # delete user protected by admin rights
+    #admin_access will abort if is_admin is False
+    admin_access()
+    
+    #create query statement to return a single Post with the id of the route variable
+    stmt = db.select(User).filter_by(id=user_id)
+    #scalar will return a single post where the id matches post_id and assign the result to the post variable
+    user = db.session.scalar(stmt)
+
+    #if the post exists then change their is_admin attribute to True
+    #else provide an error message and 404 resource not found code
+    if user:
+        if user.is_admin:
+            return {'Message': f'User id: {user_id} \'{user.f_name} {user.l_name}\' already has Admin privileges'}
+
+        user.is_admin = True
+        db.session.commit()
+        
+        return {'Message': f'You successfully granted Admin privileges to the user id: {user_id} \'{user.f_name} {user.l_name}\'.',
+        'New user details': UserSchema(exclude=['password']).dump(user)
+        }
+    else:
+        abort(404, description=f'User id:{user_id} does not exist')
+

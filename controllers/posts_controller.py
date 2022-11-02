@@ -14,13 +14,16 @@ posts_bp = Blueprint('posts', __name__, url_prefix='/posts')
 @posts_bp.route('/', methods=['POST'])
 def create_single_post():
 
+    # loading request data into the marshmallow PostSchema for validation
+    data = PostSchema().load(request.json)
+
     #create a new instance of Post class to store request.json data
     post = Post(
-        title = request.json['title'],
+        title = data['title'],
         date = date.today(),
-        is_active = request.json['is_active'],
-        content = request.json['content'],
-        tag = request.json['tag']
+        is_active = data['is_active'],
+        content = data['content'],
+        tag = data['tag']
     )
     # Add new post details to the database and commit changes
     db.session.add(post)

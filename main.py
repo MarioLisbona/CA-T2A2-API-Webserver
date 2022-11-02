@@ -65,6 +65,11 @@ def create_forum():
     def key_error(err):
         return {'error': f'the field {err} is required'}, 400
 
+    # # #ValidationError error handler
+    @app.errorhandler(ValidationError)
+    def validation_error(err):
+        return {'error': err.messages}, 400
+
     return app
 
 

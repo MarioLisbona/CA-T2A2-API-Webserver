@@ -50,17 +50,26 @@ def edit_users_own_details():
     #scalar will return a single user where the id matches user_id and assign the result to the user variable
     user = db.session.scalar(stmt)
 
+    # loading request data into the marshmallow PostSchema for validation
+    data = UserSchema().load(request.json)
+
     #need an if statement here because
     # ID can be retrieved from a valid token even if the user has been deleted from the database by the admin
     # if the user exists in database, they can update any profile attributes except is_admin
     if user:
-        user.f_name = request.json.get('f_name') or user.f_name
-        user.l_name = request.json.get('l_name') or user.l_name
-        user.email = request.json.get('email') or user.email
+        user.f_name = data['f_name'] or user.f_name
+        user.l_name = data['l_name'] or user.l_name
+        # user.email = data['email'] or user.email
 
-        #need to use if statement here - suspect its because generate_password_hash needs a return value
+        #Email should be optional when updating profile
+        if request.json.get('email'):
+            user.email = data['email']
+        
+        #password should also be optional - cant get this to work
+        # #need to use if statement here - suspect its because generate_password_hash needs a return value
         if request.json.get('password'):
-            user.password = bcrypt.generate_password_hash(request.json.get('password')).decode('utf-8')
+            user.password = bcrypt.generate_password_hash(data['password']).decode('utf-8')
+
     
         # Add new post details to the database and commit changes
         db.session.commit()

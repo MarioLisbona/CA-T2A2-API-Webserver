@@ -28,6 +28,9 @@ class PostSchema(ma.Schema):
         Regexp('^[a-zA-Z0-9 ]+$', error='Only letters and numbers and spaces are allowed')
         ))
 
+    #validating content - minimum of 3 characters in length and max of 2,000 characters (roughly 300-500 words)
+    content = fields.String(required=True, validate=(Length(min=100, max=2000)))
+
     #validating tags input
     #tags can only be ones that are listed in the VALID_TAGS tuple
     tag = fields.String(validate=OneOf(VALID_TAGS))

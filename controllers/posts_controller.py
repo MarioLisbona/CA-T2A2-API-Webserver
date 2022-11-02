@@ -22,10 +22,15 @@ def create_single_post():
         title = data['title'],
         date = date.today(),
         time = datetime.now().strftime("%H:%M:%S"),
-        is_active = data['is_active'],
+        # is_active = data['is_active'],
         content = data['content'],
         tag = data['tag']
     )
+
+    # #if there is is_active key then assign it to is_active variable
+    # if request.json.get('is_active'):
+    #     post.is_active = data['is_active']
+
     # Add new post details to the database and commit changes
     db.session.add(post)
     db.session.commit()

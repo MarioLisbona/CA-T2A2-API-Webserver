@@ -26,9 +26,9 @@ def create_single_post():
         content = data['content'],
         # tag = data['tag']
     )
-    
+
     #tags are optional
-    # #if there is a tag key in the JSON request then assign it to tag variable
+    #if there is a tag key in the JSON request then assign it to tag variable
     if request.json.get('tag'):
         post.tag = data['tag']
 

@@ -24,12 +24,13 @@ def create_single_post():
         time = datetime.now().strftime("%H:%M:%S"),
         # is_active = data['is_active'],
         content = data['content'],
-        tag = data['tag']
+        # tag = data['tag']
     )
-
-    # #if there is is_active key then assign it to is_active variable
-    # if request.json.get('is_active'):
-    #     post.is_active = data['is_active']
+    
+    #tags are optional
+    # #if there is a tag key in the JSON request then assign it to tag variable
+    if request.json.get('tag'):
+        post.tag = data['tag']
 
     # Add new post details to the database and commit changes
     db.session.add(post)

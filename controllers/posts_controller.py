@@ -12,6 +12,8 @@ posts_bp = Blueprint('posts', __name__, url_prefix='/posts')
 
 # ======================================CREATE a new post==================================
 @posts_bp.route('/', methods=['POST'])
+#Route protected by JWT
+@jwt_required()
 def create_single_post():
 
     # loading request data into the marshmallow PostSchema for validation
@@ -44,6 +46,8 @@ def create_single_post():
 
 # ======================================READ all posts==================================
 @posts_bp.route('/')
+#Route protected by JWT
+@jwt_required()
 def get_all_posts():
 
     #create query statement to return all records in Post table sort by newest first
@@ -55,8 +59,11 @@ def get_all_posts():
     return PostSchema(many=True).dump(posts)
 
 
+
 # ======================================READ a single post==================================
 @posts_bp.route('<int:post_id>')
+#Route protected by JWT
+@jwt_required()
 def get_single_post(post_id):
     
     #create query statement to return a single Post with the id of the route variable
@@ -74,6 +81,8 @@ def get_single_post(post_id):
 
 # ======================================UPDATE a single post==================================
 @posts_bp.route('<int:post_id>', methods=['PUT', 'PATCH'])
+#Route protected by JWT
+@jwt_required()
 def edit_single_post(post_id):
     
     #create query statement to return a single Post with the id of the route variable

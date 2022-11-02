@@ -4,7 +4,7 @@ import flask_jwt_extended
 from sqlalchemy.exc import IntegrityError
 from init import db, bcrypt
 from models.user import User, UserSchema
-from models.post import Post
+from models.post import Post, PostSchema
 from controllers.auth_controller import admin_access
 from flask_jwt_extended import jwt_required, create_access_token, get_jwt_identity
 
@@ -12,10 +12,11 @@ from flask_jwt_extended import jwt_required, create_access_token, get_jwt_identi
 admin_bp = Blueprint('admin', __name__, url_prefix='/admin')
 
 # =============================DELETE any post - ADMIN ONLY========================================================
-@admin_bp.route('/posts/<int:post_id>', methods=['DELETE'])
+@admin_bp.route('/posts/<int:post_id>/delete/', methods=['DELETE'])
 #Route protected by JWT
 @jwt_required()
 def delete_single_post(post_id):
+
     # delete post protected by admin rights
     #admin_access will abort if is_admin is False
     admin_access()
@@ -37,18 +38,39 @@ def delete_single_post(post_id):
 
 
 # # =============================deactivate any post - ADMIN ONLY========================================================
-# @admin_bp.route('/posts/<int:post_id>', methods=['DELETE'])
-# #Route protected by JWT
-# @jwt_required()
-# def deactivate_single_post(post_id):
+@admin_bp.route('/posts/<int:post_id>/deactivate/', methods=['PATCH'])
+#Route protected by JWT
+@jwt_required()
+def deactivate_single_post(post_id):
 
+    # delete post protected by admin rights
+    #admin_access will abort if is_admin is False
+    admin_access()
+
+    #call function to deactivate post
+    return activate_deactivate_post(post_id, False, 'deactivated')
+
+
+# # =============================activate any post - ADMIN ONLY========================================================
+@admin_bp.route('/posts/<int:post_id>/activate/', methods=['PATCH'])
+#Route protected by JWT
+@jwt_required()
+def activate_single_post(post_id):
+
+    # delete post protected by admin rights
+    #admin_access will abort if is_admin is False
+    admin_access()
+
+    #call function to activate post
+    return activate_deactivate_post(post_id, True, 'activated')
 
 
 # ======================================DELETE any user - ADMIN ONLY==================================================
-@admin_bp.route('/users/<int:user_id>', methods=['DELETE'])
+@admin_bp.route('/users/<int:user_id>/delete/', methods=['DELETE'])
 #Route protected by JWT
 @jwt_required()
 def delete_single_user(user_id):
+
     # delete user protected by admin rights
     #admin_access will abort if is_admin is False
     admin_access()
@@ -69,10 +91,11 @@ def delete_single_user(user_id):
 
 
 # ======================================Grant admin rights to any user - ADMIN ONLY=====================================
-@admin_bp.route('/grant_admin/users/<int:user_id>', methods=['PATCH'])
+@admin_bp.route('/users/<int:user_id>/grant_admin/', methods=['PATCH'])
 #Route protected by JWT
 @jwt_required()
 def grant_admin_rights(user_id):
+
     # delete user protected by admin rights
     #admin_access will abort if is_admin is False
     admin_access()
@@ -82,10 +105,11 @@ def grant_admin_rights(user_id):
 
 
 # ======================================Revoke admin rights from any user - ADMIN ONLY==================================
-@admin_bp.route('/revoke_admin/users/<int:user_id>', methods=['PATCH'])
+@admin_bp.route('/users/<int:user_id>/revoke_admin/', methods=['PATCH'])
 #Route protected by JWT
 @jwt_required()
 def revoke_admin_rights(user_id):
+    
     # delete user protected by admin rights
     #admin_access will abort if is_admin is False
     admin_access()
@@ -118,4 +142,30 @@ def grant_revoke_admin(user_id, admin_bool, string_1, string_2, string_3):
         }
     else:
         abort(404, description=f'User id:{user_id} does not exist')
+
+
+# ======================================Function def - activate/deactivate a Post==============================================
+def activate_deactivate_post(post_id, active_bool, status):
+    #create query statement to return a single Post with the id of the route variable
+    stmt = db.select(Post).filter_by(id=post_id)
+    #scalar will return a single post where the id matches post_id and assign the result to the post variable
+    post = db.session.scalar(stmt)
+
+    #if the post exists then change their is_admin attribute to True
+    #else provide an error message and 404 resource not found code
+    if post:
+        #Message displaying that the user already has admin rights
+        if active_bool == post.is_active:
+            return {'Message': f'Post id{post_id} titled - \'{post.title}\' is already {status}'}
+
+        #user does not have admin rights - change is_admin to True and commit to database
+        post.is_active = active_bool
+        db.session.commit()
+
+        #return message with new user details
+        return {'Message': f'You successfully {status} the post: id{post_id} titled - \'{post.title}\'.',
+        'New user details': PostSchema().dump(post)
+        }
+    else:
+        abort(404, description=f'Post id:{post_id} does not exist')
 

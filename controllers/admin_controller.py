@@ -61,10 +61,10 @@ def delete_single_user(user_id):
 
 
 # ======================================Grant admin rights to any user - ADMIN ONLY==================================
-@admin_bp.route('/grant_access/<int:user_id>', methods=['PATCH'])
+@admin_bp.route('/grant_admin/<int:user_id>', methods=['PATCH'])
 #Route protected by JWT
 @jwt_required()
-def make_user_admin(user_id):
+def grant_admin_rights(user_id):
     # delete user protected by admin rights
     #admin_access will abort if is_admin is False
     admin_access()
@@ -77,13 +77,49 @@ def make_user_admin(user_id):
     #if the post exists then change their is_admin attribute to True
     #else provide an error message and 404 resource not found code
     if user:
+        #Message displaying that the user already has admin rights
         if user.is_admin:
-            return {'Message': f'User id: {user_id} \'{user.f_name} {user.l_name}\' already has Admin privileges'}
+            return {'Message': f'User id: {user_id} \'{user.f_name} {user.l_name}\' already has admin privileges'}
 
+        #user does not have admin rights - change is_admin to True and commit to database
         user.is_admin = True
         db.session.commit()
-        
-        return {'Message': f'You successfully granted Admin privileges to the user id: {user_id} \'{user.f_name} {user.l_name}\'.',
+
+        #return message with new user details
+        return {'Message': f'You successfully granted admin privileges to the user id: {user_id} \'{user.f_name} {user.l_name}\'.',
+        'New user details': UserSchema(exclude=['password']).dump(user)
+        }
+    else:
+        abort(404, description=f'User id:{user_id} does not exist')
+
+
+# ======================================Revoke admin rights from any user - ADMIN ONLY==================================
+@admin_bp.route('/revoke_admin/<int:user_id>', methods=['PATCH'])
+#Route protected by JWT
+@jwt_required()
+def revoke_admin_rights(user_id):
+    # delete user protected by admin rights
+    #admin_access will abort if is_admin is False
+    admin_access()
+    
+    #create query statement to return a single Post with the id of the route variable
+    stmt = db.select(User).filter_by(id=user_id)
+    #scalar will return a single post where the id matches post_id and assign the result to the post variable
+    user = db.session.scalar(stmt)
+
+    #if the post exists then change their is_admin attribute to True
+    #else provide an error message and 404 resource not found code
+    if user:
+        #Message displaying that the user already has admin rights
+        if not user.is_admin:
+            return {'Message': f'User id: {user_id} \'{user.f_name} {user.l_name}\' does not have admin privileges'}
+
+        #user does not have admin rights - change is_admin to True and commit to database
+        user.is_admin = False
+        db.session.commit()
+
+        #return message with new user details
+        return {'Message': f'You successfully revoked admin privileges for the user id: {user_id} \'{user.f_name} {user.l_name}\'.',
         'New user details': UserSchema(exclude=['password']).dump(user)
         }
     else:

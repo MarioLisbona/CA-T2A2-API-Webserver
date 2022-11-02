@@ -13,6 +13,7 @@ posts_bp = Blueprint('posts', __name__, url_prefix='/posts')
 # ======================================CREATE a new post==================================
 @posts_bp.route('/', methods=['POST'])
 def create_single_post():
+
     #create a new instance of Post class to store request.json data
     post = Post(
         title = request.json['title'],

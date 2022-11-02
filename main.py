@@ -6,6 +6,7 @@ from controllers.posts_controller import posts_bp
 from controllers.users_controller import users_bp
 from controllers.auth_controller import auth_bp
 from controllers.admin_controller import admin_bp
+from marshmallow.exceptions import ValidationError
 import os
 
 
@@ -52,22 +53,22 @@ def create_forum():
     #not found, 404, error handler
     @app.errorhandler(404)
     def not_found(err):
-        return {'error': str(err)}
+        return {'error': str(err)}, 404
 
     #conflict, 409, error handler
     @app.errorhandler(409)
     def conflict(err):
         return {'error': str(err)}, 409
 
-    # # #KeyError error handler
-    # @app.errorhandler(KeyError)
-    # def key_error(err):
-    #     return {'error': f'the field {err} is required'}, 400
+    # #KeyError error handler
+    @app.errorhandler(KeyError)
+    def key_error(err):
+        return {'error': f'the field {err} is required'}, 400
 
     # # #ValidationError error handler
-    # @app.errorhandler(ValidationError)
-    # def validation_error(err):
-    #     return {'error': err.messages}, 400
+    @app.errorhandler(ValidationError)
+    def validation_error(err):
+        return {'error': err.messages}, 400
 
     return app
 

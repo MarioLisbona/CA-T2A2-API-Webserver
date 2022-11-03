@@ -46,10 +46,10 @@ class PostSchema(ma.Schema):
 
 
     user = fields.Nested('UserSchema', only=['f_name', 'l_name', 'email'])
-    # replies = fields.List(fields.Nested('ReplySchema', exclude=['card']))
+    replies = fields.List(fields.Nested('ReplySchema', exclude=['post']))
 
     class Meta:
-        fields = ('id', 'title', 'date', 'time', 'is_active', 'content', 'tag', 'user')
+        fields = ('id', 'title', 'date', 'time', 'is_active', 'content', 'tag', 'user', 'replies')
         ordered = True
 
     

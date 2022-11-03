@@ -33,9 +33,7 @@ class PostSchema(ma.Schema):
     #validating title input - need sto be at least 3 characters long, contain
     #only letters numbers and spaces
     title = fields.String(validate=And(
-        Length(min=3, max=100, error='Title must be minimum of 3 characters in length and maximum of 100'),
-        Regexp('^[a-zA-Z0-9 ]+$', error='Only letters and numbers and spaces are allowed')
-        ))
+        Length(min=3, max=100, error='Title must be minimum of 3 characters in length and maximum of 100')))
 
     #validating content - minimum of 3 characters in length and max of 2,000 characters (roughly 300-500 words)
     content = fields.String(validate=(Length(min=100, max=2000)))

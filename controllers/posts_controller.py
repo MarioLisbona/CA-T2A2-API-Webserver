@@ -1,10 +1,11 @@
 from flask import Blueprint, request, abort
+from sqlalchemy import and_
 from datetime import date, datetime
 import flask_jwt_extended
 from init import db
 from models.post import Post, PostSchema
 from controllers.auth_controller import admin_access
-from flask_jwt_extended import jwt_required
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 #creating Blueprint for posts
 posts_bp = Blueprint('posts', __name__, url_prefix='/posts')
@@ -84,9 +85,17 @@ def get_single_post(post_id):
 #Route protected by JWT
 @jwt_required()
 def edit_single_post(post_id):
-    
-    #create query statement to return a single Post with the id of the route variable
+    #create query statement to return a single Post with the id of the route variable post_id
+    #to ascertain if route variable is a valid post for else statements below
     stmt = db.select(Post).filter_by(id=post_id)
+    post_valid = db.session.scalar(stmt)
+
+    # create query to find the post with id that matches route variable and user matches get_jwt_identity
+    #this means the post is in the database and the user trying to edit the post is the creator/owner
+    stmt = db.select(Post).where(and_(
+        Post.id == post_id,
+        Post.user_id == get_jwt_identity()
+    ))
     #scalar will return a single post where the id matches post_id and assign the result to the post variable
     post = db.session.scalar(stmt)
 
@@ -122,6 +131,10 @@ def edit_single_post(post_id):
         'Message': f'You successfully updated post id:{post.id} titled \'{post.title}\'.',
         'Post details': PostSchema().dump(post)
         }
-    #else provide an error message and 404 resource not found code
-    else:
+
+    #else if post is not in the database provide an error message and 404 resource not found code
+    elif not post_valid:
         abort(404, description=f'Post {post_id} does not exist')
+    #else post is in the database but the user is not the owner of the post
+    else:
+        abort(401, description=f'You are not the owner of this post')

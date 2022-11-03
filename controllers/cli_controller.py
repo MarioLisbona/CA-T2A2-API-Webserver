@@ -29,46 +29,6 @@ def create_db_tables():
 @db_commands.cli.command('seed')
 def seed_db_tables():
 
-    #creating a list of instances from the Post class
-    posts = [
-        Post(
-            title = 'Traveling to Indonesia',
-            date = date.today(),
-            time = datetime.now().strftime("%H:%M:%S"),
-            is_active = True,
-            content = "The Mentawai islands are a chain of islands 90 nautical miles off North Sumatra and they have some of the best waves in th world. Its also an exceptionally beautiful part of the world, The     mentawai islands are a chain of islands 90 nautical miles off North Sumatra and they have some of the best waves in th world. Its also an exceptionally beautiful part of the world., The mentawai islands are a chain of islands 90 nautical miles off North Sumatra and they have some of the best waves in th world. Its also an exceptionally beautiful part of the world., The mentawai islands are a chain of islands 90 nautical miles off North Sumatra and they have some of the best waves in th world. Its also an exceptionally beautiful part of the world.",
-            tag = 'Travel'
-        ),
-        Post(
-            title = 'Traveling to Alaska',
-            date = date.today(),
-            is_active = False,
-            time = datetime.now().strftime("%H:%M:%S"),
-            content = "The joined the same friend i went to Alaska with to explore the alps in Austria. They're, huge, beautiful, scary and so fun all at the same time. The culture, food, and people are so nice. And the sauna's are eveywhere and the best way to recover after a day snowboarding powder. The joined the same friend i went to Alaska with to explore the alps in Austria. They're, huge, beautiful, scary and so fun all at the same time. The culture, food, and people are so nice. And the sauna's are everywhere and the best way to recover after a day snowboarding powder. The joined the same friend i went to Alaska with to explore the alps in Austria. They're, huge, beautiful, scary and so fun all at the same time. The culture, food, and people are so nice. And the sauna's are everywhere and the best way to recover after a day snowboarding powder.",
-            tag = 'Travel'
-        ),
-        Post(
-            title = 'Learning to Code',
-            date = datetime(2020, 5, 17),  #TESTING FOR NEWEST DATES FIRST
-            time = datetime.now().strftime("%H:%M:%S"),
-            is_active = True,
-            content = "Some information about my experience learning how to code.Some information about my experience learning how to codeSome information about my experience learning how to codeSome information about my experience learning how to codeSome information about my experience learning how to codeSome information about my experience learning how to codeSome information about my experience learning how to codeSome information about my experience learning how to codeSome information about my experience learning how to codeSome information about my experience learning how to code",
-            tag = 'Education '
-        ),
-        Post(
-            title = 'Using Flask for Web Development',
-            date = datetime(2018, 5, 17), #TESTING FOR NEWEST DATES FIRST
-            time = datetime.now().strftime("%H:%M:%S"),
-            is_active = True,
-            content = "Learning how to build a web application with Flask and Python, Learning how to build a web application with Flask and PythonLearning how to build a web application with Flask and PythonLearning how to build a web application with Flask and PythonLearning how to build a web application with Flask and PythonLearning how to build a web application with Flask and Python",
-            tag = 'Tech'
-        )
-    ]
-
-    #adding the list of instances of the Post class to the database and commit the changes
-    db.session.add_all(posts)
-    db.session.commit()
-
     #creating a list of instances from the User class
 
     users = [
@@ -106,6 +66,60 @@ def seed_db_tables():
     db.session.add_all(users)
     db.session.commit()
 
+    #creating a list of instances from the Post class
+    posts = [
+        Post(
+            title = 'Traveling to Indonesia',
+            date = date.today(),
+            time = datetime.now().strftime("%H:%M:%S"),
+            is_active = True,
+            content = "The Mentawai islands are a chain of islands 90 nautical miles off North Sumatra and they have some of the best waves in th world. Its also an exceptionally beautiful part of the world, The     mentawai islands are a chain of islands 90 nautical miles off North Sumatra and they have some of the best waves in th world. Its also an exceptionally beautiful part of the world., The mentawai islands are a chain of islands 90 nautical miles off North Sumatra and they have some of the best waves in th world. Its also an exceptionally beautiful part of the world., The mentawai islands are a chain of islands 90 nautical miles off North Sumatra and they have some of the best waves in th world. Its also an exceptionally beautiful part of the world.",
+            tag = 'Travel',
+            user = users[0]
+        ),
+        Post(
+            title = 'Traveling to Alaska',
+            date = date.today(),
+            is_active = False,
+            time = datetime.now().strftime("%H:%M:%S"),
+            content = "The joined the same friend i went to Alaska with to explore the alps in Austria. They're, huge, beautiful, scary and so fun all at the same time. The culture, food, and people are so nice. And the sauna's are eveywhere and the best way to recover after a day snowboarding powder. The joined the same friend i went to Alaska with to explore the alps in Austria. They're, huge, beautiful, scary and so fun all at the same time. The culture, food, and people are so nice. And the sauna's are everywhere and the best way to recover after a day snowboarding powder. The joined the same friend i went to Alaska with to explore the alps in Austria. They're, huge, beautiful, scary and so fun all at the same time. The culture, food, and people are so nice. And the sauna's are everywhere and the best way to recover after a day snowboarding powder.",
+            tag = 'Travel',
+            user = users[0]
+        ),
+        Post(
+            title = 'Learning to Code',
+            date = datetime(2020, 5, 17),  #TESTING FOR NEWEST DATES FIRST
+            time = datetime.now().strftime("%H:%M:%S"),
+            is_active = True,
+            content = "Some information about my experience learning how to code.Some information about my experience learning how to codeSome information about my experience learning how to codeSome information about my experience learning how to codeSome information about my experience learning how to codeSome information about my experience learning how to codeSome information about my experience learning how to codeSome information about my experience learning how to codeSome information about my experience learning how to codeSome information about my experience learning how to code",
+            tag = 'Education',
+            user = users[3]
+        ),
+        Post(
+            title = 'Using Flask for Web Development',
+            date = datetime(2018, 5, 17), #TESTING FOR NEWEST DATES FIRST
+            time = datetime.now().strftime("%H:%M:%S"),
+            is_active = True,
+            content = "Learning how to build a web application with Flask and Python, Learning how to build a web application with Flask and PythonLearning how to build a web application with Flask and PythonLearning how to build a web application with Flask and PythonLearning how to build a web application with Flask and PythonLearning how to build a web application with Flask and Python",
+            tag = 'Tech',
+            user = users[2]
+        ),
+        Post(
+            title = 'Using Flask for Web Development',
+            date = datetime(2007, 5, 17), #TESTING FOR NEWEST DATES FIRST
+            time = datetime.now().strftime("%H:%M:%S"),
+            is_active = True,
+            content = "Learning how to build a web application with Flask and Python, Learning how to build a web application with Flask and PythonLearning how to build a web application with Flask and PythonLearning how to build a web application with Flask and PythonLearning how to build a web application with Flask and PythonLearning how to build a web application with Flask and Python. In this post im trying to create reltionships between ORM models PythonLearning how to build a web application with Flask and PythonLearning how to build a web application with Flask and PythonLearning how to build a web application with Flask and Python. In this post im trying to create reltionships between ORM modelsPythonLearning how to build a web application with Flask and PythonLearning how to build a web application with Flask and PythonLearning how to build a web application with Flask and Python. In this post im trying to create reltionships between ORM models",
+            tag = 'Tech',
+            user = users[1]
+        )
+    ]
+
+    #adding the list of instances of the Post class to the database and commit the changes
+    db.session.add_all(posts)
+    db.session.commit()
+
+
     
     
     #creating a list of instances from the Reply class
@@ -114,26 +128,36 @@ def seed_db_tables():
             reply = "I'd love to travel to indonesia one day and visit the mentwai islands to surf, I'd love to travel to indonesia one day and visit the mentwai islands to surf, I'd love to travel to indonesia one day and visit the mentwai islands to surf",
             date = date.today(),
             time = datetime.now().strftime("%H:%M:%S"),
+            user = users[1],
+            post = posts[1]
         ),
         Reply(
             reply = "I'd love to travel to Alaska one day to snowboard the backcountry terrain, I'd love to travel to Alaska one day to snowboard the backcountry terrain,I'd love to travel to Alaska one day to snowboard the backcountry terrain,I'd love to travel to Alaska one day to snowboard the backcountry terrain,",
             date = date.today(),
             time = datetime.now().strftime("%H:%M:%S"),
+            user = users[1],
+            post = posts[1]
         ),
         Reply(
             reply = "That sounds great, id love to learn to code as well, That sounds great, id love to learn to code as well",
             date = date.today(),
             time = datetime.now().strftime("%H:%M:%S"),
+            user = users[2],
+            post = posts[2]
         ),
         Reply(
             reply = "I am also learning how to use Python with Flask to develop web applications.",
             date = date.today(),
             time = datetime.now().strftime("%H:%M:%S"),
+            user = users[2],
+            post = posts[4]
         ),
         Reply(
             reply = "I'm not sure i agree with your view on this topic",
             date = date.today(),
             time = datetime.now().strftime("%H:%M:%S"),
+            user = users[3],
+            post = posts[3]
         )
     ]
 

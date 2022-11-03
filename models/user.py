@@ -16,6 +16,13 @@ class User(db.Model):
     is_admin = db.Column(db.Boolean, default=False)
 
 
+    #establishing relationship with users and replies models
+    #establishing user property in Post model
+    #establishing user property in Reply model
+    posts = db.relationship('Post', back_populates='user', cascade='all, delete')
+    replies = db.relationship('Reply', back_populates='user', cascade='all, delete')
+
+
 #marshmallow schema to handle converting the database objects from the users table into serialised objects
 class UserSchema(ma.Schema):
     #validation of data inputs
@@ -39,6 +46,10 @@ class UserSchema(ma.Schema):
     error='Invalid password. Password must be between 8 and 64 characters and contain a mix of upper and lower case letters, one numeric and one special character')
     ))
 
+
+    posts = fields.List(fields.Nested('PostSchema', exclude=['user']))
+    replies = fields.List(fields.Nested('ReplySchema', exclude=['user']))
+
     class Meta:
-        fields = ('id', 'f_name', 'l_name', 'email', 'password', 'is_admin')
+        fields = ('id', 'f_name', 'l_name', 'email', 'password', 'is_admin', 'posts', 'replies')
         ordered = True

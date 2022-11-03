@@ -153,6 +153,9 @@ def create_reply(post_id):
     #loading data into Marshmallow Schema for validation
     data = ReplySchema().load(request.json)
 
+    #posts exists so create an instance of the Reply model to store json request data
+    #assign user_id to return value of get_jwt_identity
+    #assign replies post_id to post from the object return from database query
     if post:
         reply = Reply(
             reply = data['reply'],
@@ -162,6 +165,7 @@ def create_reply(post_id):
             post_id = post_id
         )
 
+        #add and commit changes to the database
         db.session.add(reply)
         db.session.commit()
 

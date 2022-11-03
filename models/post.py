@@ -17,11 +17,19 @@ class Post(db.Model):
     content = db.Column(db.Text, nullable=False)
     tag = db.Column(db.String(100))
 
+    #creating foreign key
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+
+    #establishing relationship with users and replies models
+    #establishing posts property in User model
+    #establishing post property in Reply model
+    user = db.relationship('User', back_populates='posts')
+    replies = db.relationship('Reply', back_populates='post', cascade='all, delete')
+
 
 #marshmallow schema to handle converting the database objects from the posts table into serialised objects
 class PostSchema(ma.Schema):
     #validation of data inputs
-
     #validating title input - need sto be at least 3 characters long, contain
     #only letters numbers and spaces
     title = fields.String(validate=And(
@@ -37,8 +45,11 @@ class PostSchema(ma.Schema):
     tag = fields.String(validate=OneOf(VALID_TAGS))
 
 
+    user = fields.Nested('UserSchema', only=['f_name', 'l_name', 'email'])
+    # replies = fields.List(fields.Nested('ReplySchema', exclude=['card']))
+
     class Meta:
-        fields = ('id', 'title', 'date', 'time', 'is_active', 'content', 'tag')
+        fields = ('id', 'title', 'date', 'time', 'is_active', 'content', 'tag', 'user')
         ordered = True
 
     

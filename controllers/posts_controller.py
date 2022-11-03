@@ -207,3 +207,16 @@ def get_all_replies_on_post(post_id):
             'Replies': ReplySchema(many=True, exclude=['post']).dump(replies)
         }
         
+# ======================================Search all posts for tags - any registered user==================================
+@posts_bp.route('/tags/<string:post_tag>')
+#Route protected by JWT
+@jwt_required()
+def get_all_tags(post_tag):
+
+    stmt = db.select(Post).filter_by(tag=post_tag)
+    posts = db.session.scalars(stmt)
+
+    if posts:
+        return PostSchema(many=True, exclude=['replies']).dump(posts)
+    else:
+        abort(404, description=f'Tag {post_tag} does not exist')

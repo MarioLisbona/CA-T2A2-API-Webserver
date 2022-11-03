@@ -4,6 +4,7 @@ from datetime import date, datetime
 import flask_jwt_extended
 from init import db
 from models.post import Post, PostSchema
+from models.reply import Reply, ReplySchema
 from controllers.auth_controller import admin_access
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
@@ -138,3 +139,37 @@ def edit_single_post(post_id):
     #else post is in the database but the user is not the owner of the post
     else:
         abort(401, description=f'You are not the owner of this post')
+
+
+# ======================================CREATE a new reply to a post - any registered user==================================
+@posts_bp.route('/<int:post_id>/reply/', methods=['POST'])
+#Route protected by JWT
+@jwt_required()
+def create_reply(post_id):
+    #create query statement to return a single Post with the id of the route variable post_id
+    stmt = db.select(Post).filter_by(id=post_id)
+    post = db.session.scalar(stmt)
+
+    #loading data into Marshmallow Schema for validation
+    data = ReplySchema().load(request.json)
+
+    if post:
+        reply = Reply(
+            reply = data['reply'],
+            date = date.today(),
+            time = datetime.now().strftime("%H:%M:%S"),
+            user_id = get_jwt_identity(),
+            post_id = post_id
+        )
+
+        db.session.add(reply)
+        db.session.commit()
+
+        #return success message and return the reply data
+        return {
+            'Message': f'You successfully replied to the post titled \'{post.title}\'',
+            'Reply details': ReplySchema().dump(reply)
+            }
+    else:
+        abort(404, description=f'Post {post_id} does not exist')
+

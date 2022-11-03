@@ -1,5 +1,5 @@
 from flask import Blueprint, request, abort
-from sqlalchemy import and_
+from sqlalchemy import and_, func
 from datetime import date, datetime
 import flask_jwt_extended
 from init import db
@@ -177,3 +177,33 @@ def create_reply(post_id):
     else:
         abort(404, description=f'Post {post_id} does not exist')
 
+
+# =============================get all replies to a post - registered user========================================================
+@posts_bp.route('/<int:post_id>/replies/', methods=['GET'])
+#Route protected by JWT
+@jwt_required()
+def get_all_replies_on_post(post_id):
+
+    #create query statement to return replies where the post_id they are replying to is same as the route variable
+    stmt = db.select(Reply).filter_by(post_id=post_id)
+    #There could be multiple replies to the same post
+    replies = db.session.scalars(stmt)
+
+    #query database to see if the post exists
+    stmt = db.select(Post).filter_by(id=post_id)
+    post = db.session.scalar(stmt)
+
+    #query database to count how many replies are on this post
+    # stmt =  db.select(Reply).func.count().filter_by(post_id=post_id)
+    # count = db.session.scalar(stmt)
+
+    #post does not exist
+    if not post:
+        abort(404, description=f'Post {post_id} does not exist')
+    else:
+        #display post title and all replies - excluding nested post content
+        return {
+            'Post': f'id:{post.id} \'{post.title}\'',
+            'Replies': ReplySchema(many=True, exclude=['post']).dump(replies)
+        }
+        

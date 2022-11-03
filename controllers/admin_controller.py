@@ -109,7 +109,7 @@ def grant_admin_rights(user_id):
 #Route protected by JWT
 @jwt_required()
 def revoke_admin_rights(user_id):
-    
+
     # delete user protected by admin rights
     #admin_access will abort if is_admin is False
     admin_access()

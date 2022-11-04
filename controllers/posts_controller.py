@@ -195,15 +195,18 @@ def get_all_replies_on_post(post_id):
     post = db.session.scalar(stmt)
 
     #query database to count how many replies are on this post
-    # stmt =  db.select(Reply).func.count().filter_by(post_id=post_id)
-    # count = db.session.scalar(stmt)
+    stmt = stmt = db.select(db.func.count()).select_from(Reply).filter_by(post_id=post_id)
+    count = db.session.scalar(stmt)
 
     #post does not exist
     if not post:
         abort(404, description=f'Post {post_id} does not exist')
     else:
-        #display post title and all replies - excluding nested post content
+        #Display post stats - number of replies
+        #display post id and title
+        #display all replies - excluding nested post content
         return {
+            'Stats': f'This post has {count} replies',
             'Post': f'id:{post.id} \'{post.title}\'',
             'Replies': ReplySchema(many=True, exclude=['post']).dump(replies)
         }

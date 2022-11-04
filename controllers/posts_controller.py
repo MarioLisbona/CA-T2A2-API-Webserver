@@ -207,7 +207,8 @@ def get_all_replies_on_post(post_id):
         #display all replies - excluding nested post content
         return {
             'Stats': f'This post has {count} replies',
-            'Post': f'id:{post.id} \'{post.title}\'',
+            # 'Post information': f'id:{post.id} \'{post.title}\'',
+            'Post information': PostSchema(only=['id', 'title']).dump(post),
             'Replies': ReplySchema(many=True, exclude=['post']).dump(replies)
         }
         

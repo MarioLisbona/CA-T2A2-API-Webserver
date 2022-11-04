@@ -14,6 +14,7 @@ class User(db.Model):
     email = db.Column(db.String(100), nullable=False, unique=True)
     password = db.Column(db.String, nullable=False)
     is_admin = db.Column(db.Boolean, default=False)
+    warnings = db.Column(db.Integer, default=0)
 
 
     #establishing relationship with users and replies models
@@ -51,5 +52,5 @@ class UserSchema(ma.Schema):
     replies = fields.List(fields.Nested('ReplySchema', exclude=['user']))
 
     class Meta:
-        fields = ('id', 'f_name', 'l_name', 'email', 'password', 'is_admin', 'posts', 'replies')
+        fields = ('id', 'f_name', 'l_name', 'email', 'password', 'is_admin', 'warnings', 'posts', 'replies')
         ordered = True

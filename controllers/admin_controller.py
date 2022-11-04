@@ -43,15 +43,21 @@ def get_forum_stats():
     stmt = stmt = db.select(db.func.count()).select_from(User).filter_by(is_admin=True)
     admins = db.session.scalar(stmt)
 
-  
+    # return {
+    #     'Active Posts': f'There are {active_posts} active posts the in the forum.',
+    #     'Archived Posts': f'There are {archived_posts} archived posts the in the forum.',
+    #     'Replies': f'There are {replies} replies posted to the forum.',
+    #     'Users': f'There are {users} registered in the forum.',
+    #     'Admins': f'There are {admins} administrators moderating the forum.',
+    #     }
 
     return {
-        'Active Posts': f'There are {active_posts} active posts the in the forum.',
-        'Archived Posts': f'There are {archived_posts} archived posts the in the forum.',
-        'Replies': f'There are {replies} replies posted to the forum.',
-        'Users': f'There are {users} registered in the forum.',
-        'Admins': f'There are {admins} administrators moderating the forum.',
-        }
+        'Active Posts': active_posts,
+        'Archived Posts': archived_posts,
+        'Replies': replies,
+        'Users': users,
+        'Administrators': admins
+    }
 
 
 # ======================================READ all user profiles - ADMIN ONLY==================================

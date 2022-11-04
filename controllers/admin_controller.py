@@ -179,13 +179,16 @@ def delete_single_user(user_id):
     stmt = db.select(User).filter_by(id=user_id)
     #scalar will return a single post where the id matches post_id and assign the result to the post variable
     user = db.session.scalar(stmt)
-
+         
     #if the post exists then use Schema to return json serialized version of the query statement
     #else provide an error message and 404 resource not found code
     if user:
-        db.session.delete(user)
-        db.session.commit()
-        return {'Message': f'You successfully deleted the user id: {user_id} \'{user.f_name} {user.l_name}\'.'}
+        if user.warnings > 3:
+            db.session.delete(user)
+            db.session.commit()
+            return {'Message': f'You successfully deleted the user id: {user_id} \'{user.f_name} {user.l_name}\'.'}
+        else:
+            return {'Message': f'You cannot deleted the user id: {user_id} \'{user.f_name} {user.l_name}\'. They still have {3 - user.warnings} community guideline violation warnings remaining.'}
     else:
         abort(404, description=f'User id:{user_id} does not exist')
 

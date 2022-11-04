@@ -5,11 +5,53 @@ from sqlalchemy.exc import IntegrityError
 from init import db, bcrypt
 from models.user import User, UserSchema
 from models.post import Post, PostSchema
+from models.reply import Reply, ReplySchema
 from controllers.auth_controller import admin_access
 from flask_jwt_extended import jwt_required, create_access_token, get_jwt_identity
 
 #creating Blueprint for users
 admin_bp = Blueprint('admin', __name__, url_prefix='/admin')
+
+
+# ======================================READ forum statistics - ADMIN ONLY==================================
+@admin_bp.route('/stats/')
+#Route protected by JWT
+@jwt_required()
+def get_forum_stats():
+
+    #Read any user protected by admin rights
+    #admin_access will abort if is_admin is False
+    admin_access()
+
+    #query database to count how many replies are posted to the forum
+    stmt = stmt = db.select(db.func.count()).select_from(Reply)
+    replies = db.session.scalar(stmt)
+
+    #query database to count how many posts are active in the forum
+    stmt = stmt = db.select(db.func.count()).select_from(Post).filter_by(is_active=True)
+    active_posts = db.session.scalar(stmt)
+
+    #query database to count how many posts are archived in the forum
+    stmt = stmt = db.select(db.func.count()).select_from(Post).filter_by(is_active=False)
+    archived_posts = db.session.scalar(stmt)
+
+    #query database to count how many user are registered in the forum
+    stmt = stmt = db.select(db.func.count()).select_from(User)
+    users = db.session.scalar(stmt)
+
+    #query database to count how many user are registered in the forum
+    stmt = stmt = db.select(db.func.count()).select_from(User).filter_by(is_admin=True)
+    admins = db.session.scalar(stmt)
+
+  
+
+    return {
+        'Active Posts': f'There are {active_posts} active posts the in the forum.',
+        'Archived Posts': f'There are {archived_posts} archived posts the in the forum.',
+        'Replies': f'There are {replies} replies posted to the forum.',
+        'Users': f'There are {users} registered in the forum.',
+        'Admins': f'There are {admins} administrators moderating the forum.',
+        }
 
 
 # ======================================READ all user profiles - ADMIN ONLY==================================

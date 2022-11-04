@@ -10,25 +10,6 @@ from flask_jwt_extended import jwt_required
 users_bp = Blueprint('users', __name__, url_prefix='/users')
 
 
-# ======================================READ all user profiles - ADMIN ONLY==================================
-@users_bp.route('/')
-#Route protected by JWT
-@jwt_required()
-def get_all_users():
-
-    #Read any user protected by admin rights
-    #admin_access will abort if is_admin is False
-    admin_access()
-
-    #create query statement to return all records in Post table sort by alphabetically
-    stmt = db.select(User).order_by(User.l_name, User.f_name)
-    #scalalars will return many results and assign to users variable
-    users = db.session.scalars(stmt)
-
-    #use Schema to return json serialized version of the query statement
-    return UserSchema(many=True, exclude=['password']).dump(users)
-
-
 # ======================================READ a single user profile - ADMIN or Profile Owner==================================
 @users_bp.route('<int:user_id>')
 #Route protected by JWT

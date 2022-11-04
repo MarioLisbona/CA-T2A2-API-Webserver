@@ -7,7 +7,6 @@ from controllers.users_controller import users_bp
 from controllers.auth_controller import auth_bp
 from controllers.admin_controller import admin_bp
 from marshmallow.exceptions import ValidationError
-# from flask_autodoc.autodoc import Autodoc
 import os
 
 

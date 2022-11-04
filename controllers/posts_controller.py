@@ -27,6 +27,7 @@ def create_single_post():
         date = date.today(),
         time = datetime.now().strftime("%H:%M:%S"),
         content = data['content'],
+        user_id = get_jwt_identity()
         # tag = data['tag']
     )
 

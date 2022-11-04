@@ -1,8 +1,11 @@
 from init import db, ma
 from marshmallow import fields
 from marshmallow.validate import Length, And, Regexp, OneOf
+import os
 
-VALID_TAGS = ('Travel', 'Tech', 'Snowboarding', 'Surfing', 'Foiling', 'Food', 'Pets', 'Music')
+# VALID_TAGS = ('Travel', 'Tech', 'Snowboarding', 'Surfing', 'Foiling', 'Food', 'Pets', 'Music')
+VALID_TAGS = os.environ.get('VALID_TAGS')
+
 
 class Post(db.Model):
     #assigning a table name to the model
@@ -40,7 +43,7 @@ class PostSchema(ma.Schema):
 
     #validating tags input
     #tags can only be ones that are listed in the VALID_TAGS tuple
-    tag = fields.String(validate=OneOf(VALID_TAGS))
+    tag = fields.String(validate=OneOf(VALID_TAGS, error=f'Must be one of: {VALID_TAGS}'))
 
 
     user = fields.Nested('UserSchema', only=['f_name', 'l_name', 'email'])

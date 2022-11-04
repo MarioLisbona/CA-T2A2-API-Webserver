@@ -11,8 +11,10 @@ from marshmallow.exceptions import ValidationError
 import os
 
 
-
+tags = 'Travel, Tech, Snowboarding, Surfing, Foiling, Food, Pets, Music'
 def create_forum():
+
+
     #Creating an instance of the Flask object
     app = Flask(__name__)
 

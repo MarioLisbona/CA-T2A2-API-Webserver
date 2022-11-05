@@ -43,15 +43,21 @@ def get_forum_stats():
     stmt = stmt = db.select(db.func.count()).select_from(User).filter_by(is_admin=True)
     admins = db.session.scalar(stmt)
 
-  
+    # return {
+    #     'Active Posts': f'There are {active_posts} active posts the in the forum.',
+    #     'Archived Posts': f'There are {archived_posts} archived posts the in the forum.',
+    #     'Replies': f'There are {replies} replies posted to the forum.',
+    #     'Users': f'There are {users} registered in the forum.',
+    #     'Admins': f'There are {admins} administrators moderating the forum.',
+    #     }
 
     return {
-        'Active Posts': f'There are {active_posts} active posts the in the forum.',
-        'Archived Posts': f'There are {archived_posts} archived posts the in the forum.',
-        'Replies': f'There are {replies} replies posted to the forum.',
-        'Users': f'There are {users} registered in the forum.',
-        'Admins': f'There are {admins} administrators moderating the forum.',
-        }
+        'Active Posts': active_posts,
+        'Archived Posts': archived_posts,
+        'Replies': replies,
+        'Users': users,
+        'Administrators': admins
+    }
 
 
 # ======================================READ all user profiles - ADMIN ONLY==================================
@@ -129,6 +135,36 @@ def activate_single_post(post_id):
     return activate_deactivate_post(post_id, True, 'activated')
 
 
+# ======================================Issue violation warning to any user - ADMIN ONLY=====================================
+@admin_bp.route('/users/<int:user_id>/issue_warning/', methods=['PATCH'])
+#Route protected by JWT
+@jwt_required()
+def issue_warning(user_id):
+
+    # delete user protected by admin rights
+    #admin_access will abort if is_admin is False
+    admin_access()
+
+    #create query statement to return a single Post with the id of the route variable
+    stmt = db.select(User).filter_by(id=user_id)
+    #scalar will return a single post where the id matches post_id and assign the result to the post variable
+    user = db.session.scalar(stmt)
+
+    if user:
+        if user.warnings < 3:
+            user.warnings += 1
+
+            db.session.commit()
+            return {'Message': f'User id:{user_id} - {user.f_name} {user.l_name} has been issued a community guidelines violation warning. They have {3 - user.warnings} remaining before they are banned'}
+        else:
+            db.session.delete(user)
+            db.session.commit()
+            return {'Message': f'User id:{user_id} - {user.f_name} {user.l_name} has had 3 community guidelines violation warning. They have been banned from using the forum'}
+    else:
+        abort(404, description=f'User id:{user_id} does not exist')
+
+
+
 # ======================================DELETE any user - ADMIN ONLY==================================================
 @admin_bp.route('/users/<int:user_id>/delete/', methods=['DELETE'])
 #Route protected by JWT
@@ -143,13 +179,16 @@ def delete_single_user(user_id):
     stmt = db.select(User).filter_by(id=user_id)
     #scalar will return a single post where the id matches post_id and assign the result to the post variable
     user = db.session.scalar(stmt)
-
+         
     #if the post exists then use Schema to return json serialized version of the query statement
     #else provide an error message and 404 resource not found code
     if user:
-        db.session.delete(user)
-        db.session.commit()
-        return {'Message': f'You successfully deleted the user id: {user_id} \'{user.f_name} {user.l_name}\'.'}
+        if user.warnings > 3:
+            db.session.delete(user)
+            db.session.commit()
+            return {'Message': f'You successfully deleted the user id: {user_id} \'{user.f_name} {user.l_name}\'.'}
+        else:
+            return {'Message': f'You cannot deleted the user id: {user_id} \'{user.f_name} {user.l_name}\'. They still have {3 - user.warnings} community guideline violation warnings remaining.'}
     else:
         abort(404, description=f'User id:{user_id} does not exist')
 

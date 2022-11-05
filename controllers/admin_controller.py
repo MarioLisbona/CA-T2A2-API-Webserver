@@ -44,11 +44,12 @@ def get_forum_stats():
     admins = db.session.scalar(stmt)
 
     return {
-        'Active Posts': active_posts,
-        'Archived Posts': archived_posts,
-        'Replies': replies,
-        'Users': users,
-        'Administrators': admins
+        'message': 'Forum Statistics',
+        'active Posts': active_posts,
+        'archived Posts': archived_posts,
+        'replies': replies,
+        'users': users,
+        'administrators': admins
     }
 
 
@@ -71,6 +72,26 @@ def get_all_users():
 
     #excluding posts, password and replies - just showing user info
     return UserSchema(many=True, exclude=['password', 'posts', 'replies']).dump(users)
+
+
+
+# ======================================READ any user profile - ADMIN ONLY==================================
+@admin_bp.route('/users/<int:user_id>/')
+#Route protected by JWT
+@jwt_required()
+def get_a_user_profile(user_id):
+    
+    #create query statement to return a single user with the id of the route variable
+    stmt = db.select(User).filter_by(id=user_id)
+    #scalar will return a single user where the id matches user_id and assign the result to the user variable
+    user = db.session.scalar(stmt)
+
+    #if the user exists then use Schema to return json serialized version of the query statement
+    #else provide an error message and 404 resource not found code
+    if user:
+        return UserSchema(exclude=['password']).dump(user)
+    else:
+        abort(404, description=f'User id:{user_id} does not exist')
 
 
 # =============================DELETE any post - ADMIN ONLY========================================================
@@ -251,15 +272,19 @@ def grant_revoke_admin(user_id, admin_bool, string_1, string_2, string_3):
     if user:
         #Message displaying that the user already has admin rights
         if admin_bool == user.is_admin:
-            return {'Message': f'User id: {user_id} \'{user.f_name} {user.l_name}\' {string_1} admin privileges'}
+            
+            return {
+                'message': f'User {string_1} admin privileges',
+                'user details': UserSchema(exclude=['password', 'posts', 'replies']).dump(user)
+                }
 
         #user does not have admin rights - change is_admin to True and commit to database
         user.is_admin = admin_bool
         db.session.commit()
 
         #return message with new user details
-        return {'Message': f'You successfully {string_2} admin privileges {string_3} the user id: {user_id} \'{user.f_name} {user.l_name}\'.',
-        'New user details': UserSchema(exclude=['password']).dump(user)
+        return {'message': f'You successfully {string_2} admin privileges {string_3} the user.',
+        'updated user details': UserSchema(exclude=['password', 'posts', 'replies']).dump(user)
         }
     else:
         abort(404, description=f'User id:{user_id} does not exist')
@@ -277,16 +302,20 @@ def activate_deactivate_post(post_id, active_bool, status):
     if post:
         #Message displaying that the user already has admin rights
         if active_bool == post.is_active:
-            return {'Message': f'Post id{post_id} titled - \'{post.title}\' is already {status}'}
+            return {
+                    'Message': f'Post is already {status}',
+                    'post details': PostSchema().dump(post)
+                }
 
         #user does not have admin rights - change is_admin to True and commit to database
         post.is_active = active_bool
         db.session.commit()
 
         #return message with new user details
-        return {'Message': f'You successfully {status} the post: id{post_id} titled - \'{post.title}\'.',
-        'New user details': PostSchema().dump(post)
-        }
+        return {
+                'message': f'You successfully {status} the post.',
+                'post details': PostSchema().dump(post)
+            }
     else:
         abort(404, description=f'Post id:{post_id} does not exist')
 

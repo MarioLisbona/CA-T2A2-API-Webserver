@@ -46,6 +46,40 @@ def create_single_post():
             'post details': PostSchema().dump(post)
         }
 
+# =============================DELETE a post - Owner ONLY========================================================
+@posts_bp.route('/<int:post_id>/delete/', methods=['DELETE'])
+#Route protected by JWT
+@jwt_required()
+def delete_my_post(post_id):
+
+    #create query statement to return a single Post with the id of the route variable and id returned from get_jwt_identity
+    stmt = db.select(Post).where(
+            and_(
+                Post.id == post_id,
+                Post.user_id == get_jwt_identity()
+            )
+    )
+    #scalar will return a single post where the id matches post_id and assign the result to the post variable
+    user_post = db.session.scalar(stmt)
+
+    stmt = db.select(Post).filter_by(id=post_id)
+    post_only = db.session.scalar(stmt)
+
+    #if the post exists then use Schema to return json serialized version of the query statement
+    #else provide an error message and 404 resource not found code
+    if user_post:
+        db.session.delete(user_post)
+        db.session.commit()
+        return {
+            'message': 'Post deleted successfully',
+            'post id': user_post.id,
+            'post Title': user_post.title
+            }
+    elif post_only:
+        return {'message': 'You are not the owner of this post'}
+    else:
+        abort(404, description=f'Post {post_id} does not exist')
+
 
 # ======================================READ all posts - any registered user==================================
 @posts_bp.route('/')

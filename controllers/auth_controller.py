@@ -31,8 +31,8 @@ def register_user():
 
         #return success message and return the post data
         return {
-            'Message': f'Successfully registered user \'{user.f_name} {user.l_name}\' to the forum',
-            'User details': UserSchema(exclude=['password']).dump(user)
+            'message': f'Successfully registered new user to the forum',
+            'new user details': UserSchema(exclude=['password']).dump(user)
             }, 201
     #email address already exists - abort with json error message
     except IntegrityError:

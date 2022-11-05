@@ -10,21 +10,15 @@ from flask_jwt_extended import jwt_required
 users_bp = Blueprint('users', __name__, url_prefix='/users')
 
 
-# ======================================READ a single user profile - ADMIN or Profile Owner==================================
-@users_bp.route('<int:user_id>')
+# ======================================READ user profile - Profile Owner==================================
+@users_bp.route('/profile/')
 #Route protected by JWT
 @jwt_required()
-def get_single_post(user_id):
-
-    # if token is not the owner of this user profile then check to see if they are an admin
-    #need to cast strings to int for comparison to work
-    if int(user_id) != int(get_jwt_identity()):
-
-        #Read any user protected by admin rights
-        #admin_access will abort if is_admin is False
-        admin_access()
+def get_user_profile():
     
-    #create query statement to return a single user with the id of the route variable
+    #retrieve user id from token
+    user_id = get_jwt_identity()
+    #create query statement to return a single user with the id returned from get_jwt_identity()
     stmt = db.select(User).filter_by(id=user_id)
     #scalar will return a single user where the id matches user_id and assign the result to the user variable
     user = db.session.scalar(stmt)
@@ -81,28 +75,21 @@ def edit_users_own_details():
             request.json.get('password')
         ):
             return {
-                    'Message': f'You made no changes to the user profile.',
-                    'user id': user_id,
-                    'first name': user.f_name,
-                    'last name': user.l_name,
-                    'User details': UserSchema(exclude=['password']).dump(user)
+                    'message': f'You made no changes to the user profile.',
+                    'user details': UserSchema(exclude=['password']).dump(user)
             }
         
 
         #return success message and return the updated data
         return {
-                    'Message': 'You successfully updated the user\'s profile.',
-                    'user id': user_id,
-                    'first name': user.f_name,
-                    'last name': user.l_name,
-                    'New user details': UserSchema(exclude=['password']).dump(user)
+                    'message': 'You successfully updated the user\'s profile.',
+                    'new user details': UserSchema(exclude=['password']).dump(user)
             }
 
     #else provide an error message and 404 resource not found code
     else:
         # return {'Error': f'User {user_id} does not exist'}, 404
         abort(404, description=f'User {user_id} does not exist')
-
 
 
 

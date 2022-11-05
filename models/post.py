@@ -3,8 +3,8 @@ from marshmallow import fields
 from marshmallow.validate import Length, And, Regexp, OneOf
 import os
 
-VALID_TAGS = ('Travel', 'Tech', 'Snowboarding', 'Surfing', 'Foiling', 'Food', 'Pets', 'Music')
-
+# VALID_TAGS = ('Travel', 'Tech', 'Snowboarding', 'Surfing', 'Foiling', 'Food', 'Pets', 'Music')
+VALID_TAGS = os.environ.get('VALID_TAGS')
 
 class Post(db.Model):
     #assigning a table name to the model

@@ -256,6 +256,7 @@ def get_all_tags(post_tag):
     stmt = db.select(Post).filter_by(tag=post_tag)
     posts = db.session.scalars(stmt)
 
+
     if posts:
         return PostSchema(many=True, exclude=['replies']).dump(posts)
     else:

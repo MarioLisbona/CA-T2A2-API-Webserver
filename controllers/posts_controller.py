@@ -7,6 +7,7 @@ from models.post import Post, PostSchema
 from models.reply import Reply, ReplySchema
 from controllers.auth_controller import admin_access
 from flask_jwt_extended import jwt_required, get_jwt_identity
+import os
 
 #creating Blueprint for posts
 posts_bp = Blueprint('posts', __name__, url_prefix='/posts')
@@ -253,11 +254,14 @@ def get_all_replies_on_post(post_id):
 @jwt_required()
 def get_all_tags(post_tag):
 
+    tags = os.environ.get('VALID_TAGS')
+    tags_list = list(tags.split(', '))
+
+
     stmt = db.select(Post).filter_by(tag=post_tag)
     posts = db.session.scalars(stmt)
 
-
-    if posts:
+    if posts and post_tag in tags_list:
         return PostSchema(many=True, exclude=['replies']).dump(posts)
     else:
-        abort(404, description=f'Tag {post_tag} does not exist')
+        abort(404, description=f'There are no posts tagged \'{post_tag}\'.')

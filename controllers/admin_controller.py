@@ -43,14 +43,6 @@ def get_forum_stats():
     stmt = stmt = db.select(db.func.count()).select_from(User).filter_by(is_admin=True)
     admins = db.session.scalar(stmt)
 
-    # return {
-    #     'Active Posts': f'There are {active_posts} active posts the in the forum.',
-    #     'Archived Posts': f'There are {archived_posts} archived posts the in the forum.',
-    #     'Replies': f'There are {replies} replies posted to the forum.',
-    #     'Users': f'There are {users} registered in the forum.',
-    #     'Admins': f'There are {admins} administrators moderating the forum.',
-    #     }
-
     return {
         'Active Posts': active_posts,
         'Archived Posts': archived_posts,
@@ -101,7 +93,11 @@ def delete_single_post(post_id):
     if post:
         db.session.delete(post)
         db.session.commit()
-        return {'Message': f'You successfully deleted the post id {post_id}: \'{post.title}\'.'}
+        return {
+            'message': 'Post deleted successfully',
+            'post id': post.id,
+            'post Title': post.title
+            }
     else:
         abort(404, description=f'Post {post_id} does not exist')
 
@@ -155,11 +151,22 @@ def issue_warning(user_id):
             user.warnings += 1
 
             db.session.commit()
-            return {'Message': f'User id:{user_id} - {user.f_name} {user.l_name} has been issued a community guidelines violation warning. They have {3 - user.warnings} remaining before they are banned'}
+            return {
+                'message': 'User has violated community guidelines',
+                'user id': user_id,
+                'first name': user.f_name, 
+                'last name': user.l_name,
+                'remaining warnings till banned': 3 - user.warnings
+            }
         else:
             db.session.delete(user)
             db.session.commit()
-            return {'Message': f'User id:{user_id} - {user.f_name} {user.l_name} has had 3 community guidelines violation warning. They have been banned from using the forum'}
+            return {
+                'message': 'User has been banned from the forum',
+                'user id': user_id,
+                'first name': user.f_name, 
+                'last name': user.l_name,
+            }
     else:
         abort(404, description=f'User id:{user_id} does not exist')
 
@@ -186,9 +193,20 @@ def delete_single_user(user_id):
         if user.warnings > 3:
             db.session.delete(user)
             db.session.commit()
-            return {'Message': f'You successfully deleted the user id: {user_id} \'{user.f_name} {user.l_name}\'.'}
+            return {
+                'message': 'User has been successfully banned from the forum',
+                'user id': user_id,
+                'first name': user.f_name, 
+                'last name': user.l_name,
+            }
         else:
-            return {'Message': f'You cannot deleted the user id: {user_id} \'{user.f_name} {user.l_name}\'. They still have {3 - user.warnings} community guideline violation warnings remaining.'}
+            return {
+                'message': 'User still has warnings remaining, they cannot be banned until 3 warnings have been issued',
+                'user id': user_id,
+                'first name': user.f_name, 
+                'last name': user.l_name,
+                'remaining warnings till banned': 3 - user.warnings
+            }
     else:
         abort(404, description=f'User id:{user_id} does not exist')
 

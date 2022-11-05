@@ -81,16 +81,22 @@ def edit_users_own_details():
             request.json.get('password')
         ):
             return {
-        'Message': f'You made no changes to the user id: {user_id} \'{user.f_name} {user.l_name}\'.',
-        'User details': UserSchema(exclude=['password']).dump(user)
-        }
+                    'Message': f'You made no changes to the user profile.',
+                    'user id': user_id,
+                    'first name': user.f_name,
+                    'last name': user.l_name,
+                    'User details': UserSchema(exclude=['password']).dump(user)
+            }
         
 
         #return success message and return the updated data
         return {
-        'Message': f'You successfully updated the user id: {user_id} \'{user.f_name} {user.l_name}\'.',
-        'New user details': UserSchema(exclude=['password']).dump(user)
-        }
+                    'Message': 'You successfully updated the user\'s profile.',
+                    'user id': user_id,
+                    'first name': user.f_name,
+                    'last name': user.l_name,
+                    'New user details': UserSchema(exclude=['password']).dump(user)
+            }
 
     #else provide an error message and 404 resource not found code
     else:

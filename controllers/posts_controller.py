@@ -42,8 +42,8 @@ def create_single_post():
 
     #return success message and return the post data
     return {
-        'Message': f'You successfully add the post titled \'{post.title}\' to the database',
-        'Post details': PostSchema().dump(post)
+            'message': 'You successfully added the post to the forum',
+            'post details': PostSchema().dump(post)
         }
 
 
@@ -130,9 +130,9 @@ def edit_single_post(post_id):
 
         #return success message and return the updated data
         return {
-        'Message': f'You successfully updated post id:{post.id} titled \'{post.title}\'.',
-        'Post details': PostSchema().dump(post)
-        }
+                'message': f'You successfully updated the post.',
+                'post details': PostSchema().dump(post)
+            }
 
     #else if post is not in the database provide an error message and 404 resource not found code
     elif not post_valid:
@@ -172,8 +172,9 @@ def create_reply(post_id):
 
         #return success message and return the reply data
         return {
-            'Message': f'You successfully replied to the post titled \'{post.title}\'',
-            'Reply details': ReplySchema().dump(reply)
+            'message': f'You successfully replied to the post',
+            'post title': post.title,
+            'reply details': ReplySchema().dump(reply)
             }
     else:
         abort(404, description=f'Post {post_id} does not exist')
@@ -206,8 +207,7 @@ def get_all_replies_on_post(post_id):
         #display post id and title
         #display all replies - excluding nested post content
         return {
-            'Stats': f'This post has {count} replies',
-            # 'Post information': f'id:{post.id} \'{post.title}\'',
+            'message': f'This post has {count} replies',
             'Post information': PostSchema(only=['id', 'title']).dump(post),
             'Replies': ReplySchema(many=True, exclude=['post']).dump(replies)
         }

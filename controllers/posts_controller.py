@@ -241,7 +241,8 @@ def get_all_replies_on_post(post_id):
         #display post id and title
         #display all replies - excluding nested post content
         return {
-            'message': f'This post has {count} replies',
+            'message': 'View replies on a post',
+            'replies': count,
             'Post information': PostSchema(only=['id', 'title']).dump(post),
             'Replies': ReplySchema(many=True, exclude=['post']).dump(replies)
         }

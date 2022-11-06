@@ -203,12 +203,14 @@ def delete_single_user(user_id):
     #admin_access will abort if is_admin is False
     admin_access()
     
-    #create query statement to return a single Post with the id of the route variable
+    #create query statement to return a single User with the id of the route variable
     stmt = db.select(User).filter_by(id=user_id)
-    #scalar will return a single post where the id matches post_id and assign the result to the post variable
+    #scalar will return a single User where the id matches user_id and assign the result to the user variable
     user = db.session.scalar(stmt)
          
-    #if the post exists then use Schema to return json serialized version of the query statement
+    #if the User exists then check warning count
+    # if warnings are larger than 3 delete user
+    # else display message that warnings ar still remaining
     #else provide an error message and 404 resource not found code
     if user:
         if user.warnings > 3:
@@ -228,6 +230,7 @@ def delete_single_user(user_id):
                 'last name': user.l_name,
                 'remaining warnings till banned': 3 - user.warnings
             }
+    # else abort the user doesn't exist
     else:
         abort(404, description=f'User id:{user_id} does not exist')
 

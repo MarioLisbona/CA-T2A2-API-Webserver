@@ -4,7 +4,7 @@ from marshmallow.validate import Length, And, Regexp, OneOf
 import os
 
 # VALID_TAGS = ('Travel', 'Tech', 'Snowboarding', 'Surfing', 'Foiling', 'Food', 'Pets', 'Music')
-VALID_TAGS = os.environ.get('VALID_TAGS')
+VALID_CHANNELS = os.environ.get('VALID_CHANNELS')
 
 class Post(db.Model):
     #assigning a table name to the model
@@ -17,7 +17,7 @@ class Post(db.Model):
     time = db.Column(db.Time)
     is_active = db.Column(db.Boolean, default=True)
     content = db.Column(db.Text, nullable=False)
-    tag = db.Column(db.String(100))
+    channel = db.Column(db.String(100))
 
     #creating foreign key
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
@@ -40,16 +40,16 @@ class PostSchema(ma.Schema):
     #validating content - minimum of 3 characters in length and max of 2,000 characters (roughly 300-500 words)
     content = fields.String(validate=(Length(min=100, max=2000)))
 
-    #validating tags input
-    #tags can only be ones that are listed in the VALID_TAGS tuple
-    tag = fields.String(validate=OneOf(VALID_TAGS, error=f'Must be one of: {VALID_TAGS}'))
+    #validating channels input
+    #forum channel can only be ones that are listed in the VALID_CHANNELS tuple
+    channel = fields.String(validate=OneOf(VALID_CHANNELS, error=f'Must be one of: {VALID_CHANNELS}'))
 
 
     user = fields.Nested('UserSchema', only=['f_name', 'l_name', 'email'])
     replies = fields.List(fields.Nested('ReplySchema', exclude=['post']))
 
     class Meta:
-        fields = ('id', 'title', 'date', 'time', 'is_active', 'content', 'tag', 'user', 'replies')
+        fields = ('id', 'title', 'date', 'time', 'is_active', 'content', 'channel', 'user', 'replies')
         ordered = True
 
     

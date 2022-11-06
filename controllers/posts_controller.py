@@ -28,14 +28,14 @@ def create_single_post():
         date = date.today(),
         time = datetime.now().strftime("%H:%M:%S"),
         content = data['content'],
-        user_id = get_jwt_identity()
-        # tag = data['tag']
+        user_id = get_jwt_identity(),
+        channel = data['channel']
     )
 
-    #tags are optional
-    #if there is a tag key in the JSON request then assign it to tag variable
-    if request.json.get('tag'):
-        post.tag = data['tag']
+    # #tags are optional
+    # #if there is a tag key in the JSON request then assign it to tag variable
+    # if request.json.get('tag'):
+    #     post.tag = data['tag']
 
     # Add new post details to the database and commit changes
     db.session.add(post)
@@ -146,7 +146,7 @@ def edit_single_post(post_id):
         post.time = datetime.now().strftime("%H:%M:%S")
 
         #optional update fields
-        #if there is a tag key in the JSON request then assign it to tag variable
+        #if there is a key in the JSON request then assign it to relevant variable
 
         #title is optional for update
         if request.json.get('title'):
@@ -156,9 +156,9 @@ def edit_single_post(post_id):
         if request.json.get('content'):
             post.content = data['content']
 
-        #tags are optional for update
-        if request.json.get('tag'):
-            post.tag = data['tag']
+        # #channel are optional for update
+        # if request.json.get('channel'):
+        #     post.channel = data['channel']
 
         # Add new post details to the database and commit changes
         db.session.commit()
@@ -248,20 +248,20 @@ def get_all_replies_on_post(post_id):
             'Replies': ReplySchema(many=True, exclude=['post']).dump(replies)
         }
         
-# ======================================Search all posts for tags - any registered user==================================
-@posts_bp.route('/tags/<string:post_tag>')
+# ======================================Search all posts in a channel - any registered user==================================
+@posts_bp.route('/channel/<string:forum_channel>')
 #Route protected by JWT
 @jwt_required()
-def get_all_tags(post_tag):
+def get_all_post_in_channel(forum_channel):
 
-    tags = os.environ.get('VALID_TAGS')
-    tags_list = list(tags.split(', '))
+    channels = os.environ.get('VALID_CHANNELS')
+    channels_list = list(channels.split(', '))
 
 
-    stmt = db.select(Post).filter_by(tag=post_tag)
-    posts = db.session.scalars(stmt)
+    stmt = db.select(Post).filter_by(channel=forum_channel)
+    channel_posts = db.session.scalars(stmt)
 
-    if posts and post_tag in tags_list:
-        return PostSchema(many=True, exclude=['replies']).dump(posts)
+    if channel_posts and forum_channel in channels_list:
+        return PostSchema(many=True, exclude=['replies']).dump(channel_posts)
     else:
-        abort(404, description=f'There are no posts tagged \'{post_tag}\'.')
+        abort(404, description=f'There are no channels named \'{forum_channel}\'.')

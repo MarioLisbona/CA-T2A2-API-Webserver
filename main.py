@@ -9,8 +9,6 @@ from controllers.admin_controller import admin_bp
 from marshmallow.exceptions import ValidationError
 import os
 
-
-tags = 'Travel, Tech, Snowboarding, Surfing, Foiling, Food, Pets, Music'
 def create_forum():
 
 

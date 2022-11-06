@@ -82,7 +82,7 @@ def delete_my_post(post_id):
         abort(404, description=f'Post {post_id} does not exist')
 
 
-# ======================================READ all posts - any registered user==================================
+# ======================================READ all active posts - any registered user==================================
 @posts_bp.route('/')
 #Route protected by JWT
 @jwt_required()
@@ -104,8 +104,13 @@ def get_all_posts():
 @jwt_required()
 def get_single_post(post_id):
     
+    
     #create query statement to return a single Post with the id of the route variable
-    stmt = db.select(Post).filter_by(id=post_id)
+    stmt = db.select(Post).where(and_(
+        Post.id == post_id,
+        Post.is_active == True
+    ))
+    # stmt = db.select(Post).filter_by(id=post_id)
     #scalar will return a single post where the id matches post_id and assign the result to the post variable
     post = db.session.scalar(stmt)
 
@@ -155,10 +160,6 @@ def edit_single_post(post_id):
         #content is optional for update
         if request.json.get('content'):
             post.content = data['content']
-
-        # #channel are optional for update
-        # if request.json.get('channel'):
-        #     post.channel = data['channel']
 
         # Add new post details to the database and commit changes
         db.session.commit()
@@ -215,6 +216,36 @@ def create_reply(post_id):
         abort(404, description=f'Post {post_id} does not exist')
 
 
+# ======================================UPDATE a reply to a post - any registered user==================================
+@posts_bp.route('/<int:post_id>/reply/<int:reply_id>', methods=['PATCH'])
+#Route protected by JWT
+@jwt_required()
+def update_reply(post_id, reply_id):
+
+    #create query statement to return a single Post with the id of the route variable post_id
+    #to ascertain if route variable is a valid post for else statements below
+    # stmt = db.select(Post).filter_by(id=post_id)
+    # post_valid = db.session.scalar(stmt)
+
+    # stmt = db.select(Post).where(and_(
+    #     Post.id == post_id,
+    #     Post.replies == reply_id,
+    #     Post.replise.user_id = get
+    # ))
+
+    # create query to find the post with id that matches route variable and user matches get_jwt_identity
+    #this means the post is in the database and the user trying to edit the post is the creator/owner
+    stmt = db.select(Post).where(and_(
+        Post.id == post_id,
+        Post.user_id == get_jwt_identity()
+    ))
+    #scalar will return a single post where the id matches post_id and assign the result to the post variable
+    post = db.session.scalar(stmt)
+
+    # loading request data into the marshmallow PostSchema for validation
+    data = PostSchema().load(request.json)
+
+
 # =============================get all replies to a post - registered user========================================================
 @posts_bp.route('/<int:post_id>/replies/', methods=['GET'])
 #Route protected by JWT
@@ -254,18 +285,25 @@ def get_all_replies_on_post(post_id):
 @jwt_required()
 def get_all_post_in_channel(forum_channel):
 
+    # retirving valid channels from .env and creating a list
     channels = os.environ.get('VALID_CHANNELS')
     channels_list = list(channels.split(', '))
 
-
+    #query database to find posts in the channel
     stmt = db.select(Post).filter_by(channel=forum_channel)
     channel_posts = db.session.scalars(stmt)
 
-    print(channel_posts)
-    print(type(channel_posts))
-    # print(len(channel_posts))
+    #query database to count how many posts are posted to the forum
+    #used to find if the channel is empty
+    stmt = stmt = db.select(db.func.count()).select_from(Post).filter_by(channel=forum_channel)
+    count = db.session.scalar(stmt)
 
-    if channel_posts and forum_channel in channels_list:
+    #if scalars return object contains posts and route variable is in valid channels list return posts in channel
+    #else if the count is zero and the route variable is a valid channel display no posts
+    # else abort with error that channel does not exist
+    if count > 0 and forum_channel in channels_list:
         return PostSchema(many=True, exclude=['replies']).dump(channel_posts)
+    elif count == 0 and forum_channel in channels_list:
+        return {'msg': f'There are currently no posts in the \'{forum_channel} channel'}
     else:
         abort(404, description=f'There are no channels named \'{forum_channel}\'.')

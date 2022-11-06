@@ -327,3 +327,23 @@ def activate_deactivate_post(post_id, active_bool, status):
     else:
         abort(404, description=f'Post id:{post_id} does not exist')
 
+
+# # ======================================Add channel to the forum, - ADMIN==================================
+# @admin_bp.route('/add_channel/<string:forum_channel>')
+# #Route protected by JWT
+# @jwt_required()
+# def get_all_post_in_channel(forum_channel):
+
+#     # delete user protected by admin rights
+#     #admin_access will abort if is_admin is False
+#     admin_access()
+
+#     channels = os.environ.get('VALID_CHANNELS')
+#     channels_list = list(channels.split(', '))
+
+#     channels_list.append(forum_channel)
+#     os.environ['VALID_CHANNELS']
+
+
+#     return {'channels list': channels_list,
+#             'environ': os.environ.get('VALID_CHANNELS')}

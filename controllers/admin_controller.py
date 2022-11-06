@@ -8,6 +8,7 @@ from models.post import Post, PostSchema
 from models.reply import Reply, ReplySchema
 from controllers.auth_controller import admin_access
 from flask_jwt_extended import jwt_required, create_access_token, get_jwt_identity
+import os
 
 #creating Blueprint for users
 admin_bp = Blueprint('admin', __name__, url_prefix='/admin')
@@ -22,6 +23,9 @@ def get_forum_stats():
     #Read any user protected by admin rights
     #admin_access will abort if is_admin is False
     admin_access()
+
+    channels = os.environ.get('VALID_CHANNELS')
+    channels_list = list(channels.split(', '))
 
     #query database to count how many replies are posted to the forum
     stmt = stmt = db.select(db.func.count()).select_from(Reply)
@@ -45,11 +49,12 @@ def get_forum_stats():
 
     return {
         'message': 'Forum Statistics',
+        'channels': len(channels_list),
         'active Posts': active_posts,
         'archived Posts': archived_posts,
         'replies': replies,
         'users': users,
-        'administrators': admins
+        'administrators': admins,
     }
 
 
@@ -173,7 +178,7 @@ def issue_warning(user_id):
 
             db.session.commit()
             return {
-                'message': 'User has violated community guidelines',
+                'message': 'Warning - User has violated community guidelines',
                 'user id': user_id,
                 'first name': user.f_name, 
                 'last name': user.l_name,
@@ -322,3 +327,23 @@ def activate_deactivate_post(post_id, active_bool, status):
     else:
         abort(404, description=f'Post id:{post_id} does not exist')
 
+
+# # ======================================Add channel to the forum, - ADMIN==================================
+# @admin_bp.route('/add_channel/<string:forum_channel>')
+# #Route protected by JWT
+# @jwt_required()
+# def get_all_post_in_channel(forum_channel):
+
+#     # delete user protected by admin rights
+#     #admin_access will abort if is_admin is False
+#     admin_access()
+
+#     channels = os.environ.get('VALID_CHANNELS')
+#     channels_list = list(channels.split(', '))
+
+#     channels_list.append(forum_channel)
+#     os.environ['VALID_CHANNELS']
+
+
+#     return {'channels list': channels_list,
+#             'environ': os.environ.get('VALID_CHANNELS')}

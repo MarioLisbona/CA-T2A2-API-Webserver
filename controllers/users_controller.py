@@ -51,7 +51,7 @@ def edit_users_own_details():
     # if the user exists in database, they can update any profile attributes except is_admin
     if user:
         #all fields are optional when updating profile
-        #if there is a tag key in the JSON request then assign it to tag variable
+        #if there is a key in the JSON request then assign it to relevant variable
 
         if request.json.get('f_name'):
             user.f_name = data['f_name']

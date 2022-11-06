@@ -74,7 +74,7 @@ def seed_db_tables():
             time = datetime.now().strftime("%H:%M:%S"),
             is_active = True,
             content = "The Mentawai islands are a chain of islands 90 nautical miles off North Sumatra and they have some of the best waves in th world. Its also an exceptionally beautiful part of the world, The     mentawai islands are a chain of islands 90 nautical miles off North Sumatra and they have some of the best waves in th world. Its also an exceptionally beautiful part of the world., The mentawai islands are a chain of islands 90 nautical miles off North Sumatra and they have some of the best waves in th world. Its also an exceptionally beautiful part of the world., The mentawai islands are a chain of islands 90 nautical miles off North Sumatra and they have some of the best waves in th world. Its also an exceptionally beautiful part of the world.",
-            tag = 'Travel',
+            channel = 'Travel',
             user = users[0]
         ),
         Post(
@@ -83,7 +83,7 @@ def seed_db_tables():
             is_active = False,
             time = datetime.now().strftime("%H:%M:%S"),
             content = "The joined the same friend i went to Alaska with to explore the alps in Austria. They're, huge, beautiful, scary and so fun all at the same time. The culture, food, and people are so nice. And the sauna's are eveywhere and the best way to recover after a day snowboarding powder. The joined the same friend i went to Alaska with to explore the alps in Austria. They're, huge, beautiful, scary and so fun all at the same time. The culture, food, and people are so nice. And the sauna's are everywhere and the best way to recover after a day snowboarding powder. The joined the same friend i went to Alaska with to explore the alps in Austria. They're, huge, beautiful, scary and so fun all at the same time. The culture, food, and people are so nice. And the sauna's are everywhere and the best way to recover after a day snowboarding powder.",
-            tag = 'Travel',
+            channel = 'Travel',
             user = users[0]
         ),
         Post(
@@ -92,7 +92,7 @@ def seed_db_tables():
             time = datetime.now().strftime("%H:%M:%S"),
             is_active = True,
             content = "Some information about my experience learning how to code.Some information about my experience learning how to codeSome information about my experience learning how to codeSome information about my experience learning how to codeSome information about my experience learning how to codeSome information about my experience learning how to codeSome information about my experience learning how to codeSome information about my experience learning how to codeSome information about my experience learning how to codeSome information about my experience learning how to code",
-            tag = 'Education',
+            channel = 'Education',
             user = users[3]
         ),
         Post(
@@ -101,7 +101,7 @@ def seed_db_tables():
             time = datetime.now().strftime("%H:%M:%S"),
             is_active = True,
             content = "Learning how to build a web application with Flask and Python, Learning how to build a web application with Flask and PythonLearning how to build a web application with Flask and PythonLearning how to build a web application with Flask and PythonLearning how to build a web application with Flask and PythonLearning how to build a web application with Flask and Python",
-            tag = 'Tech',
+            channel = 'Tech',
             user = users[2]
         ),
         Post(
@@ -110,7 +110,7 @@ def seed_db_tables():
             time = datetime.now().strftime("%H:%M:%S"),
             is_active = True,
             content = "Learning how to build a web application with Flask and Python, Learning how to build a web application with Flask and PythonLearning how to build a web application with Flask and PythonLearning how to build a web application with Flask and PythonLearning how to build a web application with Flask and PythonLearning how to build a web application with Flask and Python. In this post im trying to create reltionships between ORM models PythonLearning how to build a web application with Flask and PythonLearning how to build a web application with Flask and PythonLearning how to build a web application with Flask and Python. In this post im trying to create reltionships between ORM modelsPythonLearning how to build a web application with Flask and PythonLearning how to build a web application with Flask and PythonLearning how to build a web application with Flask and Python. In this post im trying to create reltionships between ORM models",
-            tag = 'Tech',
+            channel = 'Tech',
             user = users[1]
         )
     ]

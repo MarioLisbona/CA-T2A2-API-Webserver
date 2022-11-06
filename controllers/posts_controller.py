@@ -88,8 +88,8 @@ def delete_my_post(post_id):
 @jwt_required()
 def get_all_posts():
 
-    #create query statement to return all records in Post table sort by newest first
-    stmt = db.select(Post).order_by(Post.date.desc(), Post.time.desc())
+    #create query statement to return all active records in Post table sort by newest first
+    stmt = db.select(Post).filter_by(is_active=True).order_by(Post.date.desc(), Post.time.desc())
     #scalalars will return many results and assign to posts variable
     posts = db.session.scalars(stmt)
 
@@ -248,7 +248,7 @@ def get_all_replies_on_post(post_id):
             'Replies': ReplySchema(many=True, exclude=['post']).dump(replies)
         }
         
-# ======================================Search all posts in a channel - any registered user==================================
+# ======================================display all posts in a channel - any registered user==================================
 @posts_bp.route('/channel/<string:forum_channel>')
 #Route protected by JWT
 @jwt_required()
@@ -260,6 +260,10 @@ def get_all_post_in_channel(forum_channel):
 
     stmt = db.select(Post).filter_by(channel=forum_channel)
     channel_posts = db.session.scalars(stmt)
+
+    print(channel_posts)
+    print(type(channel_posts))
+    # print(len(channel_posts))
 
     if channel_posts and forum_channel in channels_list:
         return PostSchema(many=True, exclude=['replies']).dump(channel_posts)

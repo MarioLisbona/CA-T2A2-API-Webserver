@@ -222,6 +222,11 @@ def create_reply(post_id):
 @jwt_required()
 def update_reply(reply_id):
 
+    #create query statement to return a single reply with the id of the route variable reply_id
+    #to ascertain if route variable is a valid reply for else statements below
+    stmt = db.select(Reply).filter_by(id=reply_id)
+    reply_valid = db.session.scalar(stmt)
+
     # create query to find the reply with id that matches route variable and user matches get_jwt_identity
     #this means the reply is in the database and the user trying to edit the reply is the creator/owner
     stmt = db.select(Reply).where(and_(
@@ -245,9 +250,51 @@ def update_reply(reply_id):
                 'reply details': ReplySchema(exclude=['user', 'post']).dump(reply)
             }
 
+    #else if reply is not in the database provide an error message and 404 resource not found code
+    elif not reply_valid:
+        abort(404, description=f'reply {reply_id} does not exist')
+    #else post is in the database but the user is not the owner of the post
+    else:
+        abort(401, description=f'You are not the owner of this reply')
 
-    # loading request data into the marshmallow PostSchema for validation
-    data = PostSchema().load(request.json)
+
+
+
+# =============================DELETE a reply - Owner ONLY========================================================
+@posts_bp.route('/replies/<int:reply_id>/delete/', methods=['DELETE'])
+#Route protected by JWT
+@jwt_required()
+def delete_my_reply(reply_id):
+
+    #create query statement to return a single Post with the id of the route variable and id returned from get_jwt_identity
+    stmt = db.select(Reply).where(
+            and_(
+                Reply.id == reply_id,
+                Reply.user_id == get_jwt_identity()
+            )
+    )
+
+    #scalar will return a single post where the id matches post_id and assign the result to the post variable
+    user_reply = db.session.scalar(stmt)
+
+    #query on the reply_id only to make sure the reply exists
+    stmt = db.select(Reply).filter_by(id=reply_id)
+    reply_only = db.session.scalar(stmt)
+
+    #if the reply exists then use Schema to return json serialized version of the query statement
+    #else provide an error message and 404 resource not found code
+    if user_reply:
+        db.session.delete(user_reply)
+        db.session.commit()
+        return {
+            'message': 'Reply deleted successfully',
+            'reply id': user_reply.id,
+            'reply': user_reply.reply
+            }
+    elif reply_only:
+        return {'message': 'You are not the owner of this post'}
+    else:
+        abort(404, description=f'Post {reply_id} does not exist')
 
 
 # =============================get all replies to a post - registered user========================================================

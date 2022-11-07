@@ -37,13 +37,14 @@ Creating a virtual world where this communication can happen is a step towards i
 
 ## **R10 - Describe the way tasks are allocated and tracked in your project**
 
-To manage all the tasks for this project is used a kanban board on Trello. I first created the users stories below that apply to the forum API. All the tasks that need to be completed in the project, including all the documentation, answers to assignment questions and the actual coding of different routes for the API are assigned to tickets and placed in the backlog column. I then assigned different coloured labels for different groups of tasks, green for R1, R2, R3  assignment rubrics, purple for assignment requirements to check, yellow for optional features after the minimum viable product was complete and orange for coding tasks.
+To manage all the tasks for this project is used a kanban board on Trello. I first created the users stories below that apply to the forum API. All the tasks that need to be completed in the project, including all the documentation, answers to assignment questions and the actual coding of different routes for the API are assigned to tickets and placed in the backlog column. I then assigned different coloured labels for different groups of tasks, green for R1, R2, R3  assignment rubrics, purple for assignment requirements to check, yellow for optional features after the minimum viable product was complete and orange for coding tasks. This allowed me to get a get a quick overview of of the project by showing where different tasks and groups of tasks where located in the cycle of the kanban board.
 
 I then wrote all the user stories for the API. The user stories below are broken down into two classes of users that will be accessing the forum API, Administrator and user, and represent all the different routes to resources that the API will facilitate.
 
 | User          	| Action                                                                                                 	|
 |---------------	|--------------------------------------------------------------------------------------------------------	|
 | Administrator 	| I want to view all user profiles                                                                       	|
+| Administrator 	| I want to view a single user profile                                                                   	|
 | Administrator 	| I want to delete any posts that violate community guidelines                                           	|
 | Administrator 	| I want to delete any replies that violate community guidelines                                         	|
 | Administrator 	| I want to deactivate a post that has had no activity for 3 months or has violated community guidelines 	|
@@ -80,19 +81,17 @@ I then created a kanban board with Trello to allocate and track tasks for the du
 - Testing
 - Done
 
+<br>
+
+<img src="./docs/kanban-columns.png" width='900' alt="kanban columns">
+
+I set Work In Progress limits (WIP's) on the columns to track how many tasks where in each stage of the project. Once the kanban board was setup i would move tasks or tickets from the backlog column into the todo until that was full. At this stage i would give each ticket a date for the work to be completed by. Then i would take a task/tasks fro To Do and place it in the Doing column and then begin on the task. I added checklists for the more complicated tasks to keep track of each sub-task that would need to be completed before that ticket could be moved to the testing and Done columns.
+
+If any completed features needed refactoring or their scope changed, then i would move the ticket back to the To Do column, adjust the checklists, date and the process would start again for that task.
 
 
-PICTURE
 
-
-This allowed me to get a get a quick overview of of the project by showing where different tasks and groups of tasks where located in the cycle of the kanban board.
-
-
-
-You can become a member of my T2A2 Web API trello board[*here*](https://trello.com/invite/b/tgZAzcbl/ATTI8dca09e313c793fbac3a556003958f8aC962B77D/t2a2-api-webserver) to become a 
-
-pic
-
+You can become a member of my T2A2 Web API trello board [*here*](https://trello.com/invite/b/tgZAzcbl/ATTI8dca09e313c793fbac3a556003958f8aC962B77D/t2a2-api-webserver) to view all the tickets that were created.
 
 
 ## **References**

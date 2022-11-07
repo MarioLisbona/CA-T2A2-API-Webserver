@@ -130,25 +130,30 @@ def get_single_post(post_id):
 @jwt_required()
 def get_all_posts_from_user(user_id):
 
+    #query to return all posts with an user id that matches the route variable
     stmt = db.select(Post).filter_by(user_id=user_id)
     posts = db.session.scalars(stmt)
 
+    #query to return the user who's id matches the route variable
+    #used for error message if the user does not exist
     stmt = db.select(User).filter_by(id=user_id)
     user = db.session.scalar(stmt)
 
+    #create a query to count the amount of posts where the user id matches the route variable
+    stmt = db.select(db.func.count()).select_from(Post).filter_by(user_id=user_id)
+    count = db.session.scalar(stmt)
 
-    if posts:
+    #if the user exists in the database and they have created posts display the posts
+    if user and count > 0:
         return {
-            'msg': f'User:{user_id} has posted the following posts',
+            'msg': f'User:{user_id} has posted the following posts to the forum',
             'post details': PostSchema(many=True, exclude=['replies']).dump(posts)
         }
-
-
-
-
-
-
-
+    #the user exists but they have not posted anything
+    elif user and count == 0:
+        return {'msg': f'The user id:{user_id} - {user.f_name} {user.l_name} has not posted anything to the forum'}
+    else:
+        abort(404, description=f'User id {user_id} does not exist')
 
 
 # ======================================UPDATE a single post - POST OWNER==================================

@@ -5,6 +5,7 @@ import flask_jwt_extended
 from init import db
 from models.post import Post, PostSchema
 from models.reply import Reply, ReplySchema
+from models.user import User, UserSchema
 from controllers.auth_controller import admin_access
 from flask_jwt_extended import jwt_required, get_jwt_identity
 import os
@@ -120,6 +121,34 @@ def get_single_post(post_id):
         return PostSchema().dump(post)
     else:
         abort(404, description=f'Post {post_id} does not exist')
+
+
+
+# ======================================READ posts from a single user - any registered user==================================
+@posts_bp.route('/users/<int:user_id>/')
+#Route protected by JWT_
+@jwt_required()
+def get_all_posts_from_user(user_id):
+
+    stmt = db.select(Post).filter_by(user_id=user_id)
+    posts = db.session.scalars(stmt)
+
+    stmt = db.select(User).filter_by(id=user_id)
+    user = db.session.scalar(stmt)
+
+
+    if posts:
+        return {
+            'msg': f'User:{user_id} has posted the following posts',
+            'post details': PostSchema(many=True, exclude=['replies']).dump(posts)
+        }
+
+
+
+
+
+
+
 
 
 # ======================================UPDATE a single post - POST OWNER==================================

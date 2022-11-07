@@ -80,6 +80,65 @@ def get_all_users():
 
 
 
+# ======================================READ all replies - ADMIN ONLY==================================
+@admin_bp.route('/replies/')
+#Route protected by JWT
+@jwt_required()
+def get_all_replies():
+
+    #Read any user protected by admin rights
+    #admin_access will abort if is_admin is False
+    admin_access()
+
+    #create query statement to return all records in Reply table sort chronologiccaly byt date then time
+    stmt = db.select(Reply).order_by(Reply.date, Reply.time)
+    #scalars will return many results and assign to users variable
+    replies = db.session.scalars(stmt)
+
+    #excluding posts, password and replies - just showing user info
+    return ReplySchema(many=True, exclude=['user', 'post']).dump(replies)
+
+
+# ======================================READ all replies by a user - ADMIN ONLY==================================
+@admin_bp.route('/users/<int:reply_user_id>/replies/')
+#Route protected by JWT
+@jwt_required()
+def get_all_users_replies(reply_user_id):
+
+    #Read any user protected by admin rights
+    #admin_access will abort if is_admin is False
+    admin_access()
+
+    #create query statement to return all records in Reply where user id equals route variable
+    stmt = db.select(Reply).filter_by(user_id=reply_user_id)
+    #scalars will return many results and assign to replies variable
+    replies = db.session.scalars(stmt)
+
+    #query database to count how many replies have been posted by this user
+    #used to find if the user has not posted any replies
+    stmt = stmt = db.select(db.func.count()).select_from(Reply).filter_by(user_id=reply_user_id)
+    count = db.session.scalar(stmt)
+
+    #create query statement to return a single user with the id of the route variable
+    #used to find the the route variable is a valid user
+    stmt = db.select(User).filter_by(id=reply_user_id)
+    #scalar will return a single user where the id matches user_id and assign the result to the user variable
+    user = db.session.scalar(stmt)
+
+    print()
+
+    #if cont is above 0 then the user has posted replies
+    #return replies only - not the post or user
+    #else if hte user is 0 then they have not posted replies
+    #else the user does not exist
+    if count > 0:
+        return ReplySchema(many=True, exclude=['user', 'post']).dump(replies)
+    elif count == 0 and user:
+        return {'msg': f'User {reply_user_id} has not posted any replies'}
+    else:
+        abort(404, description=f'User id:{reply_user_id} does not exist')
+
+
 # ======================================READ any user profile - ADMIN ONLY==================================
 @admin_bp.route('/users/<int:user_id>/')
 #Route protected by JWT

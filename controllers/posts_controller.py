@@ -216,34 +216,38 @@ def create_reply(post_id):
         abort(404, description=f'Post {post_id} does not exist')
 
 
-# # ======================================UPDATE a reply to a post - any registered user==================================
-# @posts_bp.route('/<int:post_id>/reply/<int:reply_id>', methods=['PATCH'])
-# #Route protected by JWT
-# @jwt_required()
-# def update_reply(post_id, reply_id):
+# ======================================UPDATE a reply to a post - any registered user==================================
+@posts_bp.route('/replies/<int:reply_id>/update', methods=['PATCH'])
+#Route protected by JWT
+@jwt_required()
+def update_reply(reply_id):
 
-#     #create query statement to return a single Post with the id of the route variable post_id
-#     #to ascertain if route variable is a valid post for else statements below
-#     # stmt = db.select(Post).filter_by(id=post_id)
-#     # post_valid = db.session.scalar(stmt)
+    # create query to find the reply with id that matches route variable and user matches get_jwt_identity
+    #this means the reply is in the database and the user trying to edit the reply is the creator/owner
+    stmt = db.select(Reply).where(and_(
+        Reply.id == reply_id,
+        Reply.user_id == get_jwt_identity()
+    ))
+    #scalar will return a single post where the id matches post_id and assign the result to the post variable
+    reply = db.session.scalar(stmt)
 
-#     # stmt = db.select(Post).where(and_(
-#     #     Post.id == post_id,
-#     #     Post.replies == reply_id,
-#     #     Post.replise.user_id = get
-#     # ))
+    data = ReplySchema().load(request.json)
 
-#     # create query to find the post with id that matches route variable and user matches get_jwt_identity
-#     #this means the post is in the database and the user trying to edit the post is the creator/owner
-#     stmt = db.select(Post).where(and_(
-#         Post.id == post_id,
-#         Post.user_id == get_jwt_identity()
-#     ))
-#     #scalar will return a single post where the id matches post_id and assign the result to the post variable
-#     post = db.session.scalar(stmt)
+    if reply:
+        reply.reply = data['reply']
 
-#     # loading request data into the marshmallow PostSchema for validation
-#     data = PostSchema().load(request.json)
+        # Add new repy details to the database and commit changes
+        db.session.commit()
+
+        #return success message and return the updated data
+        return {
+                'message': f'You successfully updated the reply.',
+                'reply details': ReplySchema(exclude=['user', 'post']).dump(reply)
+            }
+
+
+    # loading request data into the marshmallow PostSchema for validation
+    data = PostSchema().load(request.json)
 
 
 # =============================get all replies to a post - registered user========================================================

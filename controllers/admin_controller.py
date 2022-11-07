@@ -58,6 +58,33 @@ def get_forum_stats():
     }
 
 
+# ======================================READ all deactivated/archived posts - ADMIN ONLY==================================
+@admin_bp.route('/posts/deactivated')
+#Route protected by JWT
+@jwt_required()
+def get_all_archived_posts():
+
+    #Read any user protected by admin rights
+    #admin_access will abort if is_admin is False
+    admin_access()
+
+    #create query statement to return all deactivated records in Post table sort by newest first
+    stmt = db.select(Post).filter_by(is_active=False).order_by(Post.date.desc(), Post.time.desc())
+    #scalalars will return many results and assign to posts variable
+    posts = db.session.scalars(stmt)
+
+    #query database to count how many posts are deactivate
+    #used to find if the user has not posted any replies
+    stmt = stmt = db.select(db.func.count()).select_from(Post).filter_by(is_active=False)
+    count = db.session.scalar(stmt)
+
+    if count > 0:
+        #use Schema to return json serialized version of the query statement
+        return PostSchema(many=True).dump(posts)
+    elif count == 0:
+            return {'msg': 'There are no deactivated posts in the forum'}
+
+
 # ======================================READ all user profiles - ADMIN ONLY==================================
 @admin_bp.route('/users/')
 #Route protected by JWT
@@ -96,7 +123,7 @@ def get_all_replies():
     replies = db.session.scalars(stmt)
 
     #excluding posts, password and replies - just showing user info
-    return ReplySchema(many=True, exclude=['user', 'post']).dump(replies)
+    return ReplySchema(many=True, exclude=['post']).dump(replies)
 
 
 # ======================================READ all replies by a user - ADMIN ONLY==================================
@@ -125,8 +152,6 @@ def get_all_users_replies(reply_user_id):
     #scalar will return a single user where the id matches user_id and assign the result to the user variable
     user = db.session.scalar(stmt)
 
-    print()
-
     #if cont is above 0 then the user has posted replies
     #return replies only - not the post or user
     #else if hte user is 0 then they have not posted replies
@@ -137,6 +162,39 @@ def get_all_users_replies(reply_user_id):
         return {'msg': f'User {reply_user_id} has not posted any replies'}
     else:
         abort(404, description=f'User id:{reply_user_id} does not exist')
+
+
+
+# =============================DELETE any reply - ADMIN ONLY========================================================
+@admin_bp.route('/replies/<int:reply_id>/delete/', methods=['DELETE'])
+#Route protected by JWT
+@jwt_required()
+def delete_single_reply(reply_id):
+
+    # delete post protected by admin rights
+    #admin_access will abort if is_admin is False
+    admin_access()
+    
+    #create query statement to return a single Post with the id of the route variable
+    stmt = db.select(Reply).filter_by(id=reply_id)
+    #scalar will return a single post where the id matches post_id and assign the result to the post variable
+    reply = db.session.scalar(stmt)
+
+    if reply:
+        db.session.delete(reply)
+        db.session.commit()
+        return {
+            'message': 'Reply deleted successfully',
+            'post id': reply.id,
+            'reply': reply.reply
+            }
+    else:
+        abort(404, description=f'Post {reply_id} does not exist')
+
+
+
+
+
 
 
 # ======================================READ any user profile - ADMIN ONLY==================================
@@ -325,7 +383,6 @@ def revoke_admin_rights(user_id):
 
     #call function to revoke admin rights
     return grant_revoke_admin(user_id, False, 'does not have', 'revoked', 'from')
-
 
 # ======================================Function def - Revoke/grant access==============================================
 def grant_revoke_admin(user_id, admin_bool, string_1, string_2, string_3):

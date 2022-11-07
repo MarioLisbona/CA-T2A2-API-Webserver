@@ -37,9 +37,9 @@ Creating a virtual world where this communication can happen is a step towards i
 
 ## **R10 - Describe the way tasks are allocated and tracked in your project**
 
-A good example of how allocated and tracked tasks in this project is demonstrated by how user stories were created to map the different routes the API would need.
+To manage all the tasks for this project is used a kanban board on Trello. I first created the users stories below that apply to the forum API. All the tasks that need to be completed in the project, including all the documentation, answers to assignment questions and the actual coding of different routes for the API are assigned to tickets and placed in the backlog column. I then assigned different coloured labels for different groups of tasks, green for R1, R2, R3  assignment rubrics, purple for assignment requirements to check, yellow for optional features after the minimum viable product was complete and orange for coding tasks.
 
-I first created the users stories below that apply to the forum API.
+I then wrote all the user stories for the API. The user stories below are broken down into two classes of users that will be accessing the forum API, Administrator and user, and represent all the different routes to resources that the API will facilitate.
 
 | User          	| Action                                                                                                 	|
 |---------------	|--------------------------------------------------------------------------------------------------------	|
@@ -52,7 +52,7 @@ I first created the users stories below that apply to the forum API.
 | Administrator 	| I want to view all replies on the forum                                                                	|
 | Administrator 	| I want to view all replies posted by a user                                                            	|
 | Administrator 	| I want to issue a warning to a user                                                                    	|
-| Administrator 	| I i want to a user to be automatically deleted on next offence post third warning                      	|
+| Administrator 	| I i want to a user to be automatically deleted on the next offence post third warning                     |
 | Administrator 	| I want to grant admin rights to another user                                                           	|
 | Administrator 	| I want to revoke admin rights from another user                                                        	|
 | Administrator 	| I want to be able to view the forum statistics                                                         	|
@@ -72,7 +72,6 @@ I first created the users stories below that apply to the forum API.
 | User          	| I want to display all the posts in a forum channel                                                     	|
 | User          	| I want to display all the posts from a particular user                                                 	|
 
-Each one of these user stories would eventually become a route to access the forum API functionality.
 
 I then created a kanban board with Trello to allocate and track tasks for the duration of the project. The kanban board is comprised of 5 columns, from left to right they are:
 - Backlog
@@ -81,7 +80,7 @@ I then created a kanban board with Trello to allocate and track tasks for the du
 - Testing
 - Done
 
-All the tasks that need to be completed in the project, including all the documentation, answers to assignment questions and the actual coding of different routes for the API are assigned to tickets and placed in the backlog column. I then assigned different coloured labels for different groups, green for R1, R2, R3 questions etc, purple for assignment requirements to check, yellow for optional features after the minimum viable product was complete and orange for coding tasks.
+
 
 PICTURE
 

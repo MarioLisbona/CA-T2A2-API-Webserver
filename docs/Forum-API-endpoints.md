@@ -780,7 +780,7 @@
     "channel": "Travel"
 }
 ```
-- Request Body:
+- Response Body:
 - successfully post to forum:
 
 ```JSON
@@ -850,3 +850,201 @@
     "error": "404 Not Found: Post 3 does not exist"
 }
 ```
+
+### /posts/
+
+- Methods: GET
+- Arguments: *None*
+- Description: read all active posts
+- Authentication: @jwt_required()
+- Headers-Authorization: Bearer {Token} - get_jwt_identity()
+- Request Body: *None*
+- Response Body:
+
+```JSON
+[
+    {
+        "id": 12,
+        "title": "Europe for Winter",
+        "date": "2022-11-08",
+        "time": "14:56:44",
+        "is_active": true,
+        "content": "My trip to Europe was amazing. We rode some amazing resorts, found some amazing backcountry terrain and got alot of pwder turns in. And the food was unreal!",
+        "channel": "Travel",
+        "user": {
+            "f_name": "Mario",
+            "l_name": "Lisbona",
+            "email": "mario.lisbona@gmail.com"
+        },
+        "replies": []
+    }
+]
+```
+
+
+### /posts/\<int:post_id\>/
+
+- Methods: GET
+- Arguments: *post_id*
+- Description: read a specific post given a post id
+- Authentication: @jwt_required()
+- Headers-Authorization: Bearer {Token} - get_jwt_identity()
+- Request Body: *None*
+- Response Body:
+- Post exists:
+
+```JSON
+{
+    "id": 12,
+    "title": "Europe for Winter",
+    "date": "2022-11-08",
+    "time": "14:56:44",
+    "is_active": true,
+    "content": "My trip to Europe was amazing. We rode some amazing resorts, found some amazing backcountry terrain and got alot of pwder turns in. And the food was unreal!",
+    "channel": "Travel",
+    "user": {
+        "f_name": "Mario",
+        "l_name": "Lisbona",
+        "email": "mario.lisbona@gmail.com"
+    },
+    "replies": []
+}
+```
+- Post does not exist:
+  
+```JSON
+{
+    "error": "404 Not Found: Post 124 does not exist"
+}
+```
+
+
+### /posts/users/\<int:user_id\>/
+
+- Methods: GET
+- Arguments: *user_id*
+- Description: read all posts from a speciifc user given a user id
+- Authentication: @jwt_required()
+- Headers-Authorization: Bearer {Token} - get_jwt_identity()
+- Request Body: *None*
+- Response Body:
+- User exists and has posted to the forum:
+
+```JSON
+{
+    "msg": "User:1 has posted the following posts to the forum",
+    "post details": [
+        {
+            "id": 1,
+            "title": "Traveling to Indonesia",
+            "date": "2022-11-07",
+            "time": "09:31:11",
+            "is_active": false,
+            "content": "Post content",
+            "channel": "Travel",
+            "user": {
+                "f_name": "Administrator",
+                "l_name": "Admin",
+                "email": "admin@forum.com"
+            }
+        }
+    ]
+}
+```
+
+- User exists and has not posted to the forum:
+
+```JSON
+{
+    "msg": "The user id:9 - Mario Lisbona has not posted anything to the forum"
+}
+```
+
+- User does not exist:
+
+```JSON
+{
+    "error": "404 Not Found: User id 96 does not exist"
+}
+```
+
+
+### /posts/\<int:post_id\>/
+
+- Methods: PUT, PATCH
+- Arguments: *post_id*
+- Description: update a post as the owner
+- Authentication: @jwt_required()
+- Headers-Authorization: Bearer {Token} - get_jwt_identity()
+- Request Body: Every field can be updated but all fields when updating are also optional. all fields available are shown below
+
+```JSON
+{
+    "title": "Changing the title of a post!",
+    "content": "This will have to be more than 2000 This will have to be more than 2000 chars"
+}
+```
+
+- Response Body:
+- successfully updated post
+
+```JSON
+{
+    "message": "You successfully updated the post.",
+    "post details": {
+        "id": 5,
+        "title": "Changing the title of a post!",
+        "date": "2022-11-08",
+        "time": "15:47:16",
+        "is_active": true,
+        "content": "This will have to be more than 2000 chars",
+        "channel": "Tech",
+        "user": {
+            "f_name": "Mario",
+            "l_name": "Lisbona",
+            "email": "mario.lisbona@gmail.com"
+        },
+        "replies": [
+            {
+                "id": 4,
+                "reply": "I am also learning how to use Python with Flask to develop web applications.",
+                "date": "2022-11-08",
+                "time": "15:43:03",
+                "user": {
+                    "f_name": "Ali",
+                    "l_name": "Taubner",
+                    "email": "ali.taubner@gmail.com"
+                }
+            }
+        ]
+    }
+}
+```
+
+- not the owner of the post:
+
+```JSON
+{
+    "error": "401 Unauthorized: You are not the owner of this post"
+}
+```
+
+- post does not exist:
+
+```JSON
+{
+    "error": "404 Not Found: Post 55 does not exist"
+}
+```
+
+
+### /posts/\<int:post_id\>/reply
+
+- Methods: POST
+- Arguments: *post_id*
+- Description: create a reply to a post
+- Authentication: @jwt_required()
+- Headers-Authorization: Bearer {Token} - get_jwt_identity()
+- Request Body: Every field can be updated but all fields when updating are also optional. all fields available are shown below
+
+```JSON

@@ -102,7 +102,7 @@ def get_all_posts():
 
 
 # ======================================READ a single post - any registered user==================================
-@posts_bp.route('<int:post_id>')
+@posts_bp.route('/<int:post_id>/')
 #Route protected by JWT
 @jwt_required()
 def get_single_post(post_id):
@@ -159,7 +159,7 @@ def get_all_posts_from_user(user_id):
 
 
 # ======================================UPDATE a single post - POST OWNER==================================
-@posts_bp.route('<int:post_id>', methods=['PUT', 'PATCH'])
+@posts_bp.route('/<int:post_id>/', methods=['PUT', 'PATCH'])
 #Route protected by JWT
 @jwt_required()
 def edit_single_post(post_id):

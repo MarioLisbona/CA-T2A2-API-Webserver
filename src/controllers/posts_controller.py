@@ -23,25 +23,32 @@ def create_single_post():
     # loading request data into the marshmallow PostSchema for validation
     data = PostSchema().load(request.json)
 
-    #create a new instance of Post class to store request.json data
-    post = Post(
-        title = data['title'],
-        date = date.today(),
-        time = datetime.now().strftime("%H:%M:%S"),
-        content = data['content'],
-        user_id = get_jwt_identity(),
-        channel = data['channel']
-    )
+    #create query to make sure if associated with token is in the database
+    stmt = db.select(User).filter_by(id=get_jwt_identity())
+    user = db.session.scalar(stmt)
 
-    # Add new post details to the database and commit changes
-    db.session.add(post)
-    db.session.commit()
+    if user:
+        #create a new instance of Post class to store request.json data
+        post = Post(
+            title = data['title'],
+            date = date.today(),
+            time = datetime.now().strftime("%H:%M:%S"),
+            content = data['content'],
+            user_id = get_jwt_identity(),
+            channel = data['channel']
+        )
 
-    #return success message and return the post data
-    return {
-            'message': 'You successfully added the post to the forum',
-            'post details': PostSchema().dump(post)
-        }
+        # Add new post details to the database and commit changes
+        db.session.add(post)
+        db.session.commit()
+
+        #return success message and return the post data
+        return {
+                'message': 'You successfully added the post to the forum',
+                'post details': PostSchema().dump(post)
+            }
+    else:
+        abort(404, description=f'User {get_jwt_identity()} does not exist')
 
 # =============================DELETE a post - Owner ONLY========================================================
 @posts_bp.route('/<int:post_id>/delete/', methods=['DELETE'])

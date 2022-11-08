@@ -32,7 +32,7 @@ def get_user_profile():
 
 
 # # ======================================UPDATE a user's profile - Profile Owner==================================
-@users_bp.route('/update_profile', methods=['PUT', 'PATCH'])
+@users_bp.route('/update_profile/', methods=['PUT', 'PATCH'])
 @jwt_required()
 def edit_users_own_details():
     #retrieve the user's own id from their token

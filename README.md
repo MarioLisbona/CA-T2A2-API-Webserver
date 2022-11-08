@@ -53,6 +53,8 @@ No solution is ever the perfect solution, there are always drawbacks that need t
 
 ## **R5 - Document all endpoints for your API**
 
+View all the endpoint documentation for the Forum API [*here*](./Forum-API-endpoints.md)
+
 ## **R6 - An ERD for your app**
 
 ## **R7 - Detail any third party services that your app will use**

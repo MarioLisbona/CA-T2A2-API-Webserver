@@ -776,7 +776,77 @@
 ```JSON
 {
     "title": "Europe for Winter",
-    "content": "My trip to Europe was amazing. We rode some amazing resorts, found some amazing backcountry terrain and got alot of pwder turns in. And the food was unreal!",
+    "content": "My trip to Europe was amazing. We rode some amazing resorts, found some amazing backcountry terrain and got alot of powder turns in. And the food was unreal!",
     "channel": "Travel"
+}
+```
+- Request Body:
+- successfully post to forum:
+
+```JSON
+{
+    "message": "You successfully added the post to the forum",
+    "post details": {
+        "id": 13,
+        "title": "Europe for Winter",
+        "date": "2022-11-08",
+        "time": "15:02:08",
+        "is_active": true,
+        "content": "My trip to Europe was amazing. We rode some amazing resorts, found some amazing backcountry terrain and got alot of pwder turns in. And the food was unreal!",
+        "channel": "Travel",
+        "user": {
+            "f_name": "Mario",
+            "l_name": "Lisbona",
+            "email": "mario.lisbona@gmail.com"
+        },
+        "replies": []
+    }
+}
+```
+
+- Token valid but user has been deleted from database
+
+```JSON
+{
+    "error": "404 Not Found: User 7 does not exist"
+}
+```
+
+<hr>
+<br>
+
+
+### /posts/\<int:post_id\>/delete/
+
+- Methods: DELETE
+- Arguments: *post_id*
+- Description: Delete a post that a user owns
+- Authentication: @jwt_required()
+- Headers-Authorization: Bearer {Token} - get_jwt_identity()
+- Request Body: *None*
+- Response Body:
+- Successful Delete
+
+```JSON
+{
+    "message": "Post deleted successfully",
+    "post id": 13,
+    "post Title": "Europe for Winter"
+}
+```
+
+- Not the owner of the post or an admin
+
+```JSON
+{
+    "message": "You are not the owner of this post"
+}
+```
+
+- post does not exist
+
+```JSON
+{
+    "error": "404 Not Found: Post 3 does not exist"
 }
 ```

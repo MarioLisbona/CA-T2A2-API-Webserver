@@ -334,7 +334,7 @@ def delete_my_reply(reply_id):
 
 
 # =============================get all replies to a post - registered user========================================================
-@posts_bp.route('/<int:post_id>/replies/', methods=['GET'])
+@posts_bp.route('/<int:post_id>/replies/')
 #Route protected by JWT
 @jwt_required()
 def get_all_replies_on_post(post_id):
@@ -376,8 +376,11 @@ def get_all_post_in_channel(forum_channel):
     channels = os.environ.get('VALID_CHANNELS')
     channels_list = list(channels.split(', '))
 
-    #query database to find posts in the channel
-    stmt = db.select(Post).filter_by(channel=forum_channel)
+    #query database to find all active posts in the channel
+    stmt = db.select(Post).where(and_(
+        Post.channel == forum_channel,
+        Post.is_active == True
+    ))
     channel_posts = db.session.scalars(stmt)
 
     #query database to count how many posts are posted to the forum

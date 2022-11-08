@@ -1,4 +1,11 @@
-# Forum API endpoint documenation
+# **Tables of contents**
+- [**Admin routes**](#admin-routes)
+- [**Auth routes**](#auth-routes)
+- [**User routes**](#user-routes)
+- [**Post routes**](#post-routes)
+- [**CLI Commands**](#cli-commands)
+
+# **Forum API endpoint documenation**
 
 ## Admin routes:
 
@@ -452,7 +459,7 @@
 <br>
 
 
-### users/\<int:user_id\>/grant_admin/
+### /admin/users/\<int:user_id\>/grant_admin/
 
 - Methods: PATCH
 - Arguments: *user_id*
@@ -505,7 +512,7 @@
 <br>
 
 
-### users/\<int:user_id\>/revoke_admin/
+### /admin/users/\<int:user_id\>/revoke_admin/
 
 - Methods: PATCH
 - Arguments: *user_id*
@@ -553,7 +560,8 @@
     "error": "404 Not Found: User id:13 does not exist"
 }
 ```
-
+[**Back to Table of Contents**](#tables-of-contents)
+<hr>
 <hr>
 <hr>
 <br>
@@ -644,7 +652,8 @@
     "error": "401 Unauthorized: Invalid email or password"
 }
 ```
-
+[**Back to Table of Contents**](#tables-of-contents)
+<hr>
 <hr>
 <hr>
 <br>
@@ -757,6 +766,8 @@
 }
 ```
 
+[**Back to Table of Contents**](#tables-of-contents)
+<hr>
 <hr>
 <hr>
 <br>
@@ -1187,3 +1198,143 @@
 
 <hr>
 <br>
+
+### /posts/replies/\<int:post_id\>/replies/
+
+- Methods: GET
+- Arguments: *post_id*
+- Description: display all replies to a post given a post id
+- Authentication: @jwt_required()
+- Headers-Authorization: Bearer {Token} - get_jwt_identity()
+- Request Body: *None*
+- Response Body:
+
+```JSON
+{
+    "message": "View replies on a post",
+    "replies": 2,
+    "Post information": {
+        "id": 5,
+        "title": "Changing the title of a post!"
+    },
+    "Replies": [
+        {
+            "id": 4,
+            "reply": "I am also learning how to use Python with Flask to develop web applications.",
+            "date": "2022-11-08",
+            "time": "15:43:03",
+            "user": {
+                "f_name": "Ali",
+                "l_name": "Taubner",
+                "email": "ali.taubner@gmail.com"
+            }
+        },
+        {
+            "id": 8,
+            "reply": "Iv just started to learn Flask and im building a forum API",
+            "date": "2022-11-09",
+            "time": "08:00:55",
+            "user": {
+                "f_name": "Mario",
+                "l_name": "Lisbona",
+                "email": "mario.lisbona@gmail.com"
+            }
+        }
+    ]
+}
+```
+
+- Post does not exist:
+
+```JSON
+{
+    "error": "404 Not Found: Post 55 does not exist"
+}
+```
+
+<hr>
+<br>
+
+### /posts/channel/\<string:forum_channel\>/
+
+- Methods: GET
+- Arguments: *post_id*
+- Description: display all posts in a given forum channel
+  - Forum channels: Travel, Tech, Snowboarding, Surfing, Foiling, Food, Pets, Music
+- Authentication: @jwt_required()
+- Headers-Authorization: Bearer {Token} - get_jwt_identity()
+- Request Body: *None*
+- Response Body:
+
+```JSON
+[
+    {
+        "id": 4,
+        "title": "Using Flask for Web Development",
+        "date": "2018-05-17",
+        "time": "15:43:03",
+        "is_active": true,
+        "content": "Learning how to build a web application with Flask and Python, Learning how to build a web application with Flask and PythonLearning how to build a web application with Flask and PythonLearning how to build a web application with Flask and PythonLearning how to build a web application with Flask and PythonLearning how to build a web application with Flask and Python",
+        "channel": "Tech",
+        "user": {
+            "f_name": "Ali",
+            "l_name": "Taubner",
+            "email": "ali.taubner@gmail.com"
+        }
+    },
+    {
+        "id": 5,
+        "title": "Changing the title of a post!",
+        "date": "2022-11-08",
+        "time": "15:47:16",
+        "is_active": true,
+        "content": "This will have to be more than 100 chars and no more than 2000 ",
+        "channel": "Tech",
+        "user": {
+            "f_name": "Mario",
+            "l_name": "Lisbona",
+            "email": "mario.lisbona@gmail.com"
+        }
+    }
+]
+
+```
+
+- CHannel does not contain any posts:
+
+```JSON
+{
+    "msg": "There are currently no posts in the 'Snowboarding channel"
+}
+```
+
+```
+- CHannel does not exist:
+
+```JSON
+{
+    "error": "404 Not Found: There are no channels named 'Hiking'."
+}
+```
+
+[**Back to Table of Contents**](#tables-of-contents)
+<hr>
+<hr>
+<hr>
+<br>
+
+## CLI Commands
+
+- flask db drop
+  - drop all tables in the database
+- flask db create
+  - create the table structures in the database
+- flask db seed
+  - seed the tables in the database with sample data
+
+[**Back to Table of Contents**](#tables-of-contents)
+<br>
+<br>
+<hr>
+
+

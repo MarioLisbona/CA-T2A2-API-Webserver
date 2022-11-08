@@ -59,7 +59,7 @@ def get_forum_stats():
 
 
 # ======================================READ all deactivated/archived posts - ADMIN ONLY==================================
-@admin_bp.route('/posts/deactivated')
+@admin_bp.route('/posts/deactivated/')
 #Route protected by JWT
 @jwt_required()
 def get_all_archived_posts():
@@ -189,7 +189,7 @@ def delete_single_reply(reply_id):
             'reply': reply.reply
             }
     else:
-        abort(404, description=f'Post {reply_id} does not exist')
+        abort(404, description=f'Reply {reply_id} does not exist')
 
 
 
@@ -335,7 +335,8 @@ def delete_single_user(user_id):
     # else display message that warnings ar still remaining
     #else provide an error message and 404 resource not found code
     if user:
-        if user.warnings > 3:
+        print(user.warnings)
+        if user.warnings >= 3:
             db.session.delete(user)
             db.session.commit()
             return {

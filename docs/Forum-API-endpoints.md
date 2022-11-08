@@ -851,6 +851,10 @@
 }
 ```
 
+<hr>
+<br>
+
+
 ### /posts/
 
 - Methods: GET
@@ -880,6 +884,10 @@
     }
 ]
 ```
+
+<hr>
+<br>
+
 
 
 ### /posts/\<int:post_id\>/
@@ -917,6 +925,10 @@
     "error": "404 Not Found: Post 124 does not exist"
 }
 ```
+
+<hr>
+<br>
+
 
 
 ### /posts/users/\<int:user_id\>/
@@ -967,6 +979,10 @@
     "error": "404 Not Found: User id 96 does not exist"
 }
 ```
+
+<hr>
+<br>
+
 
 
 ### /posts/\<int:post_id\>/
@@ -1038,6 +1054,10 @@
 ```
 
 
+<hr>
+<br>
+
+
 ### /posts/\<int:post_id\>/reply
 
 - Methods: POST
@@ -1045,6 +1065,125 @@
 - Description: create a reply to a post
 - Authentication: @jwt_required()
 - Headers-Authorization: Bearer {Token} - get_jwt_identity()
-- Request Body: Every field can be updated but all fields when updating are also optional. all fields available are shown below
+- Request Body:
+  
+```JSON
+{
+    "reply": "Yes! i love indo!!!! Im heading to the ments in March! :D"
+}
+```
+
+- Response Body: 
 
 ```JSON
+{
+    "message": "You successfully replied to the post",
+    "post title": "Traveling to Indonesia",
+    "reply details": {
+        "id": 7,
+        "reply": "Yes! i love indo!!!! Im heading to the ments in March! :D",
+        "date": "2022-11-08",
+        "time": "16:02:37"
+    }
+}
+```
+
+- post does not exist:
+
+```JSON
+{
+    "error": "404 Not Found: Post 55 does not exist"
+}
+```
+
+
+<hr>
+<br>
+
+
+### /posts/replies/\<int:reply_id\>/update/
+
+- Methods: POST
+- Arguments: *reply_id*
+- Description: update a reply to a post as the owner of the reply
+- Authentication: @jwt_required()
+- Headers-Authorization: Bearer {Token} - get_jwt_identity()
+- Request Body:
+  
+```JSON
+{
+    "reply": "Updating the reply to a post as the owner of the reply"
+}
+```
+
+- Response Body:
+- Successfully update reply
+
+```JSON
+{
+    "message": "You successfully updated the reply.",
+    "reply details": {
+        "id": 6,
+        "reply": "Updating the reply to a post as the owner of the reply",
+        "date": "2022-11-08",
+        "time": "16:00:43"
+    }
+}
+```
+
+- Not the owner of the reply
+
+```JSON
+{
+    "message": "You are not the owner of this Reply"
+}
+```
+
+- reply does not exist:
+
+```JSON
+{
+    "error": "404 Not Found: reply 55 does not exist"
+}
+```
+
+<hr>
+<br>
+
+### /posts/replies/\<int:reply_id\>/delete/
+
+- Methods: DELETE
+- Arguments: *reply_id*
+- Description: Delete a reply to a post as the owner of the reply
+- Authentication: @jwt_required()
+- Headers-Authorization: Bearer {Token} - get_jwt_identity()
+- Request Body: *None*
+- Response Body:
+- Successfully Delete reply
+
+```JSON
+{
+    "message": "Reply deleted successfully",
+    "reply id": 6,
+    "reply": "Updating the reply to a post as the owner of the reply"
+}
+```
+
+- Not the owner of the reply
+
+```JSON
+{
+    "message": "You are not the owner of this Reply"
+}
+```
+
+- reply does not exist:
+
+```JSON
+{
+    "error": "404 Not Found: reply 55 does not exist"
+}
+```
+
+<hr>
+<br>

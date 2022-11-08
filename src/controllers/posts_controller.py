@@ -246,14 +246,14 @@ def create_reply(post_id):
         return {
             'message': f'You successfully replied to the post',
             'post title': post.title,
-            'reply details': ReplySchema().dump(reply)
+            'reply details': ReplySchema(exclude=['post', 'user']).dump(reply)
             }
     else:
         abort(404, description=f'Post {post_id} does not exist')
 
 
 # ======================================UPDATE a reply to a post - any registered user==================================
-@posts_bp.route('/replies/<int:reply_id>/update', methods=['PATCH'])
+@posts_bp.route('/replies/<int:reply_id>/update/', methods=['PATCH'])
 #Route protected by JWT
 @jwt_required()
 def update_reply(reply_id):
@@ -302,7 +302,7 @@ def update_reply(reply_id):
 @jwt_required()
 def delete_my_reply(reply_id):
 
-    #create query statement to return a single Post with the id of the route variable and id returned from get_jwt_identity
+    #create query statement to return a single reply with the id of the route variable and id returned from get_jwt_identity
     stmt = db.select(Reply).where(
             and_(
                 Reply.id == reply_id,
@@ -310,7 +310,7 @@ def delete_my_reply(reply_id):
             )
     )
 
-    #scalar will return a single post where the id matches post_id and assign the result to the post variable
+    #scalar will return a single reply where the id matches reply_id and assign the result to the post variable
     user_reply = db.session.scalar(stmt)
 
     #query on the reply_id only to make sure the reply exists
@@ -328,9 +328,9 @@ def delete_my_reply(reply_id):
             'reply': user_reply.reply
             }
     elif reply_only:
-        return {'message': 'You are not the owner of this post'}
+        return {'message': 'You are not the owner of this Reply'}
     else:
-        abort(404, description=f'Post {reply_id} does not exist')
+        abort(404, description=f'Reply {reply_id} does not exist')
 
 
 # =============================get all replies to a post - registered user========================================================

@@ -16,11 +16,10 @@ users_bp = Blueprint('users', __name__, url_prefix='/users')
 @jwt_required()
 def get_user_profile():
     
-    #retrieve user id from token
-    user_id = get_jwt_identity()
     #create query statement to return a single user with the id returned from get_jwt_identity()
-    stmt = db.select(User).filter_by(id=user_id)
-    #scalar will return a single user where the id matches user_id and assign the result to the user variable
+    stmt = db.select(User).filter_by(id=get_jwt_identity())
+
+    #scalar will return a single user where the id matches get_jwt_identity() and assign the result to the user variable
     user = db.session.scalar(stmt)
 
     #if the user exists then use Schema to return json serialized version of the query statement
@@ -28,7 +27,7 @@ def get_user_profile():
     if user:
         return UserSchema(exclude=['password']).dump(user)
     else:
-        abort(404, description=f'User id:{user_id} does not exist')
+        abort(404, description=f'User id:{get_jwt_identity()} does not exist')
 
 
 # # ======================================UPDATE a user's profile - Profile Owner==================================

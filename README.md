@@ -12,10 +12,18 @@
   - [**R5 - Document all endpoints for your API**](#r5---document-all-endpoints-for-your-api)
   - [**R6 - An ERD for your app**](#r6---an-erd-for-your-app)
   - [**R7 - Detail any third party services that your app will use**](#r7---detail-any-third-party-services-that-your-app-will-use)
+    - [**SQLAlchemy**](#sqlalchemy)
+    - [**flask-marshmallow**](#flask-marshmallow)
+    - [**python-dotenv**](#python-dotenv)
+    - [**psycopg2-binary**](#psycopg2-binary)
+    - [**pip-review**](#pip-review)
+    - [**Flask-Bcrypt**](#flask-bcrypt)
+    - [**Flask-JWT-Extended**](#flask-jwt-extended)
   - [**R8 - Describe your projects models in terms of the relationships they have with each other**](#r8---describe-your-projects-models-in-terms-of-the-relationships-they-have-with-each-other)
   - [**R9 - Discuss the database relations to be implemented in your application**](#r9---discuss-the-database-relations-to-be-implemented-in-your-application)
   - [**R10 - Describe the way tasks are allocated and tracked in your project**](#r10---describe-the-way-tasks-are-allocated-and-tracked-in-your-project)
   - [**References**](#references)
+  - [**Other links**](#other-links)
 
 ## **R1 - Identification of the problem you are trying to solve by building this particular app.**
 
@@ -51,13 +59,90 @@ No solution is ever the perfect solution, there are always drawbacks that need t
 
 ## **R4 - Identify and discuss the key functionalities and benefits of an ORM**
 
+An Object Relational Mapper (ORM) is a language specific code module or library that acts as an intermediary between data stored in a relational database and objects created in application code. Below is a table of user data in a PostgreSQL database
+
+```
+ id |    f_name     | l_name  |          email          |                           password                           | is_admin | warnings 
+----+---------------+---------+-------------------------+--------------------------------------------------------------+----------+----------
+  1 | Administrator | Admin   | admin@forum.com         | $2b$12$nS0KObVyXv8HmKNAtcvBmu2rsXnnqY8BGGOgm2mcXvit7TgmPRp4e | t        |        0
+  2 | Mario         | Lisbona | mario.lisbona@gmail.com | $2b$12$.ZF7EmMGNoJBb9bimlCjMum7Os86.ADN8PPS5PTQX1SEd0/lPF02O | f        |        0
+  3 | Ali           | Taubner | ali.taubner@gmail.com   | $2b$12$zGkzP1Cjwro0WsW8UTan2.07ZmRJqPnkiMczKRtCCJOBDysm5rEsW | f        |        0
+  4 | Coda          | Cat     | coda.cat@gmail.com      | $2b$12$Tw5Bo2CrbAgPaWGtf8oQU.4uj7zGYi6ZkOs5.aOTX6p06s4ZudVmW | f        |        0
+```
+
+Using an ORM the following class would be created to map to the each record in the database table. 
+
+```py
+class User(db.Model):
+
+    id = db.Column(db.Integer, primary_key=True)
+    f_name = db.Column(db.String(100))
+    l_name = db.Column(db.String(100))
+    email = db.Column(db.String(100), nullable=False, unique=True)
+    password = db.Column(db.String, nullable=False)
+    is_admin = db.Column(db.Boolean, default=False)
+    warnings = db.Column(db.Integer, default=0)
+```
+For each new record in the table, a new instnace of the User class would be created and each field's data would be entered into each attribute of the object. For example the object below would be used to create user id 2.
+
+```py
+user = User(
+        f_name = 'Mario',
+        l_name = 'Lisbona',
+        email = 'mario.lisbona@gmail.com',
+        password = bcrypt.generate_password_hash('muz123').decode('utf-8'),
+        is_admin = False,
+        warnings = 0
+      )
+```
+
+Object Relational Mapping allows developers to manipulate data structures in databases through Object Orientated Programming languages. This means that developers can use the language of their choice to perform CRUD operations on the databases instead of having to write SQL statements. For example the below SQL statement will count the number of posts that are marked as active in a 'posts' table:
+```SQL
+SELECT count (*)
+FROM posts
+WHERE is_active = true;
+```
+The equvilent code in an Python using SQLAlchemy would look like this:
+
+```py
+stmt = stmt = db.select(db.func.count()).select_from(Post).filter_by(is_active=True)
+```
+
+Using an ORM to read and manipulate data from a database a process called 'hydration' which converts the value of each column of the database table into an object property. This property can now be manipulate and used in the application code. The ORM will then be used in reverse to convert the manipulate data back into a format to be used in the database. 
+
+ORM's use one of two patterns, either Active Record or Data Mapper. Active Record and Data Mapper patterns are similar in that each will have a class that represents the table in the database. The classes attributes correspond to columns in the database table. This means that every object instance is effectively linked to a single row or record in that table. Active record differs from Data Mapper here in that it not only contains the data for each attribute of record, it also contains methods to perform on that data (Create, Read, Update, Delete).
+
+This ability to query the database and develop and application in the one language has the potential to speed up the development of an application in its early stages because the developers aren't having to swap back and forth between the language the application is coded in and the language used to query the database structures. ORM's also are database platform agnostic so that an application can be built with one type of database and then switched to a different database with minimal changes to the application code. Although in theory its possible to use, for example PostgreSQL in a staging environment and then swap to MySQL in a production environment without too much hassle, this is not a good practice as unforeseen errors could occur in the production environment that weren't tested for in the staging environment.
+
+Prevention of SQL injection attacks is another benefit provided by using an ORM to interact with a database. It by no means provides total protection against SQL injection attacks but significantly reduced the chance of it happening because the interactions with the database are happening in the application code not in SQL. (Tina, 2020) [^5] (Matt Makai, 2022) [^6]
+
+
+
 ## **R5 - Document all endpoints for your API**
 
 View all the endpoint documentation for the Forum API [*here*](./docs/Forum-API-endpoints.md#api-endpoints-documentation-tables-of-contents)
 
 ## **R6 - An ERD for your app**
 
+<img src="./docs/forum-api-erd.png" width='900' alt="Forum API ERD">
+
 ## **R7 - Detail any third party services that your app will use**
+
+### **SQLAlchemy**
+
+
+
+### **flask-marshmallow**
+
+### **python-dotenv**
+
+### **psycopg2-binary**
+
+### **pip-review**
+
+### **Flask-Bcrypt**
+
+### **Flask-JWT-Extended**
 
 ## **R8 - Describe your projects models in terms of the relationships they have with each other**
 
@@ -128,10 +213,14 @@ You can become a member of my T2A2 Web API trello board [*here*](https://trello.
 - [^2 - R3](#r3---why-have-you-chosen-this-database-system-what-are-the-drawbacks-compared-to-others) - Amrit Pal Singh (2021) [*Should I Use MongoDB or PostgreSQL?*](https://medium.com/geekculture/should-i-use-mongodb-or-postgresql-ba2c1bb8b768), Medium website, accessed 08 November 2022.
 - [^3 - R3](#r3---why-have-you-chosen-this-database-system-what-are-the-drawbacks-compared-to-others) - Salman Ravoof (2022) [*MongoDB vs PostgreSQL: 15 Critical Differences*](https://kinsta.com/blog/mongodb-vs-postgresql/#what-is-postgresql), Kinsta website, accessed 08 November 2022.
 - [^4 - R3](#r3---why-have-you-chosen-this-database-system-what-are-the-drawbacks-compared-to-others) - Krasimir Hristozov (2019) [*MySQL vs PostgreSQL -- Choose the Right Database for Your Project*](https://developer.okta.com/blog/2019/07/19/mysql-vs-postgres), Okta Developer website, accessed 08 November 2022.
+- [^5 - R4](#r4---identify-and-discuss-the-key-functionalities-and-benefits-of-an-orm) - Tina (2020) [*Introduction to Object-relational mapping: the what, why, when and how of ORM*](https://dev.to/tinazhouhui/introduction-to-object-relational-mapping-the-what-why-when-and-how-of-orm-nb2), Dev Community Developer website, accessed 09 November 2022.
+- [^6 - R4](#r4---identify-and-discuss-the-key-functionalities-and-benefits-of-an-orm) - Matt Makai (2022) [*Object-relational Mappers (ORMs)*](https://www.fullstackpython.com/object-relational-mappers-orms.html), Full Stack Python website, accessed 09 November 2022.
 
 
-** https://developer.mozilla.org/en-US/docs/Web/HTTP/Status**
-https://regexr.com/38tvj
-https://c4model.com/
+## **Other links**
 
-https://vertabelo.com/blog/crow-s-foot-notation/
+- [HTTP status codes](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status)
+- [Regex generators](https://regexr.com/38tvj)
+- [Visualising Software Architecture](https://c4model.com/)
+- [Crows Foot Notation](https://vertabelo.com/blog/crow-s-foot-notation/)
+  

@@ -821,7 +821,7 @@
 - Description: Create a post to add to the forum
 - Authentication: @jwt_required()
 - Headers-Authorization: Bearer {Token} - get_jwt_identity()
-- Request Body: Every field can be updated but all fields when updating are also optional. 
+- Request Body: 
 
 ```JSON
 {
@@ -862,6 +862,21 @@
 }
 ```
 
+- Example of validation
+
+```JSON
+{
+    "error": {
+        "content": [
+            "Length must be between 100 and 2000."
+        ],
+        "channel": [
+            "Must be one of: Travel, Tech, Snowboarding, Surfing, Foiling, Food, Pets, Music"
+        ]
+    }
+}
+```
+
 <hr>
 <br>
 
@@ -889,7 +904,7 @@
 
 ```JSON
 {
-    "message": "You are not the owner of this post"
+    "error": "401 Unauthorized: You are not the owner of this post"
 }
 ```
 
@@ -933,6 +948,14 @@
         "replies": []
     }
 ]
+```
+
+- No active posts in the forum
+
+```JSON
+{
+    "error": "404 Not Found: There are no active posts in the forum"
+}
 ```
 
 <hr>
@@ -1018,7 +1041,7 @@
 
 ```JSON
 {
-    "msg": "The user id:9 - Mario Lisbona has not posted anything to the forum"
+    "error": "404 Not Found: The user id:5 - Mario Lisbona has not posted anything to the forum"
 }
 ```
 

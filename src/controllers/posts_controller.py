@@ -56,20 +56,23 @@ def create_single_post():
 @jwt_required()
 def delete_my_post(post_id):
 
-    #create query statement to return a single Post with the id of the route variable and id returned from get_jwt_identity
+    #create query statement to return a single Post with the id of the route variable 
+    # and id returned from get_jwt_identity
     stmt = db.select(Post).where(
             and_(
                 Post.id == post_id,
                 Post.user_id == get_jwt_identity()
             )
     )
-    #scalar will return a single post where the id matches post_id and assign the result to the post variable
+    #scalar will return a single post where the id matches post_id and
+    # owner is returned by get_jwt_identity
     user_post = db.session.scalar(stmt)
 
+    #find if the post exists
     stmt = db.select(Post).filter_by(id=post_id)
     post_only = db.session.scalar(stmt)
 
-    #if the post exists then use Schema to return json serialized version of the query statement
+    #if the post exists and token is the owner then use Schema to return json serialized version of the query statement
     #else provide an error message and 404 resource not found code
     if user_post:
         db.session.delete(user_post)
@@ -79,8 +82,10 @@ def delete_my_post(post_id):
             'post id': user_post.id,
             'post Title': user_post.title
             }
+    #token is not the owner of this post
     elif post_only:
-        return {'message': 'You are not the owner of this post'}
+        abort(401, description='You are not the owner of this post')
+    #post does not exist
     else:
         abort(404, description=f'Post {post_id} does not exist')
 
@@ -93,12 +98,18 @@ def get_all_posts():
 
     #create query statement to return all active records in Post table sort by newest first
     stmt = db.select(Post).filter_by(is_active=True).order_by(Post.date.desc(), Post.time.desc())
+
     #scalalars will return many results and assign to posts variable
     posts = db.session.scalars(stmt)
 
-    #use Schema to return json serialized version of the query statement
-    return PostSchema(many=True).dump(posts)
+    stmt = stmt = db.select(db.func.count()).select_from(Post).filter_by(is_active=True)
+    count = db.session.scalar(stmt)
 
+    if count > 0:
+        #use Schema to return json serialized version of the query statement
+        return PostSchema(many=True).dump(posts)
+    elif count == 0:
+        abort(404, description='There are no active posts in the forum')
 
 
 # ======================================READ a single post - any registered user==================================
@@ -109,6 +120,7 @@ def get_single_post(post_id):
     
     
     #create query statement to return a single Post with the id of the route variable
+    # and has is_active stais is True
     stmt = db.select(Post).where(and_(
         Post.id == post_id,
         Post.is_active == True
@@ -153,7 +165,7 @@ def get_all_posts_from_user(user_id):
         }
     #the user exists but they have not posted anything
     elif user and count == 0:
-        return {'msg': f'The user id:{user_id} - {user.f_name} {user.l_name} has not posted anything to the forum'}
+        abort(404, f'The user id:{user_id} - {user.f_name} {user.l_name} has not posted anything to the forum')
     else:
         abort(404, description=f'User id {user_id} does not exist')
 

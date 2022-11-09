@@ -175,6 +175,7 @@ def get_all_posts_from_user(user_id):
 #Route protected by JWT
 @jwt_required()
 def edit_single_post(post_id):
+
     #create query statement to return a single Post with the id of the route variable post_id
     #to ascertain if route variable is a valid post for else statements below
     stmt = db.select(Post).filter_by(id=post_id)
@@ -186,6 +187,7 @@ def edit_single_post(post_id):
         Post.id == post_id,
         Post.user_id == get_jwt_identity()
     ))
+
     #scalar will return a single post where the id matches post_id and assign the result to the post variable
     post = db.session.scalar(stmt)
 
@@ -231,6 +233,7 @@ def edit_single_post(post_id):
 #Route protected by JWT
 @jwt_required()
 def create_reply(post_id):
+
     #create query statement to return a single Post with the id of the route variable post_id
     stmt = db.select(Post).filter_by(id=post_id)
     post = db.session.scalar(stmt)
@@ -240,7 +243,7 @@ def create_reply(post_id):
 
     #posts exists so create an instance of the Reply model to store json request data
     #assign user_id to return value of get_jwt_identity
-    #assign replies post_id to post from the object return from database query
+    #assign replies post_id to route variable
     if post:
         reply = Reply(
             reply = data['reply'],
@@ -284,6 +287,7 @@ def update_reply(reply_id):
     #scalar will return a single post where the id matches post_id and assign the result to the post variable
     reply = db.session.scalar(stmt)
 
+    #loading data into Marshmallow Schema for validation
     data = ReplySchema().load(request.json)
 
     if reply:
@@ -314,7 +318,8 @@ def update_reply(reply_id):
 @jwt_required()
 def delete_my_reply(reply_id):
 
-    #create query statement to return a single reply with the id of the route variable and id returned from get_jwt_identity
+    #create query statement to return a single reply with the id of the route variable 
+    # and id returned from get_jwt_identity
     stmt = db.select(Reply).where(
             and_(
                 Reply.id == reply_id,
@@ -329,7 +334,7 @@ def delete_my_reply(reply_id):
     stmt = db.select(Reply).filter_by(id=reply_id)
     reply_only = db.session.scalar(stmt)
 
-    #if the reply exists then use Schema to return json serialized version of the query statement
+    #if the reply exists then delete reply and commit changes
     #else provide an error message and 404 resource not found code
     if user_reply:
         db.session.delete(user_reply)
@@ -340,7 +345,7 @@ def delete_my_reply(reply_id):
             'reply': user_reply.reply
             }
     elif reply_only:
-        return {'message': 'You are not the owner of this Reply'}
+        abort(401, description=f'You are not the owner of this reply')
     else:
         abort(404, description=f'Reply {reply_id} does not exist')
 

@@ -1246,7 +1246,7 @@
 
 ```JSON
 {
-    "message": "You are not the owner of this Reply"
+    "error": "401 Unauthorized: You are not the owner of this reply"
 }
 ```
 

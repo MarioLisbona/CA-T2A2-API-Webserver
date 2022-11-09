@@ -14,7 +14,7 @@ auth_bp = Blueprint('auth', __name__, url_prefix='/auth')
 @auth_bp.route('/register/', methods=['POST'])
 def register_user():
     try:
-        # loading request data into the marshmallow PostSchema for validation
+        # loading request data into the marshmallow UserSchema for validation
         data = UserSchema().load(request.json)
 
         #create a new instance of User class to store request.json data
@@ -51,7 +51,7 @@ def login_user():
     # if user exists and password in request.json matches decrypted password in database
     if user and bcrypt.check_password_hash(user.password, request.json['password']):
 
-        #create token based on user id and lasts for 24 hours
+        #create token based on user id that lasts for 24 hours
         token = create_access_token(identity=str(user.id), expires_delta=timedelta(days=1))
         #return token, email address and admin status
         return {'email': user.email, 'token': token, 'is_admin': user.is_admin}
@@ -63,11 +63,9 @@ def login_user():
 
 # ==========================function to check if token is valid and user is admin===================================
 def admin_access():
-    #get identity from JWT token 
-    user_id = get_jwt_identity()
 
     #create a statement to query the database for the id retrieved from JWT token
-    stmt = db.select(User).filter_by(id=user_id)
+    stmt = db.select(User).filter_by(id=get_jwt_identity())
     user = db.session.scalar(stmt)
 
     #abort if id from token is not a user in the database

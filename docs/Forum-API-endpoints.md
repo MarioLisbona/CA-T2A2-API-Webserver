@@ -1,9 +1,10 @@
-# **Tables of contents**
+# **API Endpoints Documentation Tables of contents**
 - [**Admin routes**](#admin-routes)
 - [**Auth routes**](#auth-routes)
 - [**User routes**](#user-routes)
 - [**Post routes**](#post-routes)
 - [**CLI Commands**](#cli-commands)
+- [**Back to README**](./../README.md#coder-academy---assignment-t2a2---api-webserver-project-by-mario-lisbona)
 
 # **Forum API endpoint documenation**
 
@@ -599,7 +600,9 @@
 }
 ```
 
-[**Back to Table of Contents**](#tables-of-contents)
+[**Back to Table of Contents**](#api-endpoints-documentation-tables-of-contents)
+
+[**Back to README**](./../README.md#coder-academy---assignment-t2a2---api-webserver-project-by-mario-lisbona)
 <hr>
 <hr>
 <hr>
@@ -691,7 +694,10 @@
     "error": "401 Unauthorized: Invalid email or password"
 }
 ```
-[**Back to Table of Contents**](#tables-of-contents)
+
+[**Back to Table of Contents**](#api-endpoints-documentation-tables-of-contents)
+
+[**Back to README**](./../README.md#coder-academy---assignment-t2a2---api-webserver-project-by-mario-lisbona)
 <hr>
 <hr>
 <hr>
@@ -805,7 +811,9 @@
 }
 ```
 
-[**Back to Table of Contents**](#tables-of-contents)
+[**Back to Table of Contents**](#api-endpoints-documentation-tables-of-contents)
+
+[**Back to README**](./../README.md#coder-academy---assignment-t2a2---api-webserver-project-by-mario-lisbona)
 <hr>
 <hr>
 <hr>
@@ -1379,7 +1387,9 @@
 }
 ```
 
-[**Back to Table of Contents**](#tables-of-contents)
+[**Back to Table of Contents**](#api-endpoints-documentation-tables-of-contents)
+
+[**Back to README**](./../README.md#coder-academy---assignment-t2a2---api-webserver-project-by-mario-lisbona)
 <hr>
 <hr>
 <hr>
@@ -1394,7 +1404,9 @@
 - flask db seed
   - seed the tables in the database with sample data
 
-[**Back to Table of Contents**](#tables-of-contents)
+[**Back to Table of Contents**](#api-endpoints-documentation-tables-of-contents)
+
+[**Back to README**](./../README.md#coder-academy---assignment-t2a2---api-webserver-project-by-mario-lisbona)
 <hr>
 <hr>
 <hr>

@@ -1366,7 +1366,7 @@
 
 ```JSON
 {
-    "msg": "There are currently no posts in the 'Snowboarding channel"
+    "error": "404 Not Found: There are currently no posts in the 'Snowboarding channel"
 }
 ```
 

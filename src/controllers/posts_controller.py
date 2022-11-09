@@ -356,7 +356,7 @@ def delete_my_reply(reply_id):
 @jwt_required()
 def get_all_replies_on_post(post_id):
 
-    #create query statement to return replies where the post_id they are replying to is same as the route variable
+    #create query statement to return replies where the post_id is same as the route variable
     stmt = db.select(Reply).filter_by(post_id=post_id)
     #There could be multiple replies to the same post
     replies = db.session.scalars(stmt)
@@ -389,11 +389,11 @@ def get_all_replies_on_post(post_id):
 @jwt_required()
 def get_all_post_in_channel(forum_channel):
 
-    # retirving valid channels from .env and creating a list
+    #retrieving valid channels from .env and creating a list
     channels = os.environ.get('VALID_CHANNELS')
     channels_list = list(channels.split(', '))
 
-    #query database to find all active posts in the channel
+    #query database to find all active posts in the channel given route variable for channel
     stmt = db.select(Post).where(and_(
         Post.channel == forum_channel,
         Post.is_active == True
@@ -405,12 +405,13 @@ def get_all_post_in_channel(forum_channel):
     stmt = stmt = db.select(db.func.count()).select_from(Post).filter_by(channel=forum_channel)
     count = db.session.scalar(stmt)
 
-    #if scalars return object contains posts and route variable is in valid channels list return posts in channel
+    #if scalars return object contains posts and route variable is in valid channels list 
+    # return posts in channel
     #else if the count is zero and the route variable is a valid channel display no posts
     # else abort with error that channel does not exist
     if count > 0 and forum_channel in channels_list:
         return PostSchema(many=True, exclude=['replies']).dump(channel_posts)
     elif count == 0 and forum_channel in channels_list:
-        return {'msg': f'There are currently no posts in the \'{forum_channel} channel'}
+        abort(404, description=f'There are currently no posts in the \'{forum_channel} channel')
     else:
         abort(404, description=f'There are no channels named \'{forum_channel}\'.')

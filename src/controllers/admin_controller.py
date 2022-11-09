@@ -20,10 +20,11 @@ admin_bp = Blueprint('admin', __name__, url_prefix='/admin')
 @jwt_required()
 def get_forum_stats():
 
-    #Read any user protected by admin rights
-    #admin_access will abort if is_admin is False
+    #route protected and accessible only to users with admin right
+    #admin_access function will abort if user is_admin attribute is False
     admin_access()
 
+    #accessing chanels in environment variable and creating a list with it
     channels = os.environ.get('VALID_CHANNELS')
     channels_list = list(channels.split(', '))
 
@@ -35,15 +36,15 @@ def get_forum_stats():
     stmt = stmt = db.select(db.func.count()).select_from(Post).filter_by(is_active=True)
     active_posts = db.session.scalar(stmt)
 
-    #query database to count how many posts are archived in the forum
+    #query database to count how many posts are archived/deactivated in the forum
     stmt = stmt = db.select(db.func.count()).select_from(Post).filter_by(is_active=False)
     archived_posts = db.session.scalar(stmt)
 
-    #query database to count how many user are registered in the forum
+    #query database to count how many users are registered in the forum
     stmt = stmt = db.select(db.func.count()).select_from(User)
     users = db.session.scalar(stmt)
 
-    #query database to count how many user are registered in the forum
+    #query database to count how many admins are moderating the forum
     stmt = stmt = db.select(db.func.count()).select_from(User).filter_by(is_admin=True)
     admins = db.session.scalar(stmt)
 
@@ -64,25 +65,28 @@ def get_forum_stats():
 @jwt_required()
 def get_all_archived_posts():
 
-    #Read any user protected by admin rights
-    #admin_access will abort if is_admin is False
+    #route protected and accessible only to users with admin right
+    #admin_access function will abort if user is_admin attribute is False
     admin_access()
 
-    #create query statement to return all deactivated records in Post table sort by newest first
+    #create query statement to return all deactivated records in Post table and sort by newest first
     stmt = db.select(Post).filter_by(is_active=False).order_by(Post.date.desc(), Post.time.desc())
     #scalalars will return many results and assign to posts variable
     posts = db.session.scalars(stmt)
 
     #query database to count how many posts are deactivate
-    #used to find if the user has not posted any replies
+    #used to find if there are no deactivated posts
     stmt = stmt = db.select(db.func.count()).select_from(Post).filter_by(is_active=False)
     count = db.session.scalar(stmt)
 
+    #there are posts that have been archived/deactivate
+    #display those posts
+    #else display message for no deactivated posts
     if count > 0:
         #use Schema to return json serialized version of the query statement
         return PostSchema(many=True).dump(posts)
     elif count == 0:
-            return {'msg': 'There are no deactivated posts in the forum'}
+        abort(404, description='There are no deactivated posts in the forum')
 
 
 # ======================================READ all user profiles - ADMIN ONLY==================================
@@ -91,16 +95,16 @@ def get_all_archived_posts():
 @jwt_required()
 def get_all_users():
 
-    #Read any user protected by admin rights
-    #admin_access will abort if is_admin is False
+    #route protected and accessible only to users with admin right
+    #admin_access function will abort if user is_admin attribute is False
     admin_access()
 
-    #create query statement to return all records in Post table sort by alphabetically
+    #create query statement to return all records in User table sort by by last name, first name
     stmt = db.select(User).order_by(User.l_name, User.f_name)
     #scalars will return many results and assign to users variable
     users = db.session.scalars(stmt)
 
-    #use Schema to return json serialized version of the query statement
+    #no need for count query here because there will need to be at least one user to query the database
 
     #excluding posts, password and replies - just showing user info
     return UserSchema(many=True, exclude=['password', 'posts', 'replies']).dump(users)
@@ -113,17 +117,25 @@ def get_all_users():
 @jwt_required()
 def get_all_replies():
 
-    #Read any user protected by admin rights
-    #admin_access will abort if is_admin is False
+    #route protected and accessible only to users with admin right
+    #admin_access function will abort if user is_admin attribute is False
     admin_access()
 
-    #create query statement to return all records in Reply table sort chronologiccaly byt date then time
+    #create query statement to return all records in Reply table sort chronologically by date then time
     stmt = db.select(Reply).order_by(Reply.date, Reply.time)
     #scalars will return many results and assign to users variable
     replies = db.session.scalars(stmt)
 
-    #excluding posts, password and replies - just showing user info
-    return ReplySchema(many=True, exclude=['post']).dump(replies)
+    #query database to count how many replies there are
+    #used to find if there are no replies
+    stmt = stmt = db.select(db.func.count()).select_from(Reply)
+    count = db.session.scalar(stmt)
+
+    if count > 0:
+        #excluding post, just replies
+        return ReplySchema(many=True, exclude=['post']).dump(replies)
+    elif count == 0:
+        abort(404, description='There are no replies in the forum')
 
 
 # ======================================READ all replies by a user - ADMIN ONLY==================================
@@ -132,8 +144,8 @@ def get_all_replies():
 @jwt_required()
 def get_all_users_replies(reply_user_id):
 
-    #Read any user protected by admin rights
-    #admin_access will abort if is_admin is False
+    #route protected and accessible only to users with admin right
+    #admin_access function will abort if user is_admin attribute is False
     admin_access()
 
     #create query statement to return all records in Reply where user id equals route variable
@@ -159,7 +171,7 @@ def get_all_users_replies(reply_user_id):
     if count > 0:
         return ReplySchema(many=True, exclude=['user', 'post']).dump(replies)
     elif count == 0 and user:
-        return {'msg': f'User {reply_user_id} has not posted any replies'}
+        abort(404, description=f'User {reply_user_id} has not posted any replies')
     else:
         abort(404, description=f'User id:{reply_user_id} does not exist')
 
@@ -171,13 +183,13 @@ def get_all_users_replies(reply_user_id):
 @jwt_required()
 def delete_single_reply(reply_id):
 
-    # delete post protected by admin rights
-    #admin_access will abort if is_admin is False
+    #route protected and accessible only to users with admin right
+    #admin_access function will abort if user is_admin attribute is False
     admin_access()
     
-    #create query statement to return a single Post with the id of the route variable
+    #create query statement to return a single reply with the id of the route variable
     stmt = db.select(Reply).filter_by(id=reply_id)
-    #scalar will return a single post where the id matches post_id and assign the result to the post variable
+    #scalar will return a single post where the id matches reply_id and assign the result to the post variable
     reply = db.session.scalar(stmt)
 
     if reply:
@@ -192,16 +204,15 @@ def delete_single_reply(reply_id):
         abort(404, description=f'Reply {reply_id} does not exist')
 
 
-
-
-
-
-
 # ======================================READ any user profile - ADMIN ONLY==================================
 @admin_bp.route('/users/<int:user_id>/')
 #Route protected by JWT
 @jwt_required()
 def get_a_user_profile(user_id):
+
+    #route protected and accessible only to users with admin right
+    #admin_access function will abort if user is_admin attribute is False
+    admin_access()
     
     #create query statement to return a single user with the id of the route variable
     stmt = db.select(User).filter_by(id=user_id)
@@ -222,8 +233,8 @@ def get_a_user_profile(user_id):
 @jwt_required()
 def delete_single_post(post_id):
 
-    # delete post protected by admin rights
-    #admin_access will abort if is_admin is False
+    #route protected and accessible only to users with admin right
+    #admin_access function will abort if user is_admin attribute is False
     admin_access()
     
     #create query statement to return a single Post with the id of the route variable
@@ -231,7 +242,8 @@ def delete_single_post(post_id):
     #scalar will return a single post where the id matches post_id and assign the result to the post variable
     post = db.session.scalar(stmt)
 
-    #if the post exists then use Schema to return json serialized version of the query statement
+    #if the post exists then delete post and commit changes
+    #display post that was deleted
     #else provide an error message and 404 resource not found code
     if post:
         db.session.delete(post)
@@ -252,8 +264,8 @@ def delete_single_post(post_id):
 @jwt_required()
 def deactivate_single_post(post_id):
 
-    # delete post protected by admin rights
-    #admin_access will abort if is_admin is False
+    #route protected and accessible only to users with admin right
+    #admin_access function will abort if user is_admin attribute is False
     admin_access()
 
     #call function to deactivate post
@@ -266,8 +278,8 @@ def deactivate_single_post(post_id):
 @jwt_required()
 def activate_single_post(post_id):
 
-    # delete post protected by admin rights
-    #admin_access will abort if is_admin is False
+    #route protected and accessible only to users with admin right
+    #admin_access function will abort if user is_admin attribute is False
     admin_access()
 
     #call function to activate post
@@ -280,15 +292,18 @@ def activate_single_post(post_id):
 @jwt_required()
 def issue_warning(user_id):
 
-    # delete user protected by admin rights
-    #admin_access will abort if is_admin is False
+    #route protected and accessible only to users with admin right
+    #admin_access function will abort if user is_admin attribute is False
     admin_access()
 
-    #create query statement to return a single Post with the id of the route variable
+    #create query statement to return a single user with the id of the route variable
     stmt = db.select(User).filter_by(id=user_id)
-    #scalar will return a single post where the id matches post_id and assign the result to the post variable
+    #scalar will return a single post where the id matches post_id and assign the result to the user variable
     user = db.session.scalar(stmt)
 
+    #logic to prevent user being deleted before 3 warnings have been issued
+    #if warning is issued after 3 warnings then user is automatically deleted
+    #delete user and commit changes and display message
     if user:
         if user.warnings < 3:
             user.warnings += 1
@@ -310,6 +325,7 @@ def issue_warning(user_id):
                 'first name': user.f_name, 
                 'last name': user.l_name,
             }
+    #user does not exist
     else:
         abort(404, description=f'User id:{user_id} does not exist')
 
@@ -321,8 +337,8 @@ def issue_warning(user_id):
 @jwt_required()
 def delete_single_user(user_id):
 
-    # delete user protected by admin rights
-    #admin_access will abort if is_admin is False
+    #route protected and accessible only to users with admin right
+    #admin_access function will abort if user is_admin attribute is False
     admin_access()
     
     #create query statement to return a single User with the id of the route variable
@@ -364,8 +380,8 @@ def delete_single_user(user_id):
 @jwt_required()
 def grant_admin_rights(user_id):
 
-    # delete user protected by admin rights
-    #admin_access will abort if is_admin is False
+    #route protected and accessible only to users with admin right
+    #admin_access function will abort if user is_admin attribute is False
     admin_access()
     
     #call function to grant admin rights
@@ -378,8 +394,8 @@ def grant_admin_rights(user_id):
 @jwt_required()
 def revoke_admin_rights(user_id):
 
-    # delete user protected by admin rights
-    #admin_access will abort if is_admin is False
+    #route protected and accessible only to users with admin right
+    #admin_access function will abort if user is_admin attribute is False
     admin_access()
 
     #call function to revoke admin rights
@@ -387,12 +403,13 @@ def revoke_admin_rights(user_id):
 
 # ======================================Function def - Revoke/grant access==============================================
 def grant_revoke_admin(user_id, admin_bool, string_1, string_2, string_3):
-    #create query statement to return a single Post with the id of the route variable
+
+    #create query statement to return a single user with the id of the route variable
     stmt = db.select(User).filter_by(id=user_id)
     #scalar will return a single post where the id matches post_id and assign the result to the post variable
     user = db.session.scalar(stmt)
 
-    #if the post exists then change their is_admin attribute to True
+    #if the user exists then change their is_admin attribute to True
     #else provide an error message and 404 resource not found code
     if user:
         #Message displaying that the user already has admin rights
@@ -411,56 +428,38 @@ def grant_revoke_admin(user_id, admin_bool, string_1, string_2, string_3):
         return {'message': f'You successfully {string_2} admin privileges {string_3} the user.',
         'updated user details': UserSchema(exclude=['password', 'posts', 'replies']).dump(user)
         }
+    #abort user doesnt exist
     else:
         abort(404, description=f'User id:{user_id} does not exist')
 
 
 # ======================================Function def - activate/deactivate a Post==============================================
 def activate_deactivate_post(post_id, active_bool, status):
+
     #create query statement to return a single Post with the id of the route variable
     stmt = db.select(Post).filter_by(id=post_id)
     #scalar will return a single post where the id matches post_id and assign the result to the post variable
     post = db.session.scalar(stmt)
 
-    #if the post exists then change their is_admin attribute to True
+    #if the post exists then change their is_active attribute to True
     #else provide an error message and 404 resource not found code
     if post:
-        #Message displaying that the user already has admin rights
+        #Message displaying that the post already active
         if active_bool == post.is_active:
             return {
                     'Message': f'Post is already {status}',
                     'post details': PostSchema().dump(post)
                 }
 
-        #user does not have admin rights - change is_admin to True and commit to database
+        #Post is not not active - change is_active to True and commit to database
         post.is_active = active_bool
         db.session.commit()
 
-        #return message with new user details
+        #return message with new Post details
         return {
                 'message': f'You successfully {status} the post.',
                 'post details': PostSchema().dump(post)
             }
+    #abort Post doesnt exist    
     else:
         abort(404, description=f'Post id:{post_id} does not exist')
-
-
-# # ======================================Add channel to the forum, - ADMIN==================================
-# @admin_bp.route('/add_channel/<string:forum_channel>')
-# #Route protected by JWT
-# @jwt_required()
-# def get_all_post_in_channel(forum_channel):
-
-#     # delete user protected by admin rights
-#     #admin_access will abort if is_admin is False
-#     admin_access()
-
-#     channels = os.environ.get('VALID_CHANNELS')
-#     channels_list = list(channels.split(', '))
-
-#     channels_list.append(forum_channel)
-#     os.environ['VALID_CHANNELS']
-
-
-#     return {'channels list': channels_list,
-#             'environ': os.environ.get('VALID_CHANNELS')}

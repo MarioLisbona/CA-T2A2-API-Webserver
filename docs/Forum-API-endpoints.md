@@ -64,6 +64,14 @@
 ]
 ```
 
+- Response Body: No deactivated posts
+  
+```JSON
+{
+    "error": "404 Not Found: There are no deactivated posts in the forum"
+}
+```
+
 <hr>
 <br>
 
@@ -120,6 +128,13 @@
 ]
 ```
 
+- Response Body: No replies
+  
+```JSON
+{
+    "error": "404 Not Found: There are no replies in the forum"
+}
+```
 <hr>
 <br>
 
@@ -145,6 +160,21 @@
 ]
 ```
 
+- Response Body: User has posted No replies
+  
+```JSON
+{
+    "error": "404 Not Found: User 1 has not posted any replies"
+}
+```
+
+- Response Body: User does not exist
+  
+```JSON
+{
+    "error": "404 Not Found: User id:12 does not exist"
+}
+```
 <hr>
 <br>
 
@@ -202,6 +232,14 @@
 }
 ```
 
+  - User does not exist
+  
+```JSON
+{
+    "error": "404 Not Found: User id:33 does not exist"
+}
+```
+
 <hr>
 <br>
 
@@ -225,7 +263,7 @@
 }
 ```
 
-  - Reply does not exist
+  - Post does not exist
   
 ```JSON
 {
@@ -436,7 +474,7 @@
 }
 ```
 
-  - User warning attribute greater than or equal to 3 warings:
+  - User warning attribute greater than or equal to 3 warnings:
   
 ```JSON
 {
@@ -560,6 +598,7 @@
     "error": "404 Not Found: User id:13 does not exist"
 }
 ```
+
 [**Back to Table of Contents**](#tables-of-contents)
 <hr>
 <hr>
@@ -1333,8 +1372,7 @@
   - seed the tables in the database with sample data
 
 [**Back to Table of Contents**](#tables-of-contents)
-<br>
-<br>
 <hr>
-
-
+<hr>
+<hr>
+<br>

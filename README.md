@@ -15,7 +15,7 @@
     - [**SQLAlchemy**](#sqlalchemy)
     - [**flask-marshmallow**](#flask-marshmallow)
     - [**python-dotenv**](#python-dotenv)
-    - [**psycopg2-binary**](#psycopg2-binary)
+    - [**psycopg2**](#psycopg2)
     - [**pip-review**](#pip-review)
     - [**Flask-Bcrypt**](#flask-bcrypt)
     - [**Flask-JWT-Extended**](#flask-jwt-extended)
@@ -27,10 +27,10 @@
 
 ## **R1 - Identification of the problem you are trying to solve by building this particular app.**
 
-I'm building a forum API to create an online community with an environment that encourages open communication between like minded individuals. The forum will help facilitate this by providing a variety of channels where users can make posts that relate to that channel. Users can also post replies to help continue the conversation with meaningful input from the entire forum community.
+I'm building a forum API to create an online community with an environment that encourages open communication between like minded individuals. The forum will help facilitate this by providing a variety of channels where users can make posts on different topics of interest. Users can also post replies to help continue the conversation with meaningful input from the entire forum community.
 
 
-Administrators will moderate all the interactions that happen on the platform. This will be vital in maintaining the platform's integrity as an environment where open communication can happen.
+Administrators will moderate all the interactions that happen on the platform. This will be vital in maintaining the platform's integrity as an environment where open communication can occur.
 
 
 Administrators will be able to perform important moderation activities including deactivating/archiving posts that are inactive, deleting posts, issuing users warnings and deleting users who are violating the community guidelines.
@@ -40,7 +40,7 @@ Administrators will be able to perform important moderation activities including
 
 Open and honest communication is vital in creating a world where people from different backgrounds and ethnicities can appreciate and respect the way their fellow members of society interact and view the world we live in.
 
-If an individual is seen to be communicating in an honest way then the person on the other end of that conversation will feel compelled to reciprocate. This kind of communication leads to a world where differences are celebrated rather than criticised. This fusion of different cultural idea and norms can be the catalyst for creativity and innovation in all societies.
+If an individual is seen to be communicating in an honest way then the person on the other end of that conversation is more likely to feel compelled to reciprocate. This kind of communication leads to a world where differences are celebrated rather than criticised and judged. This fusion of different cultural idea and norms can be the catalyst for creativity and innovation in all societies.
 
 Creating a virtual world where this communication can happen is a step towards it happening more often in the real world. (John E Hind, 2022) [^1] 
 
@@ -48,7 +48,7 @@ Creating a virtual world where this communication can happen is a step towards i
 
 Before a single line of code has been written, developers will have to tackle the challenge of what technologies to use in their application. One of the major decisions that needs to be made before development starts on any application is what database technology to use. Data is the lifeblood of any application and the way that it will be stored, accessed and used by the application will dictate what technologies will be used.
 
-Databases fall into two broad categories, Relational Databases Management Systems (RDBMS) which store data in a tabular format and NoSQL which stores data in document format. 
+Databases fall into two broad categories, Relational Databases Management Systems (RDBMS) which store data in a tabular format and NoSQL (not only SQL) which stores data in document format. 
 
 Cost was a major factor when choosing a database technology for this forum API. PostgreSQL is an open-source cost effective solution that provides a great alternative compared to similar licenced RDBMS. PostgreSQL was also chosen because of its reliability, robustness and its ability to create and use complex queries.
 
@@ -105,18 +105,17 @@ WHERE is_active = true;
 The equvilent code in an Python using SQLAlchemy would look like this:
 
 ```py
-stmt = stmt = db.select(db.func.count()).select_from(Post).filter_by(is_active=True)
+stmt = db.select(db.func.count()).select_from(Post).filter_by(is_active=True)
+posts = db.session.scalar(stmt)
 ```
 
 Using an ORM to read and manipulate data from a database a process called 'hydration' which converts the value of each column of the database table into an object property. This property can now be manipulate and used in the application code. The ORM will then be used in reverse to convert the manipulate data back into a format to be used in the database. 
 
-ORM's use one of two patterns, either Active Record or Data Mapper. Active Record and Data Mapper patterns are similar in that each will have a class that represents the table in the database. The classes attributes correspond to columns in the database table. This means that every object instance is effectively linked to a single row or record in that table. Active record differs from Data Mapper here in that it not only contains the data for each attribute of record, it also contains methods to perform on that data (Create, Read, Update, Delete).
+ORM's use one of two patterns, either Active Record or Data Mapper. Active Record and Data Mapper patterns are similar in that each will have a class that represents the table in the database. The class' attributes correspond to columns in the database table. This means that every object instance is effectively linked to a single row or record in that table. Active record differs from Data Mapper here in that it not only contains the data for column  of record in an object attribute, it also contains methods to perform actions on that data (Create, Read, Update, Delete).
 
-This ability to query the database and develop and application in the one language has the potential to speed up the development of an application in its early stages because the developers aren't having to swap back and forth between the language the application is coded in and the language used to query the database structures. ORM's also are database platform agnostic so that an application can be built with one type of database and then switched to a different database with minimal changes to the application code. Although in theory its possible to use, for example PostgreSQL in a staging environment and then swap to MySQL in a production environment without too much hassle, this is not a good practice as unforeseen errors could occur in the production environment that weren't tested for in the staging environment.
+This ability to query the database and develop and application in one language has the potential to speed up the development of an application in its early stages because the developers aren't having to swap back and forth between the language the application is coded in and the language used to query the database structures. ORM's also are database platform agnostic so that an application can be built with one type of database and then switched to a different database with minimal changes to the application code. Although in theory its possible to use, for example PostgreSQL in a staging environment and then swap to MySQL in a production environment without too much hassle, this is not a good practice as unforeseen errors could occur in the production environment that weren't tested for in the staging environment.
 
 Prevention of SQL injection attacks is another benefit provided by using an ORM to interact with a database. It by no means provides total protection against SQL injection attacks but significantly reduced the chance of it happening because the interactions with the database are happening in the application code not in SQL. (Tina, 2020) [^5] (Matt Makai, 2022) [^6]
-
-
 
 ## **R5 - Document all endpoints for your API**
 
@@ -130,19 +129,57 @@ View all the endpoint documentation for the Forum API [*here*](./docs/Forum-API-
 
 ### **SQLAlchemy**
 
-
+SQL Alchemy is a library used as the bridge between the main application code and the PostgreSQL database structures. It's used as an ORM (Object Relational Mapper) to translate the tables in the PostgreSQL database into Python objects and vice versa. It uses python function calls to create statements that are converted to SQL statements to integrate and interact with the database tables. PostgreSQL database table data is also converted into OPP languages to be manipulated in the application. (Bruno Krebs, 2017) [^7]
 
 ### **flask-marshmallow**
 
+This third party library is used in a few ways in this forum API. Its used to create schemas to handle the conversion of JSON to and from SQLAlchemy and Python objects. It also serialises application level objects to primitive Python Types. These serialised objects can then be converted into standard formats, including JSON to be used in Web API’s. Schema’s can also make use of Marshmallow's validation methods to validate request body inputs to in an API. (jordan, 2019) [^8]
+
 ### **python-dotenv**
 
-### **psycopg2-binary**
+This library is used to allow a Flask application to access and use sensitive data including secret keys for hashing passwords and storing database url links. Instead of these values being hard coded into the application, where they aren't secure, they can be set as key/value pairs in a .env file as shown below.
+
+- Examples of values being hard coded into the application
+
+```py
+#calling environment variables to configuring database link and secret keys for tokens
+app.config['SQLALCHEMY_DATABASE_URI'] = postgresql+psycopg2://mariolisbona:password123@127.0.0.1:5432/test_warning_model
+app.config['JWT_SECRET_KEY'] = CoderAcademyAPI!
+```
+
+Examples of the same statements using environment variables. Firstly the envronment variables are defined as key/value pairs in a .env file (1) then those varaibles are used instread of hard coded valued (2)
+  
+- setting evironment variables
+
+
+```py
+DATABASE_URL=postgresql+psycopg2://mariolisbona:password123@127.0.0.1:5432/test_warning_model
+JWT_SECRET_KEY=CoderAcademyAPI!
+```
+
+- accessing and using those variables used in the first example
+
+```py
+    #calling environment variables to configuring database link and secret keys for tokens
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
+    app.config['JWT_SECRET_KEY'] = os.environ.get('JWT_SECRET_KEY')
+```
+
+### **psycopg2**
+
+This library is used as the adapter between the PostgreSQL Database and the flask application.
 
 ### **pip-review**
 
+pip-review is a module that provides a list of packages on the Python Packages Index that are newer that the versions currently installed in a Python environment. the command `pip-review` will return show a list of currently installed packages that have newer version on PyPi. running the command `pip-review -aC` will check what packages have newer versions and will install all the latest versions in the current python environment.
+
 ### **Flask-Bcrypt**
 
+Flask bcrypt is a third party library that allows developers to use bcrypt hashing functions to protect passwords. Bcrypt is based on the Blowfish cipher and makes use of a technique known as salting, which adds an extra element of randomness to the hash to further encrypt and protect sensitive data. The bcrypt hashing functions are made intentionally slower to prevent brut force attacks (EDUCBA, 2022) [^9]
+
 ### **Flask-JWT-Extended**
+
+This library is used to create tokens that can be used to allow authenticated users to access API resources without the need to using login details for every request. JSON Web tokens have become the standard for accessing web applications and allow a server to decrypt the payload of a token to authenticate users into a system. JWT's are a great combination of basic tokens and bearer tokens. Bearer tokens are harder to maintain because they need to be stored on a database and basic tokens are too easy to hack. JWT's have taken the benefits of both these types of tokens to create a simple and secure token that is easy to maintain as no database is needed and much more secure that a basic tokens. (@alesanchezr - 4Geeks, 2019) [^10]
 
 ## **R8 - Describe your projects models in terms of the relationships they have with each other**
 
@@ -215,6 +252,10 @@ You can become a member of my T2A2 Web API trello board [*here*](https://trello.
 - [^4 - R3](#r3---why-have-you-chosen-this-database-system-what-are-the-drawbacks-compared-to-others) - Krasimir Hristozov (2019) [*MySQL vs PostgreSQL -- Choose the Right Database for Your Project*](https://developer.okta.com/blog/2019/07/19/mysql-vs-postgres), Okta Developer website, accessed 08 November 2022.
 - [^5 - R4](#r4---identify-and-discuss-the-key-functionalities-and-benefits-of-an-orm) - Tina (2020) [*Introduction to Object-relational mapping: the what, why, when and how of ORM*](https://dev.to/tinazhouhui/introduction-to-object-relational-mapping-the-what-why-when-and-how-of-orm-nb2), Dev Community Developer website, accessed 09 November 2022.
 - [^6 - R4](#r4---identify-and-discuss-the-key-functionalities-and-benefits-of-an-orm) - Matt Makai (2022) [*Object-relational Mappers (ORMs)*](https://www.fullstackpython.com/object-relational-mappers-orms.html), Full Stack Python website, accessed 09 November 2022.
+- [^7 - R7](#r7---detail-any-third-party-services-that-your-app-will-use) - Bruno Krebs (2017) [*SQLAlchemy ORM Tutorial for Python Developers*](https://auth0.com/blog/sqlalchemy-orm-tutorial-for-python-developers/), Okta website, accessed 09 November 2022.
+- [^8 - R7](#r7---detail-any-third-party-services-that-your-app-will-use) - Jordan (2019) [*Deep Dive into Flask Marshmallow*](https://www.dailysmarty.com/posts/deep-dive-into-flask-marshmallow), Daily Smarty website, accessed 09 November 2022.
+- [^9 - R7](#r7---detail-any-third-party-services-that-your-app-will-use) - EDUCBA (2022)) [*Flask bcrypt*](https://www.educba.com/flask-bcrypt/), EDUCBA website, accessed 10 November 2022.
+- [^10 - R7](#r7---detail-any-third-party-services-that-your-app-will-use) - @alesanchezr - 4Geeks (2019) [*UNDERSTANDING JWT AND HOW TO IMPLEMENT A SIMPLE JWT WITH FLASK*](https://4geeks.com/lesson/what-is-JWT-and-how-to-implement-with-Flask), 4 Geeks website, accessed 10 November 2022.
 
 
 ## **Other links**

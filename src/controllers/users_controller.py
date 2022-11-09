@@ -34,11 +34,9 @@ def get_user_profile():
 @users_bp.route('/update_profile/', methods=['PUT', 'PATCH'])
 @jwt_required()
 def edit_users_own_details():
-    #retrieve the user's own id from their token
-    user_id = get_jwt_identity()
 
     #create query statement to return user from the database 
-    stmt = db.select(User).filter_by(id=user_id)
+    stmt = db.select(User).filter_by(id=get_jwt_identity())
     #scalar will return a single user where the id matches user_id and assign the result to the user variable
     user = db.session.scalar(stmt)
 
@@ -78,7 +76,6 @@ def edit_users_own_details():
                     'user details': UserSchema(exclude=['password']).dump(user)
             }
         
-
         #return success message and return the updated data
         return {
                     'message': 'You successfully updated the user\'s profile.',
@@ -88,10 +85,4 @@ def edit_users_own_details():
     #else provide an error message and 404 resource not found code
     else:
         # return {'Error': f'User {user_id} does not exist'}, 404
-        abort(404, description=f'User {user_id} does not exist')
-
-
-
-
-
-
+        abort(404, description=f'User {get_jwt_identity()} does not exist')

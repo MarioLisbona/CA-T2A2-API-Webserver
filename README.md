@@ -183,7 +183,33 @@ This library is used to create tokens that can be used to allow authenticated us
 
 ## **R8 - Describe your projects models in terms of the relationships they have with each other**
 
+
 ## **R9 - Discuss the database relations to be implemented in your application**
+
+The database that will store the data for the forum API will consist of 3 tables
+- Uses
+- Posts
+- Replies
+  
+Each table will have a number of columns used to store data about each attribute. Each table will contain a primary key, usually called id, which will make each record in that table uniquely identifiable.
+
+Relationships will be established between these tables by linking the primary key in one table with an additional attribute in another table called a foreign key. The foreign keys are named id as well but are prefixed with the table that they have a relationship with. 
+
+For example in the ERD displayed in [*R6*](#r6---an-erd-for-your-app) of this README document, a primary key in the users table being used as a foreign key in the posts table and is named user_id. This creates an association between the user and a particular post. Each post and user that are created each individual have their own private key’s to make them unique and identifiable within their own table. When a post is created it must have a link to a user through the user_id foreign key. This means that instead of storing all the data about the user in addition to all the data about the post together in one table, there simply needs to be a link to the user and their associated data which lives which is already a record or row in the users table. 
+
+This allows for more complex relationships to be established while eliminating data redundancy throughout the database where the tables are stored. This process of reducing data repetition is known as data normalisation.
+
+The relationships that will exist between the tables in the forum API are shown as crow's feet notation relationships in the ERD displayed for [*R6*](#r6---an-erd-for-your-app) of this README document. They are explained below.
+
+- A user has a zero or many relationship to posts. This means that a user can be registered on the forum but have no posts or they can have many different posts.
+- A user has a zero or many relationship to replies. This means that a user can be registered on the forum but have no replies or they can have many different replies.
+- A post has a mandatory 1-to1 relationship with a user. This means that each post must have one and only one creator or user associated with it.
+- A reply has a mandatory 1-to1 relationship with a user. This means that each reply must have one and only one creator or user associated with it.
+- A post has a zero or many relationship to replies. This means that a post can be posted to a channel on the forum but have no replies or they can have many different replies.
+- A reply has a mandatory 1-to1 relationship with a post. This means that each reply must have one and only one post that is associated with it.
+
+
+(Patrycja Dybka, 2019) [^11]
 
 ## **R10 - Describe the way tasks are allocated and tracked in your project**
 
@@ -256,6 +282,7 @@ You can become a member of my T2A2 Web API trello board [*here*](https://trello.
 - [^8 - R7](#r7---detail-any-third-party-services-that-your-app-will-use) - Jordan (2019) [*Deep Dive into Flask Marshmallow*](https://www.dailysmarty.com/posts/deep-dive-into-flask-marshmallow), Daily Smarty website, accessed 09 November 2022.
 - [^9 - R7](#r7---detail-any-third-party-services-that-your-app-will-use) - EDUCBA (2022)) [*Flask bcrypt*](https://www.educba.com/flask-bcrypt/), EDUCBA website, accessed 10 November 2022.
 - [^10 - R7](#r7---detail-any-third-party-services-that-your-app-will-use) - @alesanchezr - 4Geeks (2019) [*UNDERSTANDING JWT AND HOW TO IMPLEMENT A SIMPLE JWT WITH FLASK*](https://4geeks.com/lesson/what-is-JWT-and-how-to-implement-with-Flask), 4 Geeks website, accessed 10 November 2022.
+- [^11 - R8](#r8---describe-your-projects-models-in-terms-of-the-relationships-they-have-with-each-other) - Patrycja Dybka (2018) [*Crow’s Foot Notation*](https://vertabelo.com/blog/crow-s-foot-notation/), Vertabelo website, accessed 10 November 2022.
 
 
 ## **Other links**
@@ -263,5 +290,4 @@ You can become a member of my T2A2 Web API trello board [*here*](https://trello.
 - [HTTP status codes](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status)
 - [Regex generators](https://regexr.com/38tvj)
 - [Visualising Software Architecture](https://c4model.com/)
-- [Crows Foot Notation](https://vertabelo.com/blog/crow-s-foot-notation/)
   

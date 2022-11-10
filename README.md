@@ -46,7 +46,7 @@ Creating a virtual world where this communication can happen is a step towards i
 
 ## **R3 - Why have you chosen this database system. What are the drawbacks compared to others?**
 
-Before a single line of code has been written, developers will have to tackle the challenge of what technologies to use in their application. One of the major decisions that needs to be made before development starts on any application is what database technology to use. Data is the lifeblood of any application and the way that it will be stored, accessed and used by the application will dictate what technologies will be used.
+Before a single line of code has been written, developers will have to tackle the challenge of what technologies to use in their application. One of the major decisions that needs to be made before development starts on any application is what database technology to use. Data is the lifeblood of any application and the way that it will be stored, accessed and manipulated by the application will dictate what technologies will be used.
 
 Databases fall into two broad categories, Relational Databases Management Systems (RDBMS) which store data in a tabular format and NoSQL (not only SQL) which stores data in document format. 
 
@@ -54,7 +54,7 @@ Cost was a major factor when choosing a database technology for this forum API. 
 
 The data structures and fields used by this forum API will remain unchanged when the API is running. Flexibility with regards to input fields and storing data is one of the biggest advantages of using a NoSQL database. Because this flexibility in data fields was not needed in this project, the decision to use PostgreSQl with its schema approach to storing data made more sense. PostgreSQL also has the added advantage of being able to run NoSQL processes because it can query and store JSON. JSON data will be used in the body of all requests and JSON will be returned to the user in all responses.
 
-No solution is ever the perfect solution, there are always drawbacks that need to be weighed against advantages. Postgres is less efficient than other RDBMS because for every new client connection established a new process which allocates 10mb of memory is created. This is a non-trivial amount of memory and if the Forum API’s user base and activity grows significantly it could become an issue that needs to be addressed. Although PostgreSQL is built with scalability, data integrity and extensibility in mind, these features often come at the expense of speed. For this reason PostgreSQL may not be the ideal solution for simple (no complex queries) workflows that mainly require read operations. PostgreSQL has only a limited number of 3rd party tools. This is because it is the less popular option when it comes to RDBMS solutions. (Amrit Pal Singh, 2021) [^2] (Salman Ravoof, 2022) [^3] (Krasimir Hristozov, 2019) [^4]
+No solution is ever the perfect solution, there are always drawbacks that need to be weighed against advantages. Postgres is less efficient than other RDBMS because for every new client connection established, a new process which allocates 10mb of memory is created. This is a non-trivial amount of memory and if the Forum API’s user base and activity grow significantly it could become an issue that needs to be addressed. Although PostgreSQL is built with scalability, data integrity and extensibility in mind, these features often come at the expense of speed. For this reason PostgreSQL may not be the ideal solution for simple (no complex queries) workflows that mainly require read operations. PostgreSQL has only a limited number of 3rd party tools. This is because it is the less popular option when it comes to RDBMS solutions. (Amrit Pal Singh, 2021) [^2] (Salman Ravoof, 2022) [^3] (Krasimir Hristozov, 2019) [^4]
 
 
 ## **R4 - Identify and discuss the key functionalities and benefits of an ORM**
@@ -83,7 +83,7 @@ class User(db.Model):
     is_admin = db.Column(db.Boolean, default=False)
     warnings = db.Column(db.Integer, default=0)
 ```
-For each new record in the table, a new instnace of the User class would be created and each field's data would be entered into each attribute of the object. For example the object below would be used to create user id 2.
+For each new record in the table, a new instance of the User class would be created and the data in each column of the database record would be mapped into each corresponding attribute of the object. For example the object below would be used to create user id 2.
 
 ```py
 user = User(
@@ -109,7 +109,7 @@ stmt = db.select(db.func.count()).select_from(Post).filter_by(is_active=True)
 posts = db.session.scalar(stmt)
 ```
 
-Using an ORM to read and manipulate data from a database a process called 'hydration' which converts the value of each column of the database table into an object property. This property can now be manipulate and used in the application code. The ORM will then be used in reverse to convert the manipulate data back into a format to be used in the database. 
+Using an ORM to read and manipulate data from a database is known as 'hydration' which converts the value of each column of the database table into an object property. This property can now be read and manipulated in the application code, stored in memory and then committed or writen back to the database. The ORM is also used in reverse to convert the manipulated data back into a format to be written to the database. 
 
 ORM's use one of two patterns, either Active Record or Data Mapper. Active Record and Data Mapper patterns are similar in that each will have a class that represents the table in the database. The class' attributes correspond to columns in the database table. This means that every object instance is effectively linked to a single row or record in that table. Active record differs from Data Mapper here in that it not only contains the data for column  of record in an object attribute, it also contains methods to perform actions on that data (Create, Read, Update, Delete).
 

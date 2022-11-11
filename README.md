@@ -20,6 +20,12 @@
     - [**Flask-Bcrypt**](#flask-bcrypt)
     - [**Flask-JWT-Extended**](#flask-jwt-extended)
   - [**R8 - Describe your projects models in terms of the relationships they have with each other**](#r8---describe-your-projects-models-in-terms-of-the-relationships-they-have-with-each-other)
+    - [Posts Model](#posts-model)
+    - [Replies Model](#replies-model)
+    - [Users Model](#users-model)
+    - [Post Schema](#post-schema)
+    - [Reply Schema](#reply-schema)
+    - [User Schema](#user-schema)
   - [**R9 - Discuss the database relations to be implemented in your application**](#r9---discuss-the-database-relations-to-be-implemented-in-your-application)
   - [**R10 - Describe the way tasks are allocated and tracked in your project**](#r10---describe-the-way-tasks-are-allocated-and-tracked-in-your-project)
   - [**References**](#references)
@@ -182,6 +188,113 @@ Flask bcrypt is a third party library that allows developers to use bcrypt hashi
 This library is used to create tokens that can be used to allow authenticated users to access API resources without the need to use login details for every request. JSON Web tokens have become the standard for accessing web applications and allow a server to decrypt the payload of a token to authenticate users into a system. JWT's are a great combination of basic tokens and bearer tokens. Bearer tokens are harder to maintain because they need to be stored in a database and basic tokens are too easy to hack. JWT's have taken the benefits of both these types of tokens to create a simple and secure token that is easy to maintain as no database is needed and much more secure that a basic tokens. (@alesanchezr - 4Geeks, 2019) [^10]
 
 ## **R8 - Describe your projects models in terms of the relationships they have with each other**
+
+The SQl alchemy models in the forum API all have their own attributes that relate to the data needed to be stored and manipulated for each entity in the API, the users, the posts and the replies to those posts. The relationships that exist between these 3 entities and the restraints that apply to those relationships dictate the way the API operates.
+
+
+Each model is a class derived from the base class `db.Model` It addition to its own unique attributes to describe that entity, each model that is on the ‘many’ side of a relationship with another model will have a foreign key attribute to represent that relationship it shares with the other model. 
+
+
+In this API the Posts and Replies tables both sit on the ‘many’ side of a relationship with the Users table. Below is a description of how those relationships are implemented.
+
+### Posts Model
+
+```py
+#creating foreign key linking to the Users model
+user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+```
+
+The above statement establishes an attribute in the Post model named `user_id` It is created in the same way as all the other attributes with the `db.Colum()` function. However this function also calls the SQLAlchemy function `db.Foriegnkey()` passing in the model name and attribute that will be the foreign key in this model, in this case the model and attribute is `users.id`. Nullable is set to false because there always has to be an owner of a post.
+
+After this relationship is established with a foreign key, the code below creates two variables, users and replies to access the user and replies objects that are linked to each post.
+
+```py
+user = db.relationship('User', back_populates='posts')
+replies = db.relationship('Reply', back_populates='post', cascade='all, delete')
+```
+
+The `back_populates` argument will create a property for this model (the Posts model) in the model on the other end of the relationship, User and Reply in the above example. So effectively it's creating a two way relationship between these models, making each one available as an object in the model it's linked to.
+
+The use of singular and plural variables names here is important and directly linked to the relationship that exists between these models. Each post can have only one created, hence the singular variable name of `user`. Each post can also have many replies on it, so I have used the plural variable name `replies` to indicate that there could potentially be many replies on a post. This is also why the cascade delete only exists on replies variables in the Post model. If a post is deleted then all the replies must be deleted, but not the creator of the post.
+
+### Replies Model
+
+The replies SQLAlchemy model sits on the many side of a relationship with Users and posts. A post can have many replies and a user can create many replies. The code below implements this relationship with foreign keys from the Posts and Uses table.
+
+```py
+#creating foreign keys linking to Users model and Posts model
+user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+post_id = db.Column(db.Integer, db.ForeignKey('posts.id'), nullable=False)
+```
+
+In the same way as in the post model, once the foreign key relationship has been established, variables are created to make available the data from each of the other models that are linked to the replies. Show in the statements below
+
+```py
+user = db.relationship('User', back_populates='replies')
+post = db.relationship('Post', back_populates='replies')
+```
+
+There are no cascade delete's in these statements because neither of the other models linked to a reply, a user and a post, should be deleted if a reply is deleted.
+
+### Users Model
+
+This SQLAlchemy model has a relationship where both its partners sit on the many side and thus the Users model does not contain a foreign key. When establishing the variables to make each of its related objects, posts and replies, available to be used, the cascade delete will be needed on both variables. This is because if a user is deleted, all its associations, the posts and replies that the user has created need to be deleted.
+
+```py
+posts = db.relationship('Post', back_populates='user', cascade='all, delete')
+replies = db.relationship('Reply', back_populates='user', cascade='all, delete')
+```
+
+The examples above describe how the relationships are established between the models. The Marshmallow schema's that have been created in this API will make use of the above relationships between the models when displaying responses to the end user. Each schema contains a fields variable inside a `class Meta:` statement. Each of the attributes inside the fields tuple will be displayed when that schema is called.
+
+### Post Schema
+
+The attributes for each post model are id, title, date, time, is_active, consent and channel. But as you can see in the code below, there are two extra attributes listed, user and replies.
+
+```py
+class Meta:
+      fields = ('id', 'title', 'date', 'time', 'is_active', 'content', 'channel', 'user', 'replies')
+      ordered = True
+```
+
+Those extra fields are the data that we want to be displayed with each post, the models that each post is linked to, users and replies. The code above is used to set this up.
+
+The code below demonstrates using the marshmallow methods to first create a nested variable for an individual user for each post, only displaying the name and email of the user. Because each post can have multiple replies, an extra method, `fields.List()` needs to be called so that replies are displayed as a list of replies. When displaying the replies, the post is omitted because we display the reply information already nested inside a response with post data.
+
+```py
+user = fields.Nested('UserSchema', only=['f_name', 'l_name', 'email'])
+replies = fields.List(fields.Nested('ReplySchema', exclude=['post']))
+```
+
+### Reply Schema
+
+Similarly in the Reply schema, in addition to the replies attributes being displayed, the user and post linked to that reply are displayed. This is setup with the following statements.
+
+```py
+user = fields.Nested('UserSchema', only=['f_name', 'l_name', 'email'])
+post = fields.Nested('PostSchema')
+    
+class Meta:
+        fields = ('id', 'reply', 'date', 'time', 'post', 'user')
+        ordered = True
+```
+
+When displaying user information, only the name and email are displayed. The whole post is displayed in this schema.
+
+### User Schema
+
+When using the Marshmallow schema to display all the attributes associated with the User Model, the posts and replies objects that have a relationship with that user will also be displayed. The user will be excluded from the two nested lists that will contain the posts and replies associated with that user. The statements below show how this is coded.
+
+```py
+posts = fields.List(fields.Nested('PostSchema', exclude=['user']))
+replies = fields.List(fields.Nested('ReplySchema', exclude=['user']))
+
+class Meta:
+        fields = ('id', 'f_name', 'l_name', 'email', 'password', 'is_admin', 'warnings', 'posts', 'replies')
+        ordered = True
+```
+
+
 
 
 ## **R9 - Discuss the database relations to be implemented in your application**

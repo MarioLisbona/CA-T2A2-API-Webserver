@@ -3,7 +3,7 @@ from marshmallow import fields
 from marshmallow.validate import Length, And, Regexp, OneOf
 import os
 
-# VALID_TAGS = ('Travel', 'Tech', 'Snowboarding', 'Surfing', 'Foiling', 'Food', 'Pets', 'Music')
+#assigning environment variable data to valid channels
 VALID_CHANNELS = os.environ.get('VALID_CHANNELS')
 
 class Post(db.Model):
@@ -19,12 +19,13 @@ class Post(db.Model):
     content = db.Column(db.Text, nullable=False)
     channel = db.Column(db.String(100))
 
-    #creating foreign key
+    #creating foreign key linking to the Users model
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 
     #establishing relationship with users and replies models
     #establishing posts property in User model
     #establishing post property in Reply model
+    #cascade delete on replies, if a post is deleted, then all associated replies will be deleted
     user = db.relationship('User', back_populates='posts')
     replies = db.relationship('Reply', back_populates='post', cascade='all, delete')
 
@@ -32,8 +33,7 @@ class Post(db.Model):
 #marshmallow schema to handle converting the database objects from the posts table into serialised objects
 class PostSchema(ma.Schema):
     #validation of data inputs
-    #validating title input - need sto be at least 3 characters long, contain
-    #only letters numbers and spaces
+    #validating title input - min 3 and max 100 chars
     title = fields.String(validate=And(
         Length(min=3, max=100, error='Title must be minimum of 3 characters in length and maximum of 100')))
 
@@ -45,6 +45,9 @@ class PostSchema(ma.Schema):
     channel = fields.String(validate=OneOf(VALID_CHANNELS, error=f'Must be one of: {VALID_CHANNELS}'))
 
 
+    #creating variables to display Reply object's relationship to a user and a post
+    #user field will only display name and email information
+    #replies field will display all data except the post
     user = fields.Nested('UserSchema', only=['f_name', 'l_name', 'email'])
     replies = fields.List(fields.Nested('ReplySchema', exclude=['post']))
 

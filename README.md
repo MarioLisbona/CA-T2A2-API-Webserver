@@ -111,7 +111,7 @@ posts = db.session.scalar(stmt)
 
 Using an ORM to read and manipulate data from a database is known as 'hydration' which converts the value of each column of the database table into an object property. This property can now be read and manipulated in the application code, stored in memory and then committed or writen back to the database. The ORM is also used in reverse to convert the manipulated data back into a format to be written to the database. 
 
-ORM's use one of two patterns, either Active Record or Data Mapper. Active Record and Data Mapper patterns are similar in that each will have a class that represents the table in the database. The class' attributes correspond to columns in the database table. This means that every object instance is effectively linked to a single row or record in that table. Active record differs from Data Mapper here in that it not only contains the data for column  of record in an object attribute, it also contains methods to perform actions on that data (Create, Read, Update, Delete).
+ORM's use one of two patterns, either Active Record or Data Mapper. Active Record and Data Mapper patterns are similar in that each will have a class that represents the table in the database. The class' attributes correspond to columns in the database table. This means that every object instance is effectively linked to a single row or record in that table. Active record differs from Data Mapper here in that it not only contains the column data of each record in an object attribute, it also contains methods to perform actions on that data (Create, Read, Update, Delete).
 
 This ability to query the database and develop and application in one language has the potential to speed up the development of an application in its early stages because the developers aren't having to swap back and forth between the language the application is coded in and the language used to query the database structures. ORM's also are database platform agnostic so that an application can be built with one type of database and then switched to a different database with minimal changes to the application code. Although in theory its possible to use, for example PostgreSQL in a staging environment and then swap to MySQL in a production environment without too much hassle, this is not a good practice as unforeseen errors could occur in the production environment that weren't tested for in the staging environment.
 
@@ -129,11 +129,11 @@ View all the endpoint documentation for the Forum API [*here*](./docs/Forum-API-
 
 ### **SQLAlchemy**
 
-SQL Alchemy is a library used as the bridge between the main application code and the PostgreSQL database structures. It's used as an ORM (Object Relational Mapper) to translate the tables in the PostgreSQL database into Python objects and vice versa. It uses python function calls to create statements that are converted to SQL statements to integrate and interact with the database tables. PostgreSQL database table data is also converted into OPP languages to be manipulated in the application. (Bruno Krebs, 2017) [^7]
+SQL Alchemy is a Python library used to implement a bridge between the main application code and the PostgreSQL database structures. It's used as an ORM (Object Relational Mapper) to translate the tables in the PostgreSQL database into Python objects and vice versa. It uses python function calls to create statements that are converted to SQL statements to integrate and interact with the database tables. PostgreSQL database table data is also converted into OPP languages to be manipulated in the application. (Bruno Krebs, 2017) [^7]
 
 ### **flask-marshmallow**
 
-This third party library is used in a few ways in this forum API. Its used to create schemas to handle the conversion of JSON to and from SQLAlchemy and Python objects. It also serialises application level objects to primitive Python Types. These serialised objects can then be converted into standard formats, including JSON to be used in Web API’s. Schema’s can also make use of Marshmallow's validation methods to validate request body inputs to in an API. (jordan, 2019) [^8]
+This third party library is used in a few ways in this forum API. Its used to create schemas to handle the conversion of JSON to and from SQLAlchemy and Python objects. It also serialises application level objects to primitive Python Types. These serialised objects can then be converted into standard formats, including JSON to be used in Web API’s. Schema’s can also make use of Marshmallow's validation methods to validate request body inputs to an API. (jordan, 2019) [^8]
 
 ### **python-dotenv**
 
@@ -142,7 +142,7 @@ This library is used to allow a Flask application to access and use sensitive da
 - Examples of values being hard coded into the application
 
 ```py
-#calling environment variables to configuring database link and secret keys for tokens
+#setting values for configuring database link and secret keys for tokens
 app.config['SQLALCHEMY_DATABASE_URI'] = postgresql+psycopg2://mariolisbona:password123@127.0.0.1:5432/test_warning_model
 app.config['JWT_SECRET_KEY'] = CoderAcademyAPI!
 ```
@@ -157,7 +157,7 @@ DATABASE_URL=postgresql+psycopg2://mariolisbona:password123@127.0.0.1:5432/test_
 JWT_SECRET_KEY=CoderAcademyAPI!
 ```
 
-- accessing and using those variables used in the first example
+- accessing and using those variables used in the first example with the os moudle methods `os.environ.get()`
 
 ```py
     #calling environment variables to configuring database link and secret keys for tokens
@@ -171,15 +171,15 @@ This library is used as the adapter between the PostgreSQL Database and the flas
 
 ### **pip-review**
 
-pip-review is a module that provides a list of packages on the Python Packages Index that are newer that the versions currently installed in a Python environment. the command `pip-review` will return show a list of currently installed packages that have newer version on PyPi. running the command `pip-review -aC` will check what packages have newer versions and will install all the latest versions in the current python environment.
+pip-review is a module that provides a list of packages on the Python Packages Index that are newer that the versions currently installed in a Python environment. The command `pip-review` will return a list of currently installed packages that have newer version on PyPi. Running the command `pip-review -aC` will check what packages have newer versions and will install all the latest versions in the current python environment.
 
 ### **Flask-Bcrypt**
 
-Flask bcrypt is a third party library that allows developers to use bcrypt hashing functions to protect passwords. Bcrypt is based on the Blowfish cipher and makes use of a technique known as salting, which adds an extra element of randomness to the hash to further encrypt and protect sensitive data. The bcrypt hashing functions are made intentionally slower to prevent brut force attacks (EDUCBA, 2022) [^9]
+Flask bcrypt is a third party library that allows developers to use bcrypt hashing functions to protect passwords. Bcrypt is based on the Blowfish cipher and makes use of a technique known as salting, which adds an extra element of randomness to the hash to further encrypt and protect sensitive data. The bcrypt hashing functions are made intentionally slower to provice more securtiy against brut force attacks (EDUCBA, 2022) [^9]
 
 ### **Flask-JWT-Extended**
 
-This library is used to create tokens that can be used to allow authenticated users to access API resources without the need to using login details for every request. JSON Web tokens have become the standard for accessing web applications and allow a server to decrypt the payload of a token to authenticate users into a system. JWT's are a great combination of basic tokens and bearer tokens. Bearer tokens are harder to maintain because they need to be stored on a database and basic tokens are too easy to hack. JWT's have taken the benefits of both these types of tokens to create a simple and secure token that is easy to maintain as no database is needed and much more secure that a basic tokens. (@alesanchezr - 4Geeks, 2019) [^10]
+This library is used to create tokens that can be used to allow authenticated users to access API resources without the need to use login details for every request. JSON Web tokens have become the standard for accessing web applications and allow a server to decrypt the payload of a token to authenticate users into a system. JWT's are a great combination of basic tokens and bearer tokens. Bearer tokens are harder to maintain because they need to be stored in a database and basic tokens are too easy to hack. JWT's have taken the benefits of both these types of tokens to create a simple and secure token that is easy to maintain as no database is needed and much more secure that a basic tokens. (@alesanchezr - 4Geeks, 2019) [^10]
 
 ## **R8 - Describe your projects models in terms of the relationships they have with each other**
 
@@ -187,15 +187,15 @@ This library is used to create tokens that can be used to allow authenticated us
 ## **R9 - Discuss the database relations to be implemented in your application**
 
 The database that will store the data for the forum API will consist of 3 tables
-- Uses
+- Users
 - Posts
 - Replies
   
-Each table will have a number of columns used to store data about each attribute. Each table will contain a primary key, usually called id, which will make each record in that table uniquely identifiable.
+Each table will have a number of columns used to store data about each attribute. Each table will contain a primary key, called id, which will make each record in that table uniquely identifiable.
 
 Relationships will be established between these tables by linking the primary key in one table with an additional attribute in another table called a foreign key. The foreign keys are named id as well but are prefixed with the table that they have a relationship with. 
 
-For example in the ERD displayed in [*R6*](#r6---an-erd-for-your-app) of this README document, a primary key in the users table being used as a foreign key in the posts table and is named user_id. This creates an association between the user and a particular post. Each post and user that are created each individual have their own private key’s to make them unique and identifiable within their own table. When a post is created it must have a link to a user through the user_id foreign key. This means that instead of storing all the data about the user in addition to all the data about the post together in one table, there simply needs to be a link to the user and their associated data which lives which is already a record or row in the users table. 
+For example in the ERD displayed in [*R6*](#r6---an-erd-for-your-app) of this README document, the primary key in the users table is being used as a foreign key in the posts table and is named user_id. This creates an association between the user and a particular post. Each post and user that are created each individual have their own private key’s to make them unique and identifiable within their own table. When a post is created it must have a link to a user through the user_id foreign key. This means that instead of storing all the data about the user in addition to all the data about the post together in one table, there simply needs to be a link to the user and their associated data which is already a record or row in the users table. This is because a post cannot be created without a user having already registered with the Forum.
 
 This allows for more complex relationships to be established while eliminating data redundancy throughout the database where the tables are stored. This process of reducing data repetition is known as data normalisation.
 
@@ -213,7 +213,7 @@ The relationships that will exist between the tables in the forum API are shown 
 
 ## **R10 - Describe the way tasks are allocated and tracked in your project**
 
-To manage all the tasks for this project is used a kanban board on Trello. I first created the users stories below that apply to the forum API. All the tasks that need to be completed in the project, including all the documentation, answers to assignment questions and the actual coding of different routes for the API are assigned to tickets and placed in the backlog column. I then assigned different coloured labels for different groups of tasks, green for R1, R2, R3  assignment rubrics, purple for assignment requirements to check, yellow for optional features after the minimum viable product was complete and orange for coding tasks. This allowed me to get a get a quick overview of of the project by showing where different tasks and groups of tasks where located in the cycle of the kanban board.
+To manage all the tasks for this project is used a kanban board on Trello. I first created the users stories below that apply to the forum API. All the tasks that need to be completed in the project, including all the documentation, answers to assignment questions and the actual coding of different routes for the API were assigned to tickets and placed in the backlog column. I then assigned different coloured labels for different groups of tasks, green for R1, R2, R3  assignment rubrics, purple for assignment requirements to check, yellow for optional features after the minimum viable product was complete and orange for coding tasks. This allowed me to get a get a quick overview of of the project by showing where different tasks and groups of tasks where located in the cycle of the kanban board.
 
 I then wrote all the user stories for the API. The user stories below are broken down into two classes of users that will be accessing the forum API, Administrator and user, and represent all the different routes to resources that the API will facilitate.
 
@@ -261,7 +261,7 @@ I then created a kanban board with Trello to allocate and track tasks for the du
 
 <img src="./docs/kanban-columns.png" width='900' alt="kanban columns">
 
-I set Work In Progress limits (WIP's) on the columns to track how many tasks where in each stage of the project. Once the kanban board was setup i would move tasks or tickets from the backlog column into the todo until that was full. At this stage i would give each ticket a date for the work to be completed by. Then i would take a task/tasks fro To Do and place it in the Doing column and then begin on the task. I added checklists for the more complicated tasks to keep track of each sub-task that would need to be completed before that ticket could be moved to the testing and Done columns.
+I set Work In Progress limits (WIP's) on the columns to track how many tasks where in each stage of the project. Once the kanban board was setup I would move tasks or tickets from the backlog column into the todo until that was full. At this stage i would give each ticket a date for the work to be completed by. Then i would take a task/tasks fro To Do and place it in the Doing column and then begin on the task. I added checklists for the more complicated tasks to keep track of each sub-task that would need to be completed before that ticket could be moved to the testing and Done columns.
 
 If any completed features needed refactoring or their scope changed, then i would move the ticket back to the To Do column, adjust the checklists, date and the process would start again for that task.
 

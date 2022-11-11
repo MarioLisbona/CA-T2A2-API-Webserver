@@ -11,7 +11,7 @@ class Reply(db.Model):
     date = db.Column(db.Date)
     time = db.Column(db.Time)
 
-    #creating foreign keys
+    #creating foreign keys linking to Users model and Posts model
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     post_id = db.Column(db.Integer, db.ForeignKey('posts.id'), nullable=False)
 
@@ -26,6 +26,10 @@ class Reply(db.Model):
 #marshmallow schema to handle converting the database objects from the replies table into serialised objects
 class ReplySchema(ma.Schema):
 
+
+    #creating variables to display Reply object's relationship to a user and a post
+    #user field will only display name and email information
+    #post field will display all data
     user = fields.Nested('UserSchema', only=['f_name', 'l_name', 'email'])
     post = fields.Nested('PostSchema')
     

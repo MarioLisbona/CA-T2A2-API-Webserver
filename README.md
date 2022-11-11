@@ -5,6 +5,12 @@
 
 - [**Coder Academy - Assignment T2A2 - API Webserver Project. By Mario Lisbona**](#coder-academy---assignment-t2a2---api-webserver-project-by-mario-lisbona)
 - [**Table of contents**](#table-of-contents)
+  - [**Environment Setup Instructions**](#environment-setup-instructions)
+    - [**The .flaskenv environment file**](#the-flaskenv-environment-file)
+    - [**The .env environment file**](#the-env-environment-file)
+    - [**Creating a python virtual environment**](#creating-a-python-virtual-environment)
+    - [**Running the server**](#running-the-server)
+    - [**Seeding the database**](#seeding-the-database)
   - [**R1 - Identification of the problem you are trying to solve by building this particular app.**](#r1---identification-of-the-problem-you-are-trying-to-solve-by-building-this-particular-app)
   - [**R2 - Why is it a problem that needs solving?**](#r2---why-is-it-a-problem-that-needs-solving)
   - [**R3 - Why have you chosen this database system. What are the drawbacks compared to others?**](#r3---why-have-you-chosen-this-database-system-what-are-the-drawbacks-compared-to-others)
@@ -30,6 +36,96 @@
   - [**R10 - Describe the way tasks are allocated and tracked in your project**](#r10---describe-the-way-tasks-are-allocated-and-tracked-in-your-project)
   - [**References**](#references)
   - [**Other links**](#other-links)
+
+
+## **Environment Setup Instructions**
+
+There will be a `src` folder in the same directory as this README file. Within that folder are two files that will contain environment variables for this API to run properly, a file named `.flaskenv.sample` and another named `.envsample`
+
+When you open this project, you need to rename both of these files by taking off the `.sample` from the end of the file nam. The two filenames should look like the image below once this has been completed
+
+<br>
+
+<img src="./docs/env-flaskenv-files.png" alt=".env and .flaskenv files">
+
+<br>
+
+### **The .flaskenv environment file**
+
+Firstly open the `.flaskenv` file. You should see the following:
+
+<br>
+
+<img src="./docs/flaskenv-contents.png" alt=".flaskenv file contents">
+
+<br>
+
+- This first line in this file indicates that there is a function named `create_forum` in the `main` module that the API is run from.
+  - This setting does not need to be changed
+- The second line indicates that the server is running in debug mode
+  - This setting does not need to be changed
+- The third line indicates what port the server will run on
+  - This can be changed to whatever port you'd like to run the server on.
+
+### **The .env environment file**
+
+Sedondly open the `.env` file. You should see the following:
+
+<br>
+
+<img src="./docs/env-contents.png" alt=".env file contents">
+
+<br>
+
+- The first line is the link to the database being used for this API. You will need to create a database with the following details that are described in the DATABASE_URL key/value pair:
+  - A database with the name `forum_api`
+  - A user named `camarker` with a passowrd of `password123`
+  - User `camarker` must have all privileges granted to them for database `forum_api`
+- The second line in this file is the secret key used to creating the JWT tokens used in this API
+  - You can keep this key or change it to whatever you line in this file
+- The third line are the channels that are available in the Forum for users to post to. 
+  - You can add or delete channels here or leave the channel lists as is.
+
+### **Creating a python virtual environment**
+
+Now that the environment variables have been set, navigate to the command prompt to the `/src` directory. Run the following commands in order.
+1. `python3 -m venv .venv` - This will create a python virtual environment in the directory `.venv`
+2. `source .venv/bin/activate` -  This will activate the virtual environment
+3. `pip install -r requirements.txt` - This will install all the required modules for the API
+
+
+### **Running the server**
+
+To run the server, make sure the command prompt is in the `/src` directory and run the command
+- `flask run`
+
+This will start the server and you will be able to make requests to the address show in the command line. In the example below the server is running on `http://127.0.0.1:8000`
+
+<br>
+
+<img src="./docs/server.png" alt="server address">
+
+<br>
+
+To quit the server hold the keys: `ctrl + c` 
+Run `flask run` to start the server again.
+
+### **Seeding the database**
+
+I have provided a set of data for Users, Posts and Replies to seed the database with so that the maker can test out the functionality fo the API without initially having to enter any data.
+
+To seed the database simply run these commands in order:
+- `flask db drop`
+- `flask db create`
+- `flask db seed`
+
+alternatively you can run all three commands on the one line like below:
+
+```
+flask db drop && flask db create && flask db seed
+```
+
+
 
 ## **R1 - Identification of the problem you are trying to solve by building this particular app.**
 

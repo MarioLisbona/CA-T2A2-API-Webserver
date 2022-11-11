@@ -10,7 +10,7 @@
     - [**The .env environment file**](#the-env-environment-file)
     - [**Creating a python virtual environment**](#creating-a-python-virtual-environment)
     - [**Running the server**](#running-the-server)
-    - [**Seeding the database**](#seeding-the-database)
+    - [**Creating Tables and Seeding the database**](#creating-tables-and-seeding-the-database)
   - [**R1 - Identification of the problem you are trying to solve by building this particular app.**](#r1---identification-of-the-problem-you-are-trying-to-solve-by-building-this-particular-app)
   - [**R2 - Why is it a problem that needs solving?**](#r2---why-is-it-a-problem-that-needs-solving)
   - [**R3 - Why have you chosen this database system. What are the drawbacks compared to others?**](#r3---why-have-you-chosen-this-database-system-what-are-the-drawbacks-compared-to-others)
@@ -40,9 +40,9 @@
 
 ## **Environment Setup Instructions**
 
-There will be a `src` folder in the same directory as this README file. Within that folder are two files that will contain environment variables for this API to run properly, a file named `.flaskenv.sample` and another named `.envsample`
+There will be a `src` folder in the same directory as this README file. Within that folder are two files that will contain environment variables for this API to run properly, a file named `.flaskenv.sample` and another named `.env.sample`
 
-When you open this project, you need to rename both of these files by taking off the `.sample` from the end of the file nam. The two filenames should look like the image below once this has been completed
+When you open this project, you need to rename both of these files by taking off the `.sample` from the end of the file name. The two filenames should look like the image below once this has been completed
 
 <br>
 
@@ -81,15 +81,16 @@ Sedondly open the `.env` file. You should see the following:
   - A database with the name `forum_api`
   - A user named `camarker` with a passowrd of `password123`
   - User `camarker` must have all privileges granted to them for database `forum_api`
+  - replace the `@127.0.0.1:5432/` with the address of the database you have created
 - The second line in this file is the secret key used to creating the JWT tokens used in this API
   - You can keep this key or change it to whatever you line in this file
-- The third line are the channels that are available in the Forum for users to post to. 
+- The third line are the channels that are available in the Forum for users to post to.
   - You can add or delete channels here or leave the channel lists as is.
 
 ### **Creating a python virtual environment**
 
-Now that the environment variables have been set, navigate to the command prompt to the `/src` directory. Run the following commands in order.
-1. `python3 -m venv .venv` - This will create a python virtual environment in the directory `.venv`
+Now that the environment variables have been set, with the command prompt in the `/src` directory. Run the following commands in order.
+1. `python3 -m venv .venv` - This will create a python virtual environment in the folder `.venv`
 2. `source .venv/bin/activate` -  This will activate the virtual environment
 3. `pip install -r requirements.txt` - This will install all the required modules for the API
 
@@ -108,13 +109,14 @@ This will start the server and you will be able to make requests to the address 
 <br>
 
 To quit the server hold the keys: `ctrl + c` 
-Run `flask run` to start the server again.
 
-### **Seeding the database**
+Run the command `flask run` to start the server again.
 
-I have provided a set of data for Users, Posts and Replies to seed the database with so that the maker can test out the functionality fo the API without initially having to enter any data.
+### **Creating Tables and Seeding the database**
 
-To seed the database simply run these commands in order:
+I have provided a set of data for Users, Posts and Replies to seed the database with so that the maker can test out the functionality of the API without initially having to enter any data.
+
+To create the tables for the API and to seed the database simply run these commands in order:
 - `flask db drop`
 - `flask db create`
 - `flask db seed`

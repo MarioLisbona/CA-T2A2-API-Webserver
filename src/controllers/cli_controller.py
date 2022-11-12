@@ -37,21 +37,24 @@ def seed_db_tables():
             l_name = 'Admin',
             email = 'admin@forum.com',
             password = bcrypt.generate_password_hash('admin123').decode('utf-8'),
-            is_admin = True
+            is_admin = True,
+            status = 'Active'
         ),
         User(
             f_name = 'Mario',
             l_name = 'Lisbona',
             email = 'mario.lisbona@gmail.com',
             password = bcrypt.generate_password_hash('muz123').decode('utf-8'),
-            is_admin = False
+            is_admin = False,
+            status = 'Active'
         ),
         User(
             f_name = 'Ali',
             l_name = 'Taubner',
             email = 'ali.taubner@gmail.com',
             password = bcrypt.generate_password_hash('ali123').decode('utf-8'),
-            is_admin = False
+            is_admin = False,
+            status = 'Banned'
         ),
         User(
             f_name = 'Coda',
@@ -59,7 +62,7 @@ def seed_db_tables():
             email = 'coda.cat@gmail.com',
             password = bcrypt.generate_password_hash('coda123').decode('utf-8'),
             is_admin = False,
-            status = 'Banned'
+            status = 'Inactive'
         )
     ]
 

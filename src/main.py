@@ -24,7 +24,7 @@ def create_forum():
 
     @app.route('/')
     def index():
-        return 'Testing main server app again'
+        return 'Testing main server app again and again and again and again and again'
 
     #initializing the SQLAlchemy, Marshmallow, bcrypt and jwt instances inside the create_forum function
     db.init_app(app)

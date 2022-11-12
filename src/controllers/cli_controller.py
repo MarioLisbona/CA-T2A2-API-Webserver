@@ -58,7 +58,8 @@ def seed_db_tables():
             l_name = 'Cat',
             email = 'coda.cat@gmail.com',
             password = bcrypt.generate_password_hash('coda123').decode('utf-8'),
-            is_admin = False
+            is_admin = False,
+            status = 'Banned'
         )
     ]
 

@@ -26,12 +26,12 @@
     - [**Flask-Bcrypt**](#flask-bcrypt)
     - [**Flask-JWT-Extended**](#flask-jwt-extended)
   - [**R8 - Describe your projects models in terms of the relationships they have with each other**](#r8---describe-your-projects-models-in-terms-of-the-relationships-they-have-with-each-other)
-    - [Posts Model](#posts-model)
-    - [Replies Model](#replies-model)
-    - [Users Model](#users-model)
-    - [Post Schema](#post-schema)
-    - [Reply Schema](#reply-schema)
-    - [User Schema](#user-schema)
+    - [**Post Model**](#post-model)
+    - [**Reply Model**](#reply-model)
+    - [**User Model**](#user-model)
+    - [**Post Schema**](#post-schema)
+    - [**Reply Schema**](#reply-schema)
+    - [**User Schema**](#user-schema)
   - [**R9 - Discuss the database relations to be implemented in your application**](#r9---discuss-the-database-relations-to-be-implemented-in-your-application)
   - [**R10 - Describe the way tasks are allocated and tracked in your project**](#r10---describe-the-way-tasks-are-allocated-and-tracked-in-your-project)
   - [**References**](#references)
@@ -134,7 +134,7 @@ flask db drop && flask db create && flask db seed
 I'm building a forum API to create an online community with an environment that encourages open communication between like minded individuals. The forum will help facilitate this by providing a variety of channels where users can make posts on different topics of interest. Users can also post replies to help continue the conversation with meaningful input from the entire forum community.
 
 
-Administrators will moderate all the interactions that happen on the platform. This will be vital in maintaining the platform's integrity as an environment where open communication can occur.
+Administrators will moderate all the interactions that happen on the platform. This will be vital in maintaining the platform's integrity and maintaining an environment where open communication can occur.
 
 
 Administrators will be able to perform important moderation activities including deactivating/archiving posts that are inactive, deleting posts, issuing users warnings and deleting users who are violating the community guidelines.
@@ -233,7 +233,7 @@ View all the endpoint documentation for the Forum API [*here*](./docs/Forum-API-
 
 ### **SQLAlchemy**
 
-SQL Alchemy is a Python library used to implement a bridge between the main application code and the PostgreSQL database structures. It's used as an ORM (Object Relational Mapper) to translate the tables in the PostgreSQL database into Python objects and vice versa. It uses python function calls to create statements that are converted to SQL statements to integrate and interact with the database tables. PostgreSQL database table data is also converted into OPP languages to be manipulated in the application. (Bruno Krebs, 2017) [^7]
+SQL Alchemy is a Python library used to implement a bridge between the main application code and the PostgreSQL database structures. It's used as an ORM (Object Relational Mapper) to translate the tables in the PostgreSQL database into Python objects and vice versa. It uses python function calls to create statements that are converted to SQL statements to interrogate and interact with the database tables. PostgreSQL database table data is also converted into OPP languages to be manipulated in the application. (Bruno Krebs, 2017) [^7]
 
 ### **flask-marshmallow**
 
@@ -243,17 +243,17 @@ This third party library is used in a few ways in this forum API. Its used to cr
 
 This library is used to allow a Flask application to access and use sensitive data including secret keys for hashing passwords and storing database url links. Instead of these values being hard coded into the application, where they aren't secure, they can be set as key/value pairs in a .env file as shown below.
 
-- Examples of values being hard coded into the application
+- Examples of values being hard coded into the application as strings
 
 ```py
 #setting values for configuring database link and secret keys for tokens
-app.config['SQLALCHEMY_DATABASE_URI'] = postgresql+psycopg2://mariolisbona:password123@127.0.0.1:5432/test_warning_model
-app.config['JWT_SECRET_KEY'] = CoderAcademyAPI!
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://camarker:password123@127.0.0.1:5432/forum_api'
+app.config['JWT_SECRET_KEY'] = 'CoderAcademyAPI!'
 ```
 
-Examples of the same statements using environment variables. Firstly the envronment variables are defined as key/value pairs in a .env file (1) then those varaibles are used instread of hard coded valued (2)
+Examples of the same statements using environment variables. Firstly the environment variables are defined as key/value pairs in a .env file (pic 1) then those variables are used instead of hard coded values (pic 2)
   
-- setting evironment variables
+- setting environment variables
 
 
 ```py
@@ -295,29 +295,29 @@ Each model is a class derived from the base class `db.Model` It addition to its 
 
 In this API the Posts and Replies tables both sit on the ‘many’ side of a relationship with the Users table. Below is a description of how those relationships are implemented.
 
-### Posts Model
+### **Post Model**
 
 ```py
 #creating foreign key linking to the Users model
 user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 ```
 
-The above statement establishes an attribute in the Post model named `user_id` It is created in the same way as all the other attributes with the `db.Colum()` function. However this function also calls the SQLAlchemy function `db.Foriegnkey()` passing in the model name and attribute that will be the foreign key in this model, in this case the model and attribute is `users.id`. Nullable is set to false because there always has to be an owner of a post.
+The above statement establishes an attribute in the Post model named `user_id`. It is created in the same way as all the other attributes with the `db.Colum()` function. However this function also calls the SQLAlchemy function `db.Foriegnkey()` passing in the model name and attribute that will be the foreign key in this model, in this case the model and attribute is `users.id`. Nullable is set to false because there always has to be an owner of a post.
 
-After this relationship is established with a foreign key, the code below creates two variables, users and replies to access the user and replies objects that are linked to each post.
+After this relationship is established with a foreign key, the code below creates two variables, user and replies to access the user/owner of that post and replies that are linked to each post.
 
 ```py
 user = db.relationship('User', back_populates='posts')
 replies = db.relationship('Reply', back_populates='post', cascade='all, delete')
 ```
 
-The `back_populates` argument will create a property for this model (the Posts model) in the model on the other end of the relationship, User and Reply in the above example. So effectively it's creating a two way relationship between these models, making each one available as an object in the model it's linked to.
+The `back_populates` argument will create a property for this model (the Post model), in the model on the other end of the relationship, User and Reply in the above example. So effectively it's creating a two way relationship between these models, making each one available as a property in the model it's linked to.
 
-The use of singular and plural variables names here is important and directly linked to the relationship that exists between these models. Each post can have only one created, hence the singular variable name of `user`. Each post can also have many replies on it, so I have used the plural variable name `replies` to indicate that there could potentially be many replies on a post. This is also why the cascade delete only exists on replies variables in the Post model. If a post is deleted then all the replies must be deleted, but not the creator of the post.
+The use of singular and plural variables names here is important and directly linked to the relationship that exists between these models. Each post can have only one creator/owner, hence the singular variable name of `user`. Each post can also have many replies on it, so I have used the plural variable name `replies` to indicate that there could potentially be many replies on a post. This is also why the cascade delete only exists on replies variables in the Post model. If a post is deleted then all the replies must be deleted, but not the creator of the post.
 
-### Replies Model
+### **Reply Model**
 
-The replies SQLAlchemy model sits on the many side of a relationship with Users and posts. A post can have many replies and a user can create many replies. The code below implements this relationship with foreign keys from the Posts and Uses table.
+The reply SQLAlchemy model sits on the many side of a relationship with Users and posts. A post can have many replies and a user can create many replies. The code below implements this relationship with foreign keys from the Posts and Uses table.
 
 ```py
 #creating foreign keys linking to Users model and Posts model
@@ -334,18 +334,20 @@ post = db.relationship('Post', back_populates='replies')
 
 There are no cascade delete's in these statements because neither of the other models linked to a reply, a user and a post, should be deleted if a reply is deleted.
 
-### Users Model
+### **User Model**
 
-This SQLAlchemy model has a relationship where both its partners sit on the many side and thus the Users model does not contain a foreign key. When establishing the variables to make each of its related objects, posts and replies, available to be used, the cascade delete will be needed on both variables. This is because if a user is deleted, all its associations, the posts and replies that the user has created need to be deleted.
+This SQLAlchemy model has a relationship where both its partners sit on the many side and thus the User model does not contain a foreign key. When establishing the variables to make each of its related objects, posts and replies, available to be used, the cascade delete will be needed on both variables. This is because if a user is deleted, all its associations, the posts and replies that the user has created need to be deleted.
 
 ```py
 posts = db.relationship('Post', back_populates='user', cascade='all, delete')
 replies = db.relationship('Reply', back_populates='user', cascade='all, delete')
 ```
 
-The examples above describe how the relationships are established between the models. The Marshmallow schema's that have been created in this API will make use of the above relationships between the models when displaying responses to the end user. Each schema contains a fields variable inside a `class Meta:` statement. Each of the attributes inside the fields tuple will be displayed when that schema is called.
+The examples above describe how the relationships are established between the models. 
 
-### Post Schema
+The Marshmallow schema's that have been created in this API will make use of the above relationships between the models when displaying responses to the end user. Each schema contains a fields variable inside a `class Meta:` statement. Each of the attributes inside the fields tuple will be displayed when that schema is called.
+
+### **Post Schema**
 
 The attributes for each post model are id, title, date, time, is_active, consent and channel. But as you can see in the code below, there are two extra attributes listed, user and replies.
 
@@ -355,7 +357,7 @@ class Meta:
       ordered = True
 ```
 
-Those extra fields are the data that we want to be displayed with each post, the models that each post is linked to, users and replies. The code above is used to set this up.
+Those extra fields are the data that we want to be displayed with each post, the models that each post is linked to, user and replies. The code above is used to set this up.
 
 The code below demonstrates using the marshmallow methods to first create a nested variable for an individual user for each post, only displaying the name and email of the user. Because each post can have multiple replies, an extra method, `fields.List()` needs to be called so that replies are displayed as a list of replies. When displaying the replies, the post is omitted because we display the reply information already nested inside a response with post data.
 
@@ -364,7 +366,7 @@ user = fields.Nested('UserSchema', only=['f_name', 'l_name', 'email'])
 replies = fields.List(fields.Nested('ReplySchema', exclude=['post']))
 ```
 
-### Reply Schema
+### **Reply Schema**
 
 Similarly in the Reply schema, in addition to the replies attributes being displayed, the user and post linked to that reply are displayed. This is setup with the following statements.
 
@@ -379,7 +381,7 @@ class Meta:
 
 When displaying user information, only the name and email are displayed. The whole post is displayed in this schema.
 
-### User Schema
+### **User Schema**
 
 When using the Marshmallow schema to display all the attributes associated with the User Model, the posts and replies objects that have a relationship with that user will also be displayed. The user will be excluded from the two nested lists that will contain the posts and replies associated with that user. The statements below show how this is coded.
 

@@ -21,7 +21,7 @@ def create_forum():
     app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
     app.config['JWT_SECRET_KEY'] = os.environ.get('JWT_SECRET_KEY')
 
-
+    #test message to be displayed on the index route.
     @app.route('/')
     def index():
         return 'Testing main server app'

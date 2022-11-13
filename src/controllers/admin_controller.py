@@ -169,7 +169,11 @@ def get_all_users_replies(reply_user_id):
     #else if hte user is 0 then they have not posted replies
     #else the user does not exist
     if count > 0:
-        return ReplySchema(many=True, exclude=['user', 'post']).dump(replies)
+        return {
+            'msg:': f'User {reply_user_id} - {user.f_name} {user.l_name} has posted {count} replies to the forum',
+            'details': ReplySchema(many=True, exclude=['user', 'post']).dump(replies)
+        }
+        
     elif count == 0 and user:
         abort(404, description=f'User {reply_user_id} has not posted any replies')
     else:

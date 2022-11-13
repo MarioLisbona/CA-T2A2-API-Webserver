@@ -151,14 +151,23 @@
 - Response Body:
 
 ```JSON
-[
-    {
-        "id": 7,
-        "reply": "Wow,thats great!!",
-        "date": "2022-11-07",
-        "time": "11:13:22"
-    }
-]
+{
+    "msg:": "User 3 - Ali Taubner has posted 2 replies to the forum",
+    "details": [
+        {
+            "id": 3,
+            "reply": "That sounds great, id love to learn to code as well, That sounds great, id love to learn to code as well",
+            "date": "2022-11-13",
+            "time": "12:08:57"
+        },
+        {
+            "id": 4,
+            "reply": "I am also learning how to use Python with Flask to develop web applications.",
+            "date": "2022-11-13",
+            "time": "12:08:57"
+        }
+    ]
+}
 ```
 
 - Response Body: User has posted No replies

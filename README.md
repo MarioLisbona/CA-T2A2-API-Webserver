@@ -110,13 +110,13 @@ This will start the server and you will be able to make requests to the address 
 
 To quit the server hold the keys: `ctrl + c` 
 
-Run the command `flask run` to start the server again.
+To start the server again run the command `flask run`
 
 ### **Creating Tables and Seeding the database**
 
 I have provided a set of data for Users, Posts and Replies to seed the database with so that the maker can test out the functionality of the API without initially having to enter any data.
 
-To create the tables for the API and to seed the database simply run these commands in order:
+To create the tables for the API and to seed the database firstly open a new terminal and navigate to the `/src` folder. Then run these commands in order:
 - `flask db drop`
 - `flask db create`
 - `flask db seed`

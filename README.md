@@ -35,6 +35,7 @@
   - [**R9 - Discuss the database relations to be implemented in your application**](#r9---discuss-the-database-relations-to-be-implemented-in-your-application)
   - [**R10 - Describe the way tasks are allocated and tracked in your project**](#r10---describe-the-way-tasks-are-allocated-and-tracked-in-your-project)
   - [**References**](#references)
+  - [**Project links**](#project-links)
   - [**Other links**](#other-links)
 
 
@@ -497,6 +498,11 @@ You can become a member of my T2A2 Web API trello board [*here*](https://trello.
 - [^10 - R7](#r7---detail-any-third-party-services-that-your-app-will-use) - @alesanchezr - 4Geeks (2019) [*UNDERSTANDING JWT AND HOW TO IMPLEMENT A SIMPLE JWT WITH FLASK*](https://4geeks.com/lesson/what-is-JWT-and-how-to-implement-with-Flask), 4 Geeks website, accessed 10 November 2022.
 - [^11 - R8](#r8---describe-your-projects-models-in-terms-of-the-relationships-they-have-with-each-other) - Patrycja Dybka (2018) [*Crow’s Foot Notation*](https://vertabelo.com/blog/crow-s-foot-notation/), Vertabelo website, accessed 10 November 2022.
 
+
+## **Project links**
+
+- [Trello Board](https://trello.com/b/tgZAzcbl/t2a2-api-webserver)
+- [Github Repo](https://github.com/MarioLisbona/CA-T2A2-API-Webserver)
 
 ## **Other links**
 

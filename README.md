@@ -11,6 +11,7 @@
     - [**Creating a python virtual environment**](#creating-a-python-virtual-environment)
     - [**Running the server**](#running-the-server)
     - [**Creating Tables and Seeding the database**](#creating-tables-and-seeding-the-database)
+    - [**Accessing API Resources**](#accessing-api-resources)
   - [**R1 - Identification of the problem you are trying to solve by building this particular app.**](#r1---identification-of-the-problem-you-are-trying-to-solve-by-building-this-particular-app)
   - [**R2 - Why is it a problem that needs solving?**](#r2---why-is-it-a-problem-that-needs-solving)
   - [**R3 - Why have you chosen this database system. What are the drawbacks compared to others?**](#r3---why-have-you-chosen-this-database-system-what-are-the-drawbacks-compared-to-others)
@@ -37,6 +38,7 @@
   - [**References**](#references)
   - [**Project links**](#project-links)
   - [**Other links**](#other-links)
+  - [**Other links**](#other-links-1)
 
 
 ## **Environment Setup Instructions**
@@ -128,6 +130,13 @@ alternatively you can run all three commands on the one line like below:
 flask db drop && flask db create && flask db seed
 ```
 
+### **Accessing API Resources**
+
+I have provided a provided a [*postman collections JSON file*](./docs/T2A2API-Web-Server.postman_collection.json) in the `/docs` folder that you can import into Postman in the Collections tab. It will have all the API routes available in 4 folders, Posts, Users, Auth and Admin.
+
+<hr>
+<br>
+<br>
 
 
 ## **R1 - Identification of the problem you are trying to solve by building this particular app.**
@@ -509,4 +518,8 @@ You can become a member of my T2A2 Web API trello board [*here*](https://trello.
 - [HTTP status codes](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status)
 - [Regex generators](https://regexr.com/38tvj)
 - [Visualising Software Architecture](https://c4model.com/)
-  
+
+
+## **Other links**
+
+- [**Back to the Top**](#coder-academy---assignment-t2a2---api-webserver-project-by-mario-lisbona)

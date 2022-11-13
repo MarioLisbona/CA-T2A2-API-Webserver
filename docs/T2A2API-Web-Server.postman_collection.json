@@ -1,0 +1,1066 @@
+{
+	"info": {
+		"_postman_id": "dfe23cb6-bc2a-4e76-b99f-dda0249184bb",
+		"name": "T2A2 API Web Server",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Posts",
+			"item": [
+				{
+					"name": "USER - Display all Posts",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY2ODI4Mzc0NywianRpIjoiNjY4ZWIxY2QtNDYzNy00YjA2LTllMzUtNmM3OTdlZTU5Y2JiIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IjEiLCJuYmYiOjE2NjgyODM3NDcsImV4cCI6MTY2ODM3MDE0N30.320xsJ9K-ufN--MiXMrctN_kgzKvS4JxTSeeK8HCLQU",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/posts/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"posts",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "USER - Display a single Post",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY2ODI4Mzg1MiwianRpIjoiMDEwYWQ2ZjctY2Y5ZC00Mjk4LWFiM2UtMmNkZmZiODM3ZWRiIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IjIiLCJuYmYiOjE2NjgyODM4NTIsImV4cCI6MTY2ODM3MDI1Mn0.pkA3i96h0_A5QhKoFBemk8flohognXxa_zGYVgQxfPk",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/posts/4",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"posts",
+								"4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "USER - Create a Post",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY2ODMwMTk5NywianRpIjoiMDBlNThlZWUtZmU5Ny00M2IxLWI1NjMtMjkyZmJhZWE1YjAzIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IjYiLCJuYmYiOjE2NjgzMDE5OTcsImV4cCI6MTY2ODM4ODM5N30.kRNjZNm4dHIvRmdHSjra-_n6-CTkzqewTrnd1_l6BU8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\"title\": \"third Post to database\",\n\"content\": \"Posting aTRAVE TRAVEL Ti am a fatty fatso ELTRAVETi am a fatty fatsoTi am a fatty fatsoTi am a fatty fatsoTi am a fatty fatsoTi am a fatty fatsoTi am a fatty fatsoTi am a fatty fatsoTi am a fatty fatsoTi am a fatty fatsoTi am a fatty fatsoTi am a fatty fatsoTi am a fatty fatsoTi am a fatty fatsoTi am a fatty fatsoTi am a fatty fatsoTi am a fatty fatsoTi am a fatty fatsoTi am a fatty fatsoTi am a fatty fatsoTi am a fatty fatsoTi am a fatty fatsoTi am a fatty fatsoTi am a fatty fatsoTi am a fatty fatsoTi am a fatty fatsoTi am a fatty fatso TRAVEL TREAVELTRAVE TRAVEL TREAVELTRAVE TRAVEL TREAVEL sezTRAVE TRAVEL TREAVEL databasetabase\",\n\"channel\": \"Food\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/posts",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"posts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "USER - Update an existing Post",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY2ODMwMTk5NywianRpIjoiMDBlNThlZWUtZmU5Ny00M2IxLWI1NjMtMjkyZmJhZWE1YjAzIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IjYiLCJuYmYiOjE2NjgzMDE5OTcsImV4cCI6MTY2ODM4ODM5N30.kRNjZNm4dHIvRmdHSjra-_n6-CTkzqewTrnd1_l6BU8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Changing the title of a post!\",\n    \"content\": \"This will have to be more than 2000 This will have to be more thave to be more than 2000 This will have to be more thanhave to be more than 2000 This will have to be more thanhave to be more than 2000 This will have to be more thanhave to be more than 2000 This will have to be more thanhave to be more than 2000 This will have to be more thanhave to be more than 2000 This will have to be more thanhave to be more than 2000 This will have to be more thanhave to be more than 2000 This will have to be more thanhave to be more than 2000 This will have to be more thanhave to be more than 2000 This will have to be more thanhave to be more than 2000 This will have to be more thanhave to be more than 2000 This will have to be more thanhave to be more than 2000 This will have to be more thanhave to be more than 2000 This will have to be more thanhan 2000 chars\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/posts/8",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"posts",
+								"8"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "USER - Update a reply",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY2ODMwMTk5NywianRpIjoiMDBlNThlZWUtZmU5Ny00M2IxLWI1NjMtMjkyZmJhZWE1YjAzIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IjYiLCJuYmYiOjE2NjgzMDE5OTcsImV4cCI6MTY2ODM4ODM5N30.kRNjZNm4dHIvRmdHSjra-_n6-CTkzqewTrnd1_l6BU8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"reply\": \"Updating the reply to a post as the owner of the reply hhhhhhhhhwerwerwerwerwer\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/posts/replies/6/update",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"posts",
+								"replies",
+								"6",
+								"update"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "USER - Reply to a Post",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY2ODMwMTk5NywianRpIjoiMDBlNThlZWUtZmU5Ny00M2IxLWI1NjMtMjkyZmJhZWE1YjAzIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IjYiLCJuYmYiOjE2NjgzMDE5OTcsImV4cCI6MTY2ODM4ODM5N30.kRNjZNm4dHIvRmdHSjra-_n6-CTkzqewTrnd1_l6BU8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"reply\": \"Iv just started to learn Flask and im building a forum APIsdfasfsdfsafasdfasdfafa\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/posts/5/reply",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"posts",
+								"5",
+								"reply"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "USER - display all replies for a Post",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY2ODMwMTk5NywianRpIjoiMDBlNThlZWUtZmU5Ny00M2IxLWI1NjMtMjkyZmJhZWE1YjAzIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IjYiLCJuYmYiOjE2NjgzMDE5OTcsImV4cCI6MTY2ODM4ODM5N30.kRNjZNm4dHIvRmdHSjra-_n6-CTkzqewTrnd1_l6BU8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/posts/5/replies",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"posts",
+								"5",
+								"replies"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "USER - View posts by Channel",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY2ODMwMTk5NywianRpIjoiMDBlNThlZWUtZmU5Ny00M2IxLWI1NjMtMjkyZmJhZWE1YjAzIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IjYiLCJuYmYiOjE2NjgzMDE5OTcsImV4cCI6MTY2ODM4ODM5N30.kRNjZNm4dHIvRmdHSjra-_n6-CTkzqewTrnd1_l6BU8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/posts/channel/Travel",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"posts",
+								"channel",
+								"Travel"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "USER - Delete my own post",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY2ODMwMTk5NywianRpIjoiMDBlNThlZWUtZmU5Ny00M2IxLWI1NjMtMjkyZmJhZWE1YjAzIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IjYiLCJuYmYiOjE2NjgzMDE5OTcsImV4cCI6MTY2ODM4ODM5N30.kRNjZNm4dHIvRmdHSjra-_n6-CTkzqewTrnd1_l6BU8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/posts/8/delete",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"posts",
+								"8",
+								"delete"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "USER - Delete my own reply",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY2ODMwMTk5NywianRpIjoiMDBlNThlZWUtZmU5Ny00M2IxLWI1NjMtMjkyZmJhZWE1YjAzIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IjYiLCJuYmYiOjE2NjgzMDE5OTcsImV4cCI6MTY2ODM4ODM5N30.kRNjZNm4dHIvRmdHSjra-_n6-CTkzqewTrnd1_l6BU8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/posts/replies/6/delete/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"posts",
+								"replies",
+								"6",
+								"delete",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "USER - display all posts from a user",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY2ODMwMTk5NywianRpIjoiMDBlNThlZWUtZmU5Ny00M2IxLWI1NjMtMjkyZmJhZWE1YjAzIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IjYiLCJuYmYiOjE2NjgzMDE5OTcsImV4cCI6MTY2ODM4ODM5N30.kRNjZNm4dHIvRmdHSjra-_n6-CTkzqewTrnd1_l6BU8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/posts/users/6/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"posts",
+								"users",
+								"6",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "USER - Display my User profile",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY2ODI4Mzc0NywianRpIjoiNjY4ZWIxY2QtNDYzNy00YjA2LTllMzUtNmM3OTdlZTU5Y2JiIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IjEiLCJuYmYiOjE2NjgyODM3NDcsImV4cCI6MTY2ODM3MDE0N30.320xsJ9K-ufN--MiXMrctN_kgzKvS4JxTSeeK8HCLQU",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/users/profile",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"users",
+								"profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "USER - Update my profile",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY2ODMwMTk5NywianRpIjoiMDBlNThlZWUtZmU5Ny00M2IxLWI1NjMtMjkyZmJhZWE1YjAzIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IjYiLCJuYmYiOjE2NjgzMDE5OTcsImV4cCI6MTY2ODM4ODM5N30.kRNjZNm4dHIvRmdHSjra-_n6-CTkzqewTrnd1_l6BU8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"l_name\": \"Pardue\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/users/update_profile",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"users",
+								"update_profile"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "USER - Register a new user",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"f_name\": \"Lucy\",\n    \"l_name\": \"Lisbona\",\n    \"email\": \"lucy@forum.com\",\n    \"password\": \"Lucy123!\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/auth/register",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "USER - Login a User",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"lucy@forum.com\",\n    \"password\": \"Lucy123!\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/auth/login",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Admin",
+			"item": [
+				{
+					"name": "ADMIN - Display all Users",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY2ODI4Mzc0NywianRpIjoiNjY4ZWIxY2QtNDYzNy00YjA2LTllMzUtNmM3OTdlZTU5Y2JiIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IjEiLCJuYmYiOjE2NjgyODM3NDcsImV4cCI6MTY2ODM3MDE0N30.320xsJ9K-ufN--MiXMrctN_kgzKvS4JxTSeeK8HCLQU",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/admin/users/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"admin",
+								"users",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ADMIN - Display any user profile",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY2ODI4Mzc0NywianRpIjoiNjY4ZWIxY2QtNDYzNy00YjA2LTllMzUtNmM3OTdlZTU5Y2JiIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IjEiLCJuYmYiOjE2NjgyODM3NDcsImV4cCI6MTY2ODM3MDE0N30.320xsJ9K-ufN--MiXMrctN_kgzKvS4JxTSeeK8HCLQU",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/admin/users/6",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"admin",
+								"users",
+								"6"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ADMIN - Delete any post",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY2ODI4Mzc0NywianRpIjoiNjY4ZWIxY2QtNDYzNy00YjA2LTllMzUtNmM3OTdlZTU5Y2JiIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IjEiLCJuYmYiOjE2NjgyODM3NDcsImV4cCI6MTY2ODM3MDE0N30.320xsJ9K-ufN--MiXMrctN_kgzKvS4JxTSeeK8HCLQU",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/admin/posts/7/delete",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"admin",
+								"posts",
+								"7",
+								"delete"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ADMIN - Delete any User",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY2ODEzODE3MywianRpIjoiYWM3MTU3MzctZjRmOS00YzE1LWI5ZDgtM2E5N2MzYTliMmQ1IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IjEiLCJuYmYiOjE2NjgxMzgxNzMsImV4cCI6MTY2ODIyNDU3M30.hK6w6JBd41-_QX4AUUfUwW3-OEl4s8CICAvZva5zpXQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/admin/users/5/delete",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"admin",
+								"users",
+								"5",
+								"delete"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ADMIN - Delete any reply",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY2ODI4Mzc0NywianRpIjoiNjY4ZWIxY2QtNDYzNy00YjA2LTllMzUtNmM3OTdlZTU5Y2JiIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IjEiLCJuYmYiOjE2NjgyODM3NDcsImV4cCI6MTY2ODM3MDE0N30.320xsJ9K-ufN--MiXMrctN_kgzKvS4JxTSeeK8HCLQU",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/admin/replies/5/delete",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"admin",
+								"replies",
+								"5",
+								"delete"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ADMIN - Grant admin rights to a user",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY2ODEzODE3MywianRpIjoiYWM3MTU3MzctZjRmOS00YzE1LWI5ZDgtM2E5N2MzYTliMmQ1IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IjEiLCJuYmYiOjE2NjgxMzgxNzMsImV4cCI6MTY2ODIyNDU3M30.hK6w6JBd41-_QX4AUUfUwW3-OEl4s8CICAvZva5zpXQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/admin/users/2/grant_admin",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"admin",
+								"users",
+								"2",
+								"grant_admin"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ADMIN - Revoke admin rights to a user",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY2ODEzODE3MywianRpIjoiYWM3MTU3MzctZjRmOS00YzE1LWI5ZDgtM2E5N2MzYTliMmQ1IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IjEiLCJuYmYiOjE2NjgxMzgxNzMsImV4cCI6MTY2ODIyNDU3M30.hK6w6JBd41-_QX4AUUfUwW3-OEl4s8CICAvZva5zpXQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/admin/users/2/revoke_admin",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"admin",
+								"users",
+								"2",
+								"revoke_admin"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ADMIN - Deactivate a post",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY2ODI4Mzc0NywianRpIjoiNjY4ZWIxY2QtNDYzNy00YjA2LTllMzUtNmM3OTdlZTU5Y2JiIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IjEiLCJuYmYiOjE2NjgyODM3NDcsImV4cCI6MTY2ODM3MDE0N30.320xsJ9K-ufN--MiXMrctN_kgzKvS4JxTSeeK8HCLQU",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/admin/posts/5/deactivate/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"admin",
+								"posts",
+								"5",
+								"deactivate",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ADMIN - Activate a post",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY2ODEzODE3MywianRpIjoiYWM3MTU3MzctZjRmOS00YzE1LWI5ZDgtM2E5N2MzYTliMmQ1IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IjEiLCJuYmYiOjE2NjgxMzgxNzMsImV4cCI6MTY2ODIyNDU3M30.hK6w6JBd41-_QX4AUUfUwW3-OEl4s8CICAvZva5zpXQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/admin/posts/2/activate/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"admin",
+								"posts",
+								"2",
+								"activate",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ADMIN - Display forum statistics",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY2ODI4Mzc0NywianRpIjoiNjY4ZWIxY2QtNDYzNy00YjA2LTllMzUtNmM3OTdlZTU5Y2JiIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IjEiLCJuYmYiOjE2NjgyODM3NDcsImV4cCI6MTY2ODM3MDE0N30.320xsJ9K-ufN--MiXMrctN_kgzKvS4JxTSeeK8HCLQU",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/admin/stats/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"admin",
+								"stats",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ADMIN - Issue warning to a user",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY2ODI4Mzc0NywianRpIjoiNjY4ZWIxY2QtNDYzNy00YjA2LTllMzUtNmM3OTdlZTU5Y2JiIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IjEiLCJuYmYiOjE2NjgyODM3NDcsImV4cCI6MTY2ODM3MDE0N30.320xsJ9K-ufN--MiXMrctN_kgzKvS4JxTSeeK8HCLQU",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/admin/users/2/issue_warning/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"admin",
+								"users",
+								"2",
+								"issue_warning",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ADMIN - Display all replies from a user",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY2ODEzODE3MywianRpIjoiYWM3MTU3MzctZjRmOS00YzE1LWI5ZDgtM2E5N2MzYTliMmQ1IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IjEiLCJuYmYiOjE2NjgxMzgxNzMsImV4cCI6MTY2ODIyNDU3M30.hK6w6JBd41-_QX4AUUfUwW3-OEl4s8CICAvZva5zpXQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/admin/users/6/replies/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"admin",
+								"users",
+								"6",
+								"replies",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ADMIN - Display all replies",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY2ODEzODE3MywianRpIjoiYWM3MTU3MzctZjRmOS00YzE1LWI5ZDgtM2E5N2MzYTliMmQ1IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IjEiLCJuYmYiOjE2NjgxMzgxNzMsImV4cCI6MTY2ODIyNDU3M30.hK6w6JBd41-_QX4AUUfUwW3-OEl4s8CICAvZva5zpXQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/admin/replies",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"admin",
+								"replies"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ADMIN - Display all deactivated posts",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY2ODEzODE3MywianRpIjoiYWM3MTU3MzctZjRmOS00YzE1LWI5ZDgtM2E5N2MzYTliMmQ1IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IjEiLCJuYmYiOjE2NjgxMzgxNzMsImV4cCI6MTY2ODIyNDU3M30.hK6w6JBd41-_QX4AUUfUwW3-OEl4s8CICAvZva5zpXQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/admin/posts/deactivated/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"admin",
+								"posts",
+								"deactivated",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

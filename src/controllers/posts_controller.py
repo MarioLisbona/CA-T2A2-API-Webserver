@@ -103,9 +103,9 @@ def get_all_posts():
         Post
     ).join(
         User
-    ).filter(
+    ).where(
         Post.is_active == True
-    ).filter(
+    ).where(
         User.status=='Active'
     ).order_by(Post.date.desc(), Post.time.desc())
 

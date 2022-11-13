@@ -40,7 +40,7 @@
 
 ## **Environment Setup Instructions**
 
-There will be a `src` folder in the same directory as this README file. Within that folder are two files that will contain environment variables for this API to run properly, a file named `.flaskenv.sample` and another named `.env.sample`
+Locate the `src` folder in the same directory as this README file. Within that folder are two files that will contain environment variables for this API to run properly, a file named `.flaskenv.sample` and another named `.env.sample`
 
 When you open this project, you need to rename both of these files by taking off the `.sample` from the end of the file name. The two filenames should look like the image below once this has been completed
 

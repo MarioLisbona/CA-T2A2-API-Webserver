@@ -446,9 +446,9 @@ def grant_revoke_admin(user_id, admin_bool, string_1, string_2, string_3):
         'updated user details': UserSchema(exclude=['password', 'posts', 'replies']).dump(user)
         }
     elif user and user.status == 'Inactive':
-        abort(401, description=f'You cannot grant admin privileges to User id:{user_id} - {user.f_name} {user.l_name} because they are inactive')
+        abort(401, description=f'Admin privileges cannot be {string_2} because User id:{user_id} - {user.f_name} {user.l_name} is inactive')
     elif user and user.status == 'Banned':
-        abort(401, description=f'You cannot grant admin privileges to User id:{user_id} - {user.f_name} {user.l_name} because they are banned')
+        abort(401, description=f'Admin privileges cannot be {string_2} because User id:{user_id} - {user.f_name} {user.l_name} is banned')
 
 
     #abort user doesnt exist

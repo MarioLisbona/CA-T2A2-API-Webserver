@@ -117,7 +117,7 @@ def get_all_posts():
 
     if count > 0:
         #use Schema to return json serialized version of the query statement
-        return PostSchema(many=True).dump(posts)
+        return PostSchema(many=True, exclude=['replies']).dump(posts)
     elif count == 0:
         abort(404, description='There are no active posts in the forum')
 

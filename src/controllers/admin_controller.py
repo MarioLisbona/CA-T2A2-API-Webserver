@@ -222,7 +222,7 @@ def get_a_user_profile(user_id):
     #if the user exists then use Schema to return json serialized version of the query statement
     #else provide an error message and 404 resource not found code
     if user:
-        return UserSchema(exclude=['password']).dump(user)
+        return UserSchema(exclude=['password', 'posts', 'replies']).dump(user)
     else:
         abort(404, description=f'User id:{user_id} does not exist')
 

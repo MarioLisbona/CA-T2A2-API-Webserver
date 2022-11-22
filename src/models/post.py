@@ -1,6 +1,7 @@
 from init import db, ma
 from marshmallow import fields
 from marshmallow.validate import Length, And, Regexp, OneOf
+from sqlalchemy.ext.hybrid import hybrid_property
 import os
 
 #assigning environment variable data to valid channels
@@ -28,6 +29,16 @@ class Post(db.Model):
     #cascade delete on replies, if a post is deleted, then all associated replies will be deleted
     user = db.relationship('User', back_populates='posts')
     replies = db.relationship('Reply', back_populates='post', cascade='all, delete')
+
+    @hybrid_property
+    def post_only(self):
+        return {
+            'id': self.id,
+            'title': self.title,
+            'date': self.date,
+            'time': self.time,
+            'content': self.content
+        }
 
 
 #marshmallow schema to handle converting the database objects from the posts table into serialised objects

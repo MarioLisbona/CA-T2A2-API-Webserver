@@ -37,16 +37,14 @@ def seed_db_tables():
             l_name = 'Admin',
             email = 'admin@forum.com',
             password = bcrypt.generate_password_hash('admin123').decode('utf-8'),
-            is_admin = True,
-            status = 'Active'
+            is_admin = True
         ),
         User(
             f_name = 'Mario',
             l_name = 'Lisbona',
             email = 'mario.lisbona@gmail.com',
             password = bcrypt.generate_password_hash('muz123').decode('utf-8'),
-            is_admin = False,
-            status = 'Active'
+            is_admin = False
         ),
         User(
             f_name = 'Ali',

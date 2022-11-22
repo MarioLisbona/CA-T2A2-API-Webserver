@@ -15,7 +15,7 @@ class User(db.Model):
     password = db.Column(db.String, nullable=False)
     is_admin = db.Column(db.Boolean, default=False)
     warnings = db.Column(db.Integer, default=0)
-    status = db.Column(db.String(15))
+    status = db.Column(db.String(15), default = 'Active')
 
 
     #establishing relationship with users and replies models

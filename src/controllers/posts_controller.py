@@ -112,7 +112,11 @@ def get_all_posts():
     #scalalars will return many results and assign to posts variable
     posts = db.session.scalars(stmt)
 
-    stmt = stmt = db.select(db.func.count()).select_from(Post).filter_by(is_active=True)
+    # stmt = stmt = db.select(db.func.count()).select_from(Post).filter_by(is_active=True)
+    stmt = stmt = db.select(db.func.count()).select_from(Post).where(and_(
+        Post.is_active == True,
+        User.status == 'Active'
+    ))
     count = db.session.scalar(stmt)
 
     if count > 0:

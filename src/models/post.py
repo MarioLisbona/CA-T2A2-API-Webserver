@@ -30,15 +30,6 @@ class Post(db.Model):
     user = db.relationship('User', back_populates='posts')
     replies = db.relationship('Reply', back_populates='post', cascade='all, delete')
 
-    @hybrid_property
-    def post_only(self):
-        return {
-            'id': self.id,
-            'title': self.title,
-            'date': self.date,
-            'time': self.time,
-            'content': self.content
-        }
 
 
 #marshmallow schema to handle converting the database objects from the posts table into serialised objects

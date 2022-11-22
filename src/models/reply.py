@@ -1,5 +1,6 @@
 from init import db, ma
 from marshmallow import fields
+from sqlalchemy.ext.hybrid import hybrid_property
 
 class Reply(db.Model):
     #assigning a table name to the model
@@ -20,6 +21,7 @@ class Reply(db.Model):
     #establishing replies property in Post model
     user = db.relationship('User', back_populates='replies')
     post = db.relationship('Post', back_populates='replies')
+
 
 
 

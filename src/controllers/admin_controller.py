@@ -126,6 +126,7 @@ def get_all_replies():
     #scalars will return many results and assign to users variable
     replies = db.session.scalars(stmt)
 
+
     #query database to count how many replies there are
     #used to find if there are no replies
     stmt = stmt = db.select(db.func.count()).select_from(Reply)
@@ -133,7 +134,7 @@ def get_all_replies():
 
     if count > 0:
         #excluding post, just replies
-        return ReplySchema(many=True, exclude=['post']).dump(replies)
+        return ReplySchema(many=True, exclude=['post.date', 'post.time', 'post.is_active', 'post.content', 'post.replies', 'post.user']).dump(replies)
     elif count == 0:
         abort(404, description='There are no replies in the forum')
 

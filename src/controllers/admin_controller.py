@@ -29,23 +29,36 @@ def get_forum_stats():
     channels_list = list(channels.split(', '))
 
     #query database to count how many replies are posted to the forum
-    stmt = stmt = db.select(db.func.count()).select_from(Reply)
+    stmt = db.select(db.func.count()).select_from(Reply)
     replies = db.session.scalar(stmt)
 
     #query database to count how many posts are active in the forum
-    stmt = stmt = db.select(db.func.count()).select_from(Post).filter_by(is_active=True)
+    stmt = db.select(db.func.count()).select_from(Post).filter_by(is_active=True)
     active_posts = db.session.scalar(stmt)
 
     #query database to count how many posts are archived/deactivated in the forum
-    stmt = stmt = db.select(db.func.count()).select_from(Post).filter_by(is_active=False)
+    stmt = db.select(db.func.count()).select_from(Post).filter_by(is_active=False)
     archived_posts = db.session.scalar(stmt)
 
     #query database to count how many users are registered in the forum
-    stmt = stmt = db.select(db.func.count()).select_from(User)
-    users = db.session.scalar(stmt)
+    stmt = db.select(db.func.count()).select_from(User)
+    total_users = db.session.scalar(stmt)
+
+    # #query database to count how many active users are registered in the forum
+    stmt = db.select(db.func.count()).select_from(User).filter_by(status='Active')
+    active_users = db.session.scalar(stmt)
+
+    # #query database to count how many inactive users are registered in the forum
+    stmt = db.select(db.func.count()).select_from(User).filter_by(status='Inactive')
+    inactive_users = db.session.scalar(stmt)
+
+    # #query database to count how many banned users there are registered in the forum
+    stmt = db.select(db.func.count()).select_from(User).filter_by(status='Banned')
+    banned_users = db.session.scalar(stmt)
+
 
     #query database to count how many admins are moderating the forum
-    stmt = stmt = db.select(db.func.count()).select_from(User).filter_by(is_admin=True)
+    stmt = db.select(db.func.count()).select_from(User).filter_by(is_admin=True)
     admins = db.session.scalar(stmt)
 
     return {
@@ -54,7 +67,10 @@ def get_forum_stats():
         'active Posts': active_posts,
         'archived Posts': archived_posts,
         'replies': replies,
-        'users': users,
+        'total users': total_users,
+        'active users': active_users,
+        'inactive users': inactive_users,
+        'banned users': banned_users,
         'administrators': admins,
     }
 

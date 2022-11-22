@@ -364,15 +364,16 @@ def delete_single_user(user_id):
     # else display message that warnings ar still remaining
     #else provide an error message and 404 resource not found code
     if user:
-        print(user.warnings)
         if user.warnings >= 3:
-            db.session.delete(user)
+            # db.session.delete(user)
+            user.status = 'Banned'
             db.session.commit()
             return {
                 'message': 'User has been successfully banned from the forum',
                 'user id': user_id,
                 'first name': user.f_name, 
                 'last name': user.l_name,
+                'user status': user.status
             }
         else:
             return {
@@ -380,6 +381,7 @@ def delete_single_user(user_id):
                 'user id': user_id,
                 'first name': user.f_name, 
                 'last name': user.l_name,
+                'user status': user.status,
                 'remaining warnings till banned': 3 - user.warnings
             }
     # else abort the user doesn't exist
@@ -422,9 +424,11 @@ def grant_revoke_admin(user_id, admin_bool, string_1, string_2, string_3):
     #scalar will return a single post where the id matches post_id and assign the result to the post variable
     user = db.session.scalar(stmt)
 
+    print(user.status)
+
     #if the user exists then change their is_admin attribute to True
     #else provide an error message and 404 resource not found code
-    if user:
+    if user and user.status == 'Active':
         #Message displaying that the user already has admin rights
         if admin_bool == user.is_admin:
             
@@ -441,6 +445,12 @@ def grant_revoke_admin(user_id, admin_bool, string_1, string_2, string_3):
         return {'message': f'You successfully {string_2} admin privileges {string_3} the user.',
         'updated user details': UserSchema(exclude=['password', 'posts', 'replies']).dump(user)
         }
+    elif user and user.status == 'Inactive':
+        abort(401, description=f'You cannot grant admin privileges to User id:{user_id} - {user.f_name} {user.l_name} because they are inactive')
+    elif user and user.status == 'Banned':
+        abort(401, description=f'You cannot grant admin privileges to User id:{user_id} - {user.f_name} {user.l_name} because they are banned')
+
+
     #abort user doesnt exist
     else:
         abort(404, description=f'User id:{user_id} does not exist')

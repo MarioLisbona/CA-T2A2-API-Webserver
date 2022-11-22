@@ -328,13 +328,15 @@ def issue_warning(user_id):
                 'remaining warnings till banned': 3 - user.warnings
             }
         else:
-            db.session.delete(user)
+            # db.session.delete(user)
+            user.status = 'Banned'
             db.session.commit()
             return {
                 'message': 'User has been banned from the forum',
                 'user id': user_id,
                 'first name': user.f_name, 
                 'last name': user.l_name,
+                'user status': user.status
             }
     #user does not exist
     else:

@@ -27,7 +27,7 @@ def create_single_post():
     stmt = db.select(User).filter_by(id=get_jwt_identity())
     user = db.session.scalar(stmt)
 
-    if user:
+    if user and user.status == 'Active':
         #create a new instance of Post class to store request.json data
         post = Post(
             title = data['title'],
@@ -47,6 +47,10 @@ def create_single_post():
                 'message': 'You successfully added the post to the forum',
                 'post details': PostSchema().dump(post)
             }
+    elif user and user.status == 'Inactive':
+        abort(401, description=f'User id:{get_jwt_identity()} - {user.f_name} {user.l_name} is inactive and cannot post to the forum')
+    elif user and user.status == 'Banned':
+        abort(401, description=f'User id:{get_jwt_identity()} - {user.f_name} {user.l_name} is banned and cannot post to the forum')
     else:
         abort(404, description=f'User {get_jwt_identity()} does not exist')
 

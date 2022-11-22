@@ -459,7 +459,7 @@ def activate_deactivate_post(post_id, active_bool, status):
         if active_bool == post.is_active:
             return {
                     'Message': f'Post is already {status}',
-                    'post details': PostSchema().dump(post)
+                    'post details': PostSchema(exclude=['replies']).dump(post)
                 }
 
         #Post is not not active - change is_active to True and commit to database
@@ -469,7 +469,7 @@ def activate_deactivate_post(post_id, active_bool, status):
         #return message with new Post details
         return {
                 'message': f'You successfully {status} the post.',
-                'post details': PostSchema().dump(post)
+                'post details': PostSchema(exclude=['replies']).dump(post)
             }
     #abort Post doesnt exist    
     else:

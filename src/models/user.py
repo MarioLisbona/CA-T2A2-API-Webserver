@@ -2,6 +2,10 @@ from email.message import EmailMessage
 from init import db, ma
 from marshmallow import fields
 from marshmallow.validate import Length, And, Regexp, OneOf
+import os
+
+#assigning environment variable data to valid status
+VALID_STATUS = os.environ.get('VALID_STATUS')
 
 class User(db.Model):
     #assigning a table name to the model
@@ -50,6 +54,10 @@ class UserSchema(ma.Schema):
     password = fields.String(validate=(Regexp('((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W]).{8,64})',
     error='Invalid password. Password must be between 8 and 64 characters and contain a mix of upper and lower case letters, one numeric and one special character')
     ))
+
+    #validating status's
+    #status' can only be ones that are listed in the VALID_STATUS tuple
+    status = fields.String(validate=OneOf(VALID_STATUS, error=f'Must be one of: {VALID_STATUS}'))
 
 
     #creating variables to display User object's relationship to a post and a reply

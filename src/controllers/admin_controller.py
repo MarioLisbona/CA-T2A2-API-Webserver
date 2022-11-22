@@ -416,6 +416,47 @@ def revoke_admin_rights(user_id):
     #call function to revoke admin rights
     return grant_revoke_admin(user_id, False, 'does not have', 'revoked', 'from')
 
+
+# ======================================CHange a user's status - ADMIN ONLY==================================
+@admin_bp.route('/users/<int:user_id>/change_status/', methods=['PATCH'])
+#Route protected by JWT
+@jwt_required()
+def change_user_status(user_id):
+
+    #route protected and accessible only to users with admin right
+    #admin_access function will abort if user is_admin attribute is False
+    admin_access()
+    
+    stmt = db.select(User).filter_by(id=user_id)
+    #scalar will return a single User where the id matches user_id and assign the result to
+    #the user variable
+    user = db.session.scalar(stmt)
+
+    # Load marshmallow scheme to validate user status
+    data = UserSchema().load(request.json)
+
+    #if the User exists then update their status from hte json input
+    if user:
+        #If the JSON in the request is the same as the status of the user then abort with message
+        if (user.status == request.json.get('status')):
+            abort(400, description=f'{user.f_name} {user.l_name} is already {user.status}')
+
+        #update user status
+        if request.json.get('status'):
+            user.status = data['status']
+
+        # Add new post details to the database and commit changes
+        db.session.commit()
+
+        return {
+           'message': 'User status changed successfully',
+            'user id': user_id,
+            'user status': user.status
+        }
+    else:
+        abort(404, description=f'User id:{user_id} does not exist')
+
+
 # ======================================Function def - Revoke/grant access==============================================
 def grant_revoke_admin(user_id, admin_bool, string_1, string_2, string_3):
 

@@ -193,12 +193,22 @@ def delete_single_reply(reply_id):
     #scalar will return a single post where the id matches reply_id and assign the result to the post variable
     reply = db.session.scalar(stmt)
 
+    # print('post title', reply.post.title)
+    # print('post id', reply.post.id)
+
     if reply:
+        #assigning post id and title linked to the reply to two variables
+        #otherwise once reply is deleted, the post id and title are no longer bound to this session
+        post_id = reply.post.id
+        post_title = reply.post.title
+
         db.session.delete(reply)
         db.session.commit()
         return {
             'message': 'Reply deleted successfully',
-            'post id': reply.id,
+            'post id': post_id,
+            'post title': post_title,
+            'reply id': reply.id,
             'reply': reply.reply
             }
     else:

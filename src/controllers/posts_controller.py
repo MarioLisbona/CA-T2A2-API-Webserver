@@ -176,7 +176,11 @@ def get_all_posts_from_user(user_id):
 
     #query to return the user who's id matches the route variable
     #used for error message if the user does not exist
-    stmt = db.select(User).filter_by(id=user_id)
+    # stmt = db.select(User).filter_by(id=user_id)
+    stmt = db.select(User).where(and_(
+        User.id == user_id,
+        User.status == 'Active'
+    ))
     user = db.session.scalar(stmt)
 
     #create a query to count the amount of posts where the user id matches the route variable

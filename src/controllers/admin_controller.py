@@ -451,6 +451,8 @@ def change_user_status(user_id):
     # Load marshmallow scheme to validate user status
     data = UserSchema().load(request.json)
 
+    print(user.status)
+
     #if the User exists then update their status from hte json input
     if user:
         #If the JSON in the request is the same as the status of the user then abort with message

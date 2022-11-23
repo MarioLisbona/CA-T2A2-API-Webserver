@@ -75,4 +75,9 @@ def admin_access():
     #abort if is_admin is False
     if not user.is_admin:
         abort(401, description='You do not have administrative privileges')
+
+    if user.status == 'Inactive':
+        abort(401, description=f'User id:{user.id} - {user.f_name} {user.l_name} is inactive and does not have administrative privileges')
+    elif user.status == 'Banned':
+        abort(401, description=f'User id:{user.id} - {user.f_name} {user.l_name} is banned and does not have administrative privileges')
     

@@ -264,6 +264,17 @@ def edit_single_post(post_id):
 @jwt_required()
 def create_reply(post_id):
 
+    #create query statement to return a single user with the id of get_jwt_identity
+    stmt = db.select(User).filter_by(id=get_jwt_identity())
+    user = db.session.scalar(stmt)
+
+    #user needs to be active to be able to reply to a post
+    if user.status == 'Inactive':
+        abort(401, description=f'User id:{user.id} - {user.f_name} {user.l_name} is inactive and cannot reply to any posts')
+    elif user.status == 'Banned':
+        abort(401, description=f'User id:{user.id} - {user.f_name} {user.l_name} is banned and cannot reply to any posts')
+
+
     #create query statement to return a single Post with the id of the route variable post_id
     stmt = db.select(Post).filter_by(id=post_id)
     post = db.session.scalar(stmt)
@@ -302,6 +313,16 @@ def create_reply(post_id):
 #Route protected by JWT
 @jwt_required()
 def update_reply(reply_id):
+
+    #create query statement to return a single user with the id of get_jwt_identity
+    stmt = db.select(User).filter_by(id=get_jwt_identity())
+    user = db.session.scalar(stmt)
+
+    #user needs to be active to be able to update a reply
+    if user.status == 'Inactive':
+        abort(401, description=f'User id:{user.id} - {user.f_name} {user.l_name} is inactive and cannot reply to any posts')
+    elif user.status == 'Banned':
+        abort(401, description=f'User id:{user.id} - {user.f_name} {user.l_name} is banned and cannot reply to any posts')
 
     #create query statement to return a single reply with the id of the route variable reply_id
     #to ascertain if route variable is a valid reply for else statements below

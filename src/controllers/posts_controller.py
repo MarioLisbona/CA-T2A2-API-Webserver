@@ -62,12 +62,10 @@ def delete_my_post(post_id):
 
     #create query statement to return a single Post with the id of the route variable 
     # and id returned from get_jwt_identity
-    stmt = db.select(Post).where(
-            and_(
-                Post.id == post_id,
-                Post.user_id == get_jwt_identity()
-            )
-    )
+    stmt = db.select(Post).where(and_(
+            Post.id == post_id,
+            Post.user_id == get_jwt_identity()
+        ))
     #scalar will return a single post where the id matches post_id and
     # owner is returned by get_jwt_identity
     user_post = db.session.scalar(stmt)
